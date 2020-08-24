@@ -8,15 +8,17 @@ require 'objects/bcome/version'
 Gem::Specification.new do |spec|
   spec.name          = ::Bcome::Version.name
   spec.version       = ::Bcome::Version.release
-  spec.authors       = ['Guillaume Roderick (Webzakimbo)']
+  spec.authors       = ['Webzakimbo']
   spec.email         = ['guillaume@webzakimbo.com']
-  spec.summary       = 'A DevOps Application development framework'
-  spec.description   = 'Orchestration & Automation framework for the Cloud.'
-  spec.homepage      = 'https://github.com/webzakimbo/bcome-kontrol'
+  spec.summary       = "Bcome is dev-ops application-development framework"
+  spec.description   = "Bcome lets you create your own management application on top of your infrastructure - wherever it may be - all driven from simple YAML configuration. On-premise, cloud, hybrid & multi-cloud. Amazon EC2 & GCP integration with more clouds coming."
+  spec.homepage      = 'bcome.com'
   spec.metadata = {
-    'documentation_uri' => 'https://bcome-kontrol.readthedocs.io/en/latest/'
+    'documentation_uri' => 'https://docs.bcome.com',
+    'homepage_uri' => 'https://bcome.com',
+    'source_code_uri' => 'https://github.com/webzakimbo/bcome'
   }
-  spec.license = 'GPL-3.0'
+  spec.license = 'WBZ'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
   spec.executables = ['bcome']
@@ -35,5 +37,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'strings-ansi', '0.2.0'
   spec.add_dependency 'tty-cursor', '0.2.0'
-  spec.post_install_message = "\nWe'd love your feedback about this tool: \nHow can we improve?  Email guillaume@webzakimbo.com"
+  spec.post_install_message = "\nWelcome to BCOME\n\nSee our documentation page at https://docs.bcome.com for what's new and for breaking changes in 2.0.0".
 end

@@ -6,10 +6,12 @@ Bcome is a dev-ops application-development framework.
 
 Create your own management application on top of your infrastructure - wherever it may be - all driven from simple YAML configuration.
 
-- On-premise, cloud, hybrid & multi-cloud orchestration.
+- Real-time orchestration
+- On-premise, cloud, hybrid & multi-cloud
 - Fully extensible 
 - No installation agents - all interactions are driven over SSH.
 - REPL shell, terminal triggers and custom orchestration framework built-in.
+- Amazon EC2 & GCP integration with more clouds coming.
 
 ### Getting started
 
