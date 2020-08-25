@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['guillaume@webzakimbo.com']
   spec.summary       = "Bcome is dev-ops application-development framework"
   spec.description   = "Bcome lets you create your own management application on top of your infrastructure - wherever it may be - all driven from simple YAML configuration. On-premise, cloud, hybrid & multi-cloud. Amazon EC2 & GCP integration with more clouds coming."
-  spec.homepage      = 'bcome.com'
+  spec.homepage      = 'https://bcome.com'
   spec.metadata = {
     'documentation_uri' => 'https://docs.bcome.com',
     'homepage_uri' => 'https://bcome.com',
