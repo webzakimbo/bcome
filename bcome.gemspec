@@ -37,5 +37,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'strings-ansi', '0.2.0'
   spec.add_dependency 'tty-cursor', '0.2.0'
-  spec.post_install_message = "\nWelcome to BCOME\n\nSee our documentation page at https://docs.bcome.com for what's new and for breaking changes in 2.0.0".
+  spec.post_install_message = "\nWelcome to BCOME\n\nSee our documentation page at https://docs.bcome.com for what's new and for breaking changes in 2.0.0"
 end
