@@ -68,7 +68,15 @@ module IRB
 
   class Context
     def overriden_evaluate(*_params)
-      evaluate_without_overriden(*_params)
+      if _params.last.is_a?(Hash)
+        # Ruby 2.7.0 compatibility: "Using the last argument as keyword parameters is deprecated" ; hence splat the last argument
+        last = _params.pop 
+        without_last = _params - [last]
+        evaluate_without_overriden(*without_last, **last)
+      else
+        # previous rubies...
+        evaluate_without_overriden(*_params)
+      end
     rescue ::Bcome::Exception::Base => e
       puts e.pretty_display
     end
