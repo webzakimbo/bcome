@@ -138,7 +138,12 @@ module Bcome::Node
     def load_local_data
       return {} unless File.exist?(local_data_path)
 
-      config = YAML.load_file(local_data_path).deep_symbolize_keys
+      begin
+        config = YAML.load_file(local_data_path).deep_symbolize_keys
+      rescue StandardError => e
+        raise ::Bcome::Exception::Generic, "Error parsing configuration file #{local_data_path}"
+      end
+
       return {} if config.nil?
 
       config
