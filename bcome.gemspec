@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.version       = ::Bcome::Version.release
   spec.authors       = ['Webzakimbo']
   spec.email         = ['guillaume@webzakimbo.com']
-  spec.summary       = "Bcome is dev-ops application-development framework"
-  spec.description   = "Bcome lets you create your own management application on top of your infrastructure - wherever it may be - all driven from simple YAML configuration. On-premise, cloud, hybrid & multi-cloud. Amazon EC2 & GCP integration with more clouds coming."
+  spec.summary       = "Bcome is a DevOps application-development framework"
+  spec.description   = "From simple configuration, generate a custom management interface on top of all your infrastructure - wherever it may be. On-premise, cloud, hybrid & multi-cloud. Amazon EC2 & GCP integration with more clouds coming.  Fully extensible."
   spec.homepage      = 'https://bcome.com'
   spec.metadata = {
     'documentation_uri' => 'https://docs.bcome.com',
@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.license = 'WBZ'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
+  spec.required_ruby_version = '<= 2.6.6'
   spec.executables = ['bcome']
   spec.require_paths = ['lib']
   spec.add_dependency 'activesupport', '5.2.4.3'
@@ -37,5 +38,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'strings-ansi', '0.2.0'
   spec.add_dependency 'tty-cursor', '0.2.0'
-  spec.post_install_message = "\nWelcome to BCOME\n\nSee our documentation page at https://docs.bcome.com for what's new and for breaking changes in 2.0.0"
+  spec.post_install_message = "\nWelcome to Bcome\n\nFind our documentation and more at https://bcome.com"
 end
