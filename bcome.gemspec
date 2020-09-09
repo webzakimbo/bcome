@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.license = 'WBZ'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
-  spec.required_ruby_version = '<= 2.6.6'
+  spec.required_ruby_version = '>= 2.5.0'
   spec.executables = ['bcome']
   spec.require_paths = ['lib']
   spec.add_dependency 'activesupport', '5.2.4.3'
