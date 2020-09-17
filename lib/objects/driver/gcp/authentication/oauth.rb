@@ -19,7 +19,7 @@ module Bcome::Driver::Gcp::Authentication
       @secrets_filename = client_config.secrets_filename
       @path_to_secrets = "#{credential_directory}/#{@secrets_filename}"
 
-      raise ::Bcome::Exception::Generic, 'Missing Oauth client secrets file from GCP network configuration. Please ensure you have set the secrets_path attribute.' unless File.exist?(@path_to_secrets) && File.file?(@path_to_secrets)
+      raise ::Bcome::Exception::Generic, "Missing OAuth 2.0 client secrets file from GCP network configuration. Cannot find '#{@path_to_secrets}'" unless File.exist?(@path_to_secrets) && File.file?(@path_to_secrets)
 
       # All credentials are held in .gauth
       ensure_credential_directory
