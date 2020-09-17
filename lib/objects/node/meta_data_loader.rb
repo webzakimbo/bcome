@@ -62,7 +62,7 @@ module Bcome::Node
 
         begin
           filedata = load_file_data_for(filepath)
-          all_meta_data.deep_merge!(filedata)
+          all_meta_data.deep_merge!(filedata) if filedata.is_a?(Hash)
         rescue Psych::SyntaxError => e
           raise Bcome::Exception::InvalidMetaDataConfig, "Error: #{e.message}"
         end
