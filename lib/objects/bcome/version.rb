@@ -11,11 +11,12 @@ module Bcome
     end
 
     def self.release_name
-      'multicloud & hybrid'
+      'Multicloud & Hybrid'
     end
 
     def self.display
-      "#{name} #{release} #{release_name}"
+      "#{name} v#{release} - #{release_name}"
     end
+
   end
 end
