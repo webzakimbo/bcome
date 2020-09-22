@@ -69,7 +69,7 @@ module Bcome::Ssh
     protected
 
     def set_proxy_details
-      @proxy_details ||= hops.collect(&:proxy_details)
+      @proxy_details ||= hops.compact.collect(&:proxy_details)
     end
 
     def target_machine_ingress_ip
@@ -99,7 +99,10 @@ module Bcome::Ssh
 
     def set_proxy_hop(config, parent)
       config[:fallback_bastion_host_user] = @ssh_driver.fallback_bastion_host_user
-      ::Bcome::Ssh::ProxyHop.new(config, @context_node, parent)
+      h = ::Bcome::Ssh::ProxyHop.new(config, @context_node, parent)
+
+      # We don't hop through ourselves
+      return @context_node.is_same_machine?(h.bcome_proxy_node) ? nil : h 
     end
 
     def iterable_configs

@@ -38,7 +38,7 @@ module Bcome
 
         ## Construct Hop data
         hops = proxy_chain.hops
-        hop_lines = hops.enum_for(:each_with_index).collect { |hop, index| hop.pretty_proxy_details(index + 1) }
+        hop_lines = hops.compact.enum_for(:each_with_index).collect { |hop, index| hop.pretty_proxy_details(index + 1) }
 
         @tree.merge!(to_nested_hash(hop_lines, machine_data))
       end

@@ -4,7 +4,7 @@ module Bcome::Ssh
   class ProxyHop
     include Bcome::Draw
 
-    attr_reader :parent, :config, :host
+    attr_reader :parent, :config, :host, :bcome_proxy_node
 
     def initialize(config, context_node, parent)
       @config = config

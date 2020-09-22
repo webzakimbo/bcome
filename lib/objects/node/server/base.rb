@@ -12,6 +12,10 @@ module Bcome::Node::Server
       @origin_object_id = object_id
     end
 
+    def is_same_machine?(other)
+      origin_object_id == other.origin_object_id
+    end
+
     def host
       raise 'Should be overidden'
     end
