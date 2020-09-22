@@ -34,13 +34,6 @@ module Bcome::Orchestration
     # PROCESSING INTERACTIVE COMMANDS
     #
     def process_command(raw_command)
-      if raw_command =~ /destroy/
-        are_you_sure_message = "Are you SURE you want to 'destroy'? Make sure you know what will be destroyed before you continue. (y/n):\s".warning
-        response = wait_for_input(are_you_sure_message)
-        response = wait_for_input(are_you_sure_message) until %w[y n].include?(response)
-        return if response == 'n'
-      end
-
       full_command = command(raw_command)
       @node.execute_local(full_command)
       wait_for_command_input
@@ -108,7 +101,9 @@ module Bcome::Orchestration
 
     # Formulate a terraform command
     def command(raw_command)
-      "cd #{path_to_env_config} ; terraform #{raw_command} #{var_string}"
+      cmd = "cd #{path_to_env_config} ; terraform #{raw_command}"
+      cmd = "#{cmd} #{var_string}" if raw_command =~ Regexp.new(/^apply$|plan|destroy|refresh/) 
+      return cmd
     end
   end
 end
