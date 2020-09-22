@@ -94,7 +94,7 @@ module Bcome::Ssh
         parent = hop
       end
 
-      hop_collection
+      hop_collection.compact
     end
 
     def set_proxy_hop(config, parent)
