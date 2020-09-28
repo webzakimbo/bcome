@@ -2,9 +2,11 @@
 
 ### What is Bcome
 
-Bcome is a dev-ops application-development framework.
+[![Gem Version](https://badge.fury.io/rb/bcome.svg)](https://badge.fury.io/rb/bcome)
 
-Create your own management application on top of your infrastructure - wherever it may be - all driven from simple YAML configuration.
+Bcome is the DevOps Console.
+
+Create your own on top of your infrastructure - wherever it may be - all driven from simple YAML configuration.
 
 - Real-time orchestration
 - On-premise, cloud, hybrid & multi-cloud
