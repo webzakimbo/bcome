@@ -13,13 +13,13 @@ Create your own DevOps Console on top of your infrastructure - wherever it may b
 
 ### Getting started
 
-See our <a href="https://docs.bcome.com/en/latest/">documentation</a> for installation instructions.
+Full documentation <a href="https://docs.bcome.com/en/latest/">documentation</a> for installation instructions.
 
 ### Further information
 
 Homepage: <a target="_blank" href="https://bcome.com/">https://bcome.com</a>
 
-Guides: <a target="_blank" href="https://guides.bcome.com/en/latest/">https://guides.bcome.com/en/latest/</a>
+See working examples and configuration examples on our guides site: <a target="_blank" href="https://guides.bcome.com/en/latest/">https://guides.bcome.com/en/latest/</a>
 
-The Ruby Gem: <a target="_blank" href="https://rubygems.org/gems/bcome">https://rubygems.org/gems/bcome</a>
+Get the Ruby Gem <a target="_blank" href="https://rubygems.org/gems/bcome">https://rubygems.org/gems/bcome</a>
 
