@@ -23,7 +23,7 @@ module Bcome::Ssh
     def pretty_proxy_details(n = 1)
       lines = ["proxy\s".bc_cyan + "[#{n}]"]
 
-      lines << "bcome node\s".bc_yellow + @bcome_proxy_node.namespace if @bcome_proxy_node
+      lines << "bcome node\s".bc_yellow + @bcome_proxy_node.keyed_namespace if @bcome_proxy_node
 
       lines << "host\s".bc_yellow + host
       lines << "user\s".bc_yellow + user

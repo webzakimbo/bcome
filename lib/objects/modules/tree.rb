@@ -85,7 +85,7 @@ module Bcome
 
       [
         type.to_s.bc_cyan,
-        "namespace:\s".bc_green + namespace,
+        "namespace:\s".bc_green + keyed_namespace,
         "ip address\s".bc_green + address.to_s,
         "user\s".bc_green + ssh_driver.user
       ]
