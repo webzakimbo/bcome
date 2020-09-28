@@ -177,11 +177,6 @@ module Bcome
           console_only: true,
           group: :navigation
         },
-        cache: {
-          description: 'Cache the current tree state',
-          console_only: false,
-          group: :miscellany
-        },
         meta: {
           description: 'Print out all metadata related to this node',
           group: :informational

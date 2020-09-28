@@ -23,6 +23,12 @@ module Bcome
         def menu_items
           base_items = super.dup
 
+          base_items[:cache] = {
+            description: 'Cache the current tree state',
+            console_only: false,
+            group: :miscellany
+          }
+
           base_items[:reload] = {
             description: "Restock this inventory from remote (hit 'cache' after to persist)",
             console_only: true,
