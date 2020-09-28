@@ -31,7 +31,11 @@ module Bcome::Registry::Command
           raise Bcome::Exception::MissingArgumentForRegistryCommand, error_message_suffix
         end
 
-        substitute_with = [TrueClass, FalseClass].include?(substitute_with.class) ? (substitute_with ? 'true' : 'false') : substitute_with
+        substitute_with = if [TrueClass, FalseClass].include?(substitute_with.class)
+                            substitute_with ? 'true' : 'false'
+                          else
+                            substitute_with
+                          end
         substituted_command.gsub!("%#{substitution}%", substitute_with)
       end
       substituted_command

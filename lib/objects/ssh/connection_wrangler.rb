@@ -102,11 +102,15 @@ module Bcome::Ssh
       h = ::Bcome::Ssh::ProxyHop.new(config, @context_node, parent)
 
       # We don't hop through ourselves
-      return @context_node.is_same_machine?(h.bcome_proxy_node) ? nil : h 
+      @context_node.is_same_machine?(h.bcome_proxy_node) ? nil : h
     end
 
     def iterable_configs
-      @iterable ||= @config ? (@config.is_a?(Hash) ? [@config] : @config) : []
+      @iterable ||= if @config
+                      @config.is_a?(Hash) ? [@config] : @config
+                    else
+                      []
+                    end
     end
   end
 end

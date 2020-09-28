@@ -232,7 +232,11 @@ module Bcome::Node
     end
 
     def prompt_breadcrumb
-      "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : ''}#{current_context? ? (has_parent? ? identifier.terminal_prompt : identifier) : identifier}"
+      "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : ''}#{if current_context?
+                                                                has_parent? ? identifier.terminal_prompt : identifier
+                                                              else
+                                                                identifier
+                                                              end}"
     end
 
     def namespace
@@ -268,7 +272,7 @@ module Bcome::Node
             resource.close_ssh_connection
           else
             resource.close_ssh_connections
-           end
+          end
         end
       end
       nil
@@ -321,8 +325,6 @@ module Bcome::Node
     def view_attributes_to_skip_on_setup
       [:views]
     end
-
-    private
 
     def to_ary
       # due to my method_missing implementation, the following is required.

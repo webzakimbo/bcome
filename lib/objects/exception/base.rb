@@ -8,7 +8,11 @@ module Bcome
       end
 
       def message
-        "#{message_prefix}#{@message_suffix ? + (!message_prefix.empty? ? ':' : '').to_s + " #{@message_suffix}" : ''}"
+        "#{message_prefix}#{if @message_suffix
+                              + (!message_prefix.empty? ? ':' : '').to_s + " #{@message_suffix}"
+                            else
+                              ''
+                            end}"
       end
 
       def pretty_display

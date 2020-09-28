@@ -62,7 +62,11 @@ module Bcome::Registry::Command
 
           puts tab_spacing + command_key.resource_key + item_spacing(command_key) + description.resource_value
 
-          usage_string = in_console_session? ? command_key.to_s : "bcome #{@node.keyed_namespace.empty? ? '' : "#{@node.keyed_namespace}:"}#{command_key}"
+          usage_string = if in_console_session?
+                           command_key.to_s
+                         else
+                           "bcome #{@node.keyed_namespace.empty? ? '' : "#{@node.keyed_namespace}:"}#{command_key}"
+                         end
           puts tab_spacing + ("\s" * menu_item_spacing_length) + 'usage: '.instructional + usage_string
 
           if defaults.keys.any?

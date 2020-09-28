@@ -104,7 +104,7 @@ module Bcome
           set_static_servers
           load_dynamic_nodes unless resources.any?
           nodes_loaded!
-       end
+        end
 
         def load_dynamic_nodes
           raw_servers = fetch_server_list

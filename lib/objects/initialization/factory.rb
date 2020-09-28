@@ -2,7 +2,6 @@ require 'fileutils'
 
 module Bcome::Initialization
   class Factory
- 
     include ::Bcome::Initialization::Utils
     include ::Bcome::Initialization::Structure
 
@@ -19,9 +18,9 @@ module Bcome::Initialization
 
     def do
       puts "\nInitialising Bcome".title.bold
-      initialization_paths.each {|conf|
+      initialization_paths.each do |conf|
         create_file_utils(conf[:method], conf[:paths])
-      }
+      end
       summarize(@created, "\nThe following paths were created")
       summarize(@exists, "\nThe following paths exist already, and were untouched")
       puts "\n"
@@ -29,9 +28,9 @@ module Bcome::Initialization
 
     def summarize(paths, caption)
       return unless paths.any?
-      puts "#{caption}:".informational
-      paths.each {|path| puts path.resource_key }
-    end
 
+      puts "#{caption}:".informational
+      paths.each { |path| puts path.resource_key }
+    end
   end
 end

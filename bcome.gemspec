@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.version       = ::Bcome::Version.release
   spec.authors       = ['Webzakimbo']
   spec.email         = ['guillaume@webzakimbo.com']
-  spec.summary       = "The DevOps Console"
-  spec.description   = "From simple configuration, generate a custom management interface on top of all your infrastructure - wherever it may be. On-premise, cloud, hybrid & multi-cloud. Amazon EC2 & GCP integration with more clouds coming.  Fully extensible."
+  spec.summary       = 'The DevOps Console'
+  spec.description   = 'From simple configuration, generate a custom management interface on top of all your infrastructure - wherever it may be. On-premise, cloud, hybrid & multi-cloud. Amazon EC2 & GCP integration with more clouds coming.  Fully extensible.'
   spec.homepage      = 'https://bcome.com'
   spec.metadata = {
     'documentation_uri' => 'https://docs.bcome.com',
@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
   spec.required_ruby_version = '>= 2.5.0'
-  spec.executables = ['bcome', 'init-bcome']
+  spec.executables = %w[bcome init-bcome]
   spec.require_paths = ['lib']
   spec.add_dependency 'activesupport', '5.2.4.3'
   spec.add_dependency 'awesome_print', '1.8.0'

@@ -17,11 +17,9 @@ module ::Bcome::Ssh
     end
 
     def print_output
-      begin
-        print "#{@output_string}\n\n"
-      rescue StandardError => e
-        puts "Could not print #{@output_string.inspect}"
-      end 
+      print "#{@output_string}\n\n"
+    rescue StandardError => e
+      puts "Could not print #{@output_string.inspect}"
     end
 
     def execute!

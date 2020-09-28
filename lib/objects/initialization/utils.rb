@@ -1,5 +1,4 @@
 module Bcome::Initialization::Utils
-
   def initialize_empty_yaml_config(path)
     File.write(path, {}.to_yaml)
   end
@@ -9,14 +8,13 @@ module Bcome::Initialization::Utils
   end
 
   def create_file_utils(method, paths)
-     paths.each do |path|
-       unless path.is_file_or_directory?
+    paths.each do |path|
+      if path.is_file_or_directory?
+        @exists << path
+      else
         send(method, path)
         @created << path
-      else
-        @exists << path
       end
     end
   end
-
 end

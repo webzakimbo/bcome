@@ -10,8 +10,8 @@ module Bcome::Initialization::Structure
         method: :initialize_empty_yaml_config
       },
       { # Cloud provider authorisation directories
-        paths: [".gauth",".aws"],
-       method: :create_as_directory
+        paths: ['.gauth', '.aws'],
+        method: :create_as_directory
       }
     ]
   end

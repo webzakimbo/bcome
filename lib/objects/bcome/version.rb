@@ -17,6 +17,5 @@ module Bcome
     def self.display
       "#{name} v#{release} - #{release_name}"
     end
-
   end
 end

@@ -32,7 +32,11 @@ module Bcome
 
         puts tab_spacing + key.to_s.resource_key + item_spacing(key) + (config[:description]).to_s.resource_value
         if config[:usage] || config[:terminal_usage]
-          usage_string = ::Bcome::System::Local.instance.in_console_session? ? config[:usage] : "bcome #{keyed_namespace.empty? ? '' : "#{keyed_namespace}:"}#{config[:terminal_usage]}"
+          usage_string = if ::Bcome::System::Local.instance.in_console_session?
+                           config[:usage]
+                         else
+                           "bcome #{keyed_namespace.empty? ? '' : "#{keyed_namespace}:"}#{config[:terminal_usage]}"
+                         end
           puts tab_spacing + ("\s" * menu_item_spacing_length) + 'usage: '.instructional + usage_string
         end
         puts "\n"

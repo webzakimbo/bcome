@@ -102,8 +102,8 @@ module Bcome::Orchestration
     # Formulate a terraform command
     def command(raw_command)
       cmd = "cd #{path_to_env_config} ; terraform #{raw_command}"
-      cmd = "#{cmd} #{var_string}" if raw_command =~ Regexp.new(/^apply$|plan|destroy|refresh/) 
-      return cmd
+      cmd = "#{cmd} #{var_string}" if raw_command =~ Regexp.new(/^apply$|plan|destroy|refresh/)
+      cmd
     end
   end
 end
