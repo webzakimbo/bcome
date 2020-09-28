@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rainbow'
+require 'fileutils'
 
 class String
   include StringColourStylesheet
@@ -11,6 +12,10 @@ class String
 
   def sanitize
     ansi? ? Strings::ANSI.sanitize(self) : self
+  end
+
+  def is_file_or_directory?
+    File.directory?(self) || File.exist?(self)
   end
 
   # with thanks to http://simianuprising.com/wp-content/uploads/2012/08/solarized-reference-horizontal.png
