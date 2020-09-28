@@ -1,18 +1,14 @@
-## Welcome to Bcome
-
-### What is Bcome
+## Bcome is The DevOps Console 
 
 [![Gem Version](https://badge.fury.io/rb/bcome.svg)](https://badge.fury.io/rb/bcome)
 
-Bcome is the DevOps Console.
-
-Create your own on top of your infrastructure - wherever it may be - all driven from simple YAML configuration.
+Create your own DevOps Console on top of your infrastructure - wherever it may be - all driven from simple YAML configuration.
 
 - Real-time orchestration
 - On-premise, cloud, hybrid & multi-cloud
 - Fully extensible 
 - No installation agents - all interactions are driven over SSH.
-- REPL shell, terminal triggers and custom orchestration framework built-in.
+- REPL shell, terminal triggers, orchestration and metadata framework built-in.
 - Amazon EC2 & GCP integration with more clouds coming.
 
 ### Getting started
