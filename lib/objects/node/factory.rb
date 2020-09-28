@@ -24,6 +24,7 @@ module Bcome::Node
     end
 
     def init_tree
+      raise ::Bcome::Exception::EmptyNamespaceTree, "no namespaces found in #{config_path}.\n\nPlease refer to the documentation for assistance at https://docs.bcome.com." if estate_config.nil?
       @estate = create_node(estate_config)
       @estate
     end
