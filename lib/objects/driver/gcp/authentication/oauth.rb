@@ -6,6 +6,8 @@ require 'google/api_client/client_secrets'
 
 module Bcome::Driver::Gcp::Authentication
   class Oauth < Base
+    include Utilities
+
     credential_directory = '.gauth'
 
     attr_reader :scopes, :secrets_filename, :service, :client_config
@@ -63,12 +65,17 @@ module Bcome::Driver::Gcp::Authentication
         # Total bloat from google here. Thanks google... requiring at last possible moment.
         require 'google/api_client/auth/installed_app'
 
-        wrap_indicator type: :basic, title: loader_title, completed_title: '' do
+          wrap_indicator type: :basic, title: loader_title, completed_title: '' do
           flow = Google::APIClient::InstalledAppFlow.new(
             client_id: client_secrets.client_id,
             client_secret: client_secrets.client_secret,
             scope: @scopes
           )
+ 
+          ## Override the redirected-to screen so that clearer instruction can be given          
+          flow.class.send(:remove_const,'RESPONSE_BODY') if flow.class.const_defined?('RESPONSE_BODY')
+          flow.class.send(:const_set,'RESPONSE_BODY', oauth_redirect_html)
+
           begin
              @service.authorization = flow.authorize(storage)
              signal_success
