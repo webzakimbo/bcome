@@ -1,7 +1,4 @@
 # frozen_string_literal: true
-
-require 'awesome_print'
-
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
     attr_reader :origin_object_id
@@ -216,6 +213,8 @@ module Bcome::Node::Server
       result[namespace]['error'] = ping_result[:error].message if !ping_result[:success] && ping_result[:error]
       colour = ping_result[:success] ? :green : :red
 
+      # TODO [GR] Remove dependency on awesome_print as we're literally only using it for the one line below.
+      require 'awesome_print'
       ap(result, indent: -2, color:  { hash: colour, symbol: colour, string: colour, keyword: colour, variable: colour, array: 'cyan' })
     end
 
