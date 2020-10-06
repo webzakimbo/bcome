@@ -21,7 +21,7 @@ module Bcome
         bootup
       end
     rescue Bcome::Exception::Base => e
-      print e.pretty_display
+      e.pretty_display
     end
 
     def bootup
@@ -30,7 +30,7 @@ module Bcome
       clean_up
     rescue ::Bcome::Exception::Base => e
       clean_up
-      puts e.pretty_display
+      e.pretty_display
     rescue Excon::Error::Socket => e
       clean_up
       puts "\nNo network access - please check your connection and try again\n".error

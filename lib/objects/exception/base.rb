@@ -15,9 +15,12 @@ module Bcome
                             end}"
       end
 
-      def pretty_display
-        puts "\n\n#{message}\n".error
+      def pretty_display(show_backtrace = false)
+        puts "\n" + message.error
+        print backtrace.join("\n") if show_backtrace
+        print "\n"
       end
+
     end
   end
 end

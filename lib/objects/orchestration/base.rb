@@ -10,7 +10,13 @@ module Bcome::Orchestration
     def do_execute
       raise Bcome::Exception::MissingExecuteOnRegistryObject, self.class.to_s unless respond_to?(:execute)
 
-      execute
+      begin
+        execute
+      rescue ::Bcome::Exception::Base => bcome_exception
+        show_backtrace = true unless bcome_exception.is_a?(::Bcome::Exception::InvalidMetaDataEncryptionKey)
+        bcome_exception.pretty_display(show_backtrace)
+        raise ::Bcome::Exception::UserOrchestrationError, self.class.to_s
+      end
     end
 
     def method_missing(method_sym, *_arguments)
