@@ -35,7 +35,7 @@ module ::Bcome::Ssh
       ssh_connect!
       { success: true }
     rescue Exception => e
-      { success: false, error: e }
+      { success: false, error: e, backtrace: e.backtrace }
     end
 
     def scp
