@@ -89,7 +89,15 @@ module Bcome::Ssh
 
       parent = nil
       iterable_configs.each do |config|
-        hop = set_proxy_hop(config, parent)
+        hop = get_proxy_hop(config, parent)
+  
+        if @context_node.is_same_machine?(hop.bcome_proxy_node)
+          # We don't hop through ourselves.  If we're reached ourselves in the proxy chain,
+          # then we'll break the chain at that point.
+          break
+        end  
+
+        # Set proxy hop
         hop_collection << hop
         parent = hop
       end
@@ -97,12 +105,10 @@ module Bcome::Ssh
       hop_collection.compact
     end
 
-    def set_proxy_hop(config, parent)
+    def get_proxy_hop(config, parent)
       config[:fallback_bastion_host_user] = @ssh_driver.fallback_bastion_host_user
       h = ::Bcome::Ssh::ProxyHop.new(config, @context_node, parent)
-
-      # We don't hop through ourselves
-      @context_node.is_same_machine?(h.bcome_proxy_node) ? nil : h
+      return h
     end
 
     def iterable_configs
