@@ -204,10 +204,12 @@ module Bcome::Node::Server
 
     def print_ping_result(ping_result = { success: true })
       result_string = ping_result[:success] ? 'success'.success : 'failed'.error
-      puts "\n#{namespace.bc_cyan}:\s#{result_string.bold}"
-      puts "Error:\s#{ping_result[:error].message.bc_red}" if !ping_result[:success] && ping_result[:error]
-      #puts ping_result[:backtrace]
-      puts "config:\s".bc_cyan + JSON.pretty_generate(ssh_driver.pretty_ssh_config) 
+
+      pretty_ping_result = "\n#{namespace.bc_cyan}:\s#{result_string.bold}\n"
+      pretty_ping_result += "Error:\s#{ping_result[:error].message.bc_red}" if !ping_result[:success] && ping_result[:error]
+      # pretty_ping_result += ping_result[:backtrace] if ping_result[:backtrace]
+      pretty_ping_result += "config:\s".bc_cyan + JSON.pretty_generate(ssh_driver.pretty_ssh_config)
+      puts pretty_ping_result
     end
 
     def add_list_attributes(attrs)
