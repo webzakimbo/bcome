@@ -203,19 +203,11 @@ module Bcome::Node::Server
     end
 
     def print_ping_result(ping_result = { success: true })
-      result = {
-        namespace => {
-          'connection' => ping_result[:success] ? 'success' : 'failed',
-          'ssh_config' => ssh_driver.pretty_ssh_config
-        }
-      }
-
-      result[namespace]['error'] = ping_result[:error].message if !ping_result[:success] && ping_result[:error]
-      colour = ping_result[:success] ? :green : :red
-
-      # TODO [GR] Remove dependency on awesome_print as we're literally only using it for the one line below.
-      require 'awesome_print'
-      ap(result, indent: -2, color:  { hash: colour, symbol: colour, string: colour, keyword: colour, variable: colour, array: 'cyan' })
+      result_string = ping_result[:success] ? 'success'.success : 'failed'.error
+      puts "\n#{namespace.bc_cyan}:\s#{result_string.bold}"
+      puts "Error:\s#{ping_result[:error].message.bc_red}" if !ping_result[:success] && ping_result[:error]
+      #puts ping_result[:backtrace]
+      puts "config:\s".bc_cyan + JSON.pretty_generate(ssh_driver.pretty_ssh_config) 
     end
 
     def add_list_attributes(attrs)

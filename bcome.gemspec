@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
   spec.executables = %w[bcome init-bcome]
   spec.require_paths = ['lib']
   spec.add_dependency 'activesupport', '5.2.4.3'
-  spec.add_dependency 'awesome_print', '1.8.0'
   spec.add_dependency 'diffy', '3.1.0'
   spec.add_dependency 'fog-aws', '~> 0.12.0'
   spec.add_dependency 'google-api-client', '0.29.1'
