@@ -112,6 +112,7 @@ module Bcome
       end
 
       print "\n\n"
+      p
     end
 
     def recurse_tree_lines(data, padding = '')
