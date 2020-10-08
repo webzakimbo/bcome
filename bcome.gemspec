@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.name          = ::Bcome::Version.name
   spec.version       = ::Bcome::Version.release
   spec.authors       = ['Webzakimbo']
-  spec.email         = ['guillaume@webzakimbo.com']
-  spec.summary       = 'The DevOps Console'
-  spec.description   = 'From simple configuration, generate a custom management interface on top of all your infrastructure - wherever it may be. On-premise, cloud, hybrid & multi-cloud. Amazon EC2 & GCP integration with more clouds coming.  Fully extensible.'
+  spec.email         = ['info@webzakimbo.com']
+  spec.summary       = 'The DevOps Control Panel'
+  spec.description   = "Generate custom management interfaces from simple configuration and Ruby code. On-premise, cloud, hybrid & multi-cloud. Amazon AWS (EC2) & Google Cloud (GCP) integration with more clouds coming. Fully extensible."
   spec.homepage      = 'https://bcome.com'
   spec.metadata = {
     'documentation_uri' => 'https://docs.bcome.com',
@@ -37,5 +37,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'strings-ansi', '0.2.0'
   spec.add_dependency 'tty-cursor', '0.2.0'
-  spec.post_install_message = "\nWelcome to Bcome\n\nFind our documentation and more at https://bcome.com"
+  spec.post_install_message = "\nWelcome to Bcome\n\nTo get started see https://docs.bcome.com/en/latest\n"
 end
