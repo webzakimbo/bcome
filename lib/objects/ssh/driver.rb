@@ -56,10 +56,7 @@ module Bcome::Ssh
     end
 
     def has_proxy?
-      return false if proxy_config_value == []
-      return false if proxy_config_value && proxy_config_value == -1
-
-      !@config[:proxy].nil?
+      return connection_wrangler.has_hop?
     end
   end
 end
