@@ -17,6 +17,8 @@ module Bcome
         ::Bcome::Encryptor.instance.unpack
       when 'diff_metadata'
         ::Bcome::Encryptor.instance.diff
+      when 'init'
+        ::Bcome::Initialization::Factory.do
       else
         bootup
       end

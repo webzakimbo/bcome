@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
   spec.required_ruby_version = '>= 2.5.0'
-  spec.executables = %w[bcome init-bcome]
+  spec.executables = %w[bcome]
   spec.require_paths = ['lib']
   spec.add_dependency 'activesupport', '5.2.4.3'
   spec.add_dependency 'diffy', '3.1.0'
