@@ -62,32 +62,53 @@ We do not sell the software to you or anything created by it. We remain the owne
 
 ### 1. Commencement
 1.1	This Agreement comes into effect on the date that you receive, download or use the Licensed Material, whichever is the earlier.
+
 1.2	Webzakimbo hereby licenses you to use the Licensed Materials upon the terms and conditions set out below.
 
 ### 2. Grant of Licences
 2.1	Webzakimbo hereby grants you a non-exclusive, revocable and non-transferable and personal licence to Use the Licensed Materials in accordance with the express terms of this Licence and not further or otherwise.
 
 2.2	You may Use the Light Framework without charge provided that:
+
 a.	you use a User Application to invoke the functionality of the Light Framework;
+
 b.	you do not modify the source code of the Frameworks;
+
 c.	you retain a copy of this Licence in the root directory of the directory containing the Light Framework, and if a copy does not exist in that location, cause a copy to be placed at that location;
+
 d.	Use the Licensed Materials in in accordance with laws and regulations in force in the geographic location which it is Used; and
+
 e.	otherwise comply with the terms of this Licence.
+
 2.3	You may:
+
 a.	execute functionality on Licensee Materials;
+
 b.	authorise Personnel to use Licensed Materials solely for the purpose of providing services to you, subject in any event to their continued compliance with all of terms of this Licence;
-c.	distribute the Light Framework to a third party and other software products, provided that the Light Framework remains an independent, standalone software application and not combined, integrated or incorporated into any other software application and provided that you ensure that a copy of this Licence appears in a file named “LICENCE” in the root directory of the package containing the Light Framework; and
+
+c.	distribute the Light Framework to a third party and other software products, provided that 
+the Light Framework remains an independent, standalone software application and not combined, integrated or incorporated into any other software application and provided that you ensure that a copy of this Licence appears in a file named “LICENCE” in the root directory of the package containing the Light Framework; and
+
 d.	modify the default functionality of the Frameworks at runtime provided that you do not alter the original source code of a Framework (including but not limited to code comments) and/or alter, remove, obfuscate or suppress any Trade Mark which appears as part of the functioning of the Light Framework.
 
 2.4	You shall not:
+
 a.	Use a version of the Light Framework other than one made available from the Website from time to time.
+
 b.	modify, adapt, translate, develop or make derivative works of the Light Framework, and/or combine, link to, incorporate and/or monitor the Light Framework in any way other than with a User Application, except and only to the extent that it is expressly permitted by applicable law;
+
 c.	invoke the functionality of the Light Framework other than with a User Application;
+
 d.	extract or use any part of the Light Framework as part of another software application or device, other than for your own private, personal use for a purpose which is neither directly or indirectly commercial;
+
 e.	use the Light Framework or any part of it to create, support similar functionality or facilitate similar service to that provided by the Light Framework;
+
 f.	use the Framework other than with a User Application;
+
 g.	Use the Licensed Materials or any part of any of them except to the extent and for the purposes expressly permitted by this agreement; and
+
 h.	accept payment or raise any charge for supplying, using or making available the Light Framework.
+
 2.5	If you Use the Light Framework or any part of it contrary to the terms of this Licence, your licence shall automatically terminate and you will not be entitled to use it.
 
 ### 3. Support
@@ -95,6 +116,7 @@ h.	accept payment or raise any charge for supplying, using or making available t
 
 ### 4. Warranties
 4.1	You shall:
+
 a.	ensure that the Licensed Materials are used with equipment and on systems for which it is designed, in a proper manner by competent and expert Personnel only or by persons under their supervision;
 
 b.	not use any advertising materials and promotional literature containing the Trade Marks or other references to the Licensed Materials, without the prior written consent of the Webzakimbo;
