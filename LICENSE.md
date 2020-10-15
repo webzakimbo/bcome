@@ -96,18 +96,29 @@ h.	accept payment or raise any charge for supplying, using or making available t
 ### 4. Warranties
 4.1	You shall:
 a.	ensure that the Licensed Materials are used with equipment and on systems for which it is designed, in a proper manner by competent and expert Personnel only or by persons under their supervision;
+
 b.	not use any advertising materials and promotional literature containing the Trade Marks or other references to the Licensed Materials, without the prior written consent of the Webzakimbo;
+
 c.	shall not make any written statement as to the quality or capabilities of Webzakimbo and/or the Licensed Materials without the prior written approval of the Webzakimbo;
+
 d.	use the Licensed Materials using hardware and software which satisfy the requirements of the Minimum Equipment;
+
 e.	at your own expense comply with all laws and regulations relating to your activities, as they may change from time to time, and with any conditions binding on you in any applicable licences, registrations, permits and approvals; and
+
 f.	observe all recommendations given to you by Webzakimbo in relation to the Use of the Licensed Materials;
+
 4.2	You shall not engage in or cooperate with any deceptive, misleading or unethical practices that are, or might be, detrimental to the Webzakimbo, the Licensed Materials or the public and you shall not publish, employ, or co-operate in the publication or employment of any false, misleading or deceptive advertising material or other representations or statements with regard to the Webzakimbo or the Licensed Materials.
+
 4.3	The Licensed Materials have not been developed for your particular needs. No warranty is given by Webzakimbo that the Licensed Materials will be suitable for any particular purpose.
 
 ### 5. Intellectual Property Rights
+
 5.1	The Intellectual Property Rights vesting in the Licensed Materials are and shall remain the property of Webzakimbo. Intellectual Property Rights created by the Licensee by modifying the Light Framework shall be owned by Webzakimbo. The Licensee shall confirm the assignment of modifications to the Light Framework to Webzakimbo promptly upon request in writing.
+
 5.2	The Intellectual Property Rights vesting in User Applications made by you are and shall remain your property; you are entitled to licence and sell User Applications as you wish for reward or otherwise, provided that at all times you do not attempt or purpose to licence and/or sell the Light Framework.
+
 5.3	You shall not do or authorise any third party to do any act which would or might invalidate or be inconsistent with any Intellectual Property Rights of Webzakimbo and you shall not omit or authorise any third party to omit to do any act which, by its omission, would have that effect or character.
+
 5.4	You shall not remove or obscure in any way Webzakimbo copyright and trade mark notices incorporated into the Licensed Materials.
 
 ### 6. Termination
@@ -115,23 +126,38 @@ Webzakimbo may terminate this Licence at any time without notice by any means an
 
 ### 7. Consequences of Termination
 7.1	Upon the expiry or termination of this Licence for whatever reason:
+
 a.	any rights, remedies, obligations or liabilities of the parties that have accrued up to the date of termination or expiry, including the right to claim damages and/or interim injunctive relief in respect of any breach of the agreement which existed at or before the date of termination or expiry shall not be affected or prejudiced;
+
 b.	 the continuation after termination of any provision expressly stated to survive or implicitly surviving termination shall not be affected or prejudiced; and
+
 c.	all rights and licences granted to you and your Personnel under this agreement shall terminate.
+
 7.2	The rights and remedies provided to you under this Licence are your sole remedies under this Licence and inclusive of any rights or remedies provided by law.
 
 ### 8. Limitations of Liability
 8.1	The following provisions set out the entire financial liability of the parties including without limitation any liability for the acts or omissions of its employees, agents and sub-contractors in respect of:
+
 a.	any breach of this Licence howsoever arising;
+
 b.	any use made by the Licensee or its Personnel of the Licensed Materials or any part of them; and
+
 c.	any representation (whether innocent or negligent), statement or tortious act or omission (including without limitation negligence) arising under or in connection with this Licence.
+
 8.2	Nothing in this clause 8 shall limit either party's liability for death or personal injury resulting from negligence or for fraud, fraudulent misstatement or fraudulent misrepresentation under this Licence.
+
 8.3	Except as expressly provided in this Licence (a) the Licensed Materials are provided on an “as is” basis, (b) you assume responsibility for the use and results of use of the Licensed Materials and for the conclusions drawn from such use, and (c) all warranties, conditions and other terms implied by statute or common law are to the fullest extent permitted by law are excluded.
+
 8.4	Webzakimbo shall not be liable (in contract, tort (including negligence) or for breach of statutory duty or in any other way) for loss of profits, loss of business, depletion of goodwill or similar losses, loss of anticipated savings, loss of goods, loss of use, loss or corruption of data or information; any loss of goodwill or reputation; or any special, indirect, consequential loss, or pure economic loss, costs, damages, charges or expenses suffered or incurred by the other party arising out of or in connection with the use of the Licensed Materials, or any other matter arising under or connected with this Licence.
+
 8.5	Other than in relation to any liability under clause 8.2, the Licensor’s total aggregate liability in contract, tort (including negligence or breach of statutory duty howsoever arising), misrepresentation (whether innocent or negligent), restitution or otherwise, arising in connection with the performance or contemplated performance of this agreement shall in all circumstances be limited to £1.00.
+
 8.6	The provisions of this clause 8 shall continue to apply notwithstanding the termination or expiry of this Licence for any reason or cause.
+
 8.7	Webzakimbo shall not be responsible for the maintenance, accuracy or good running of any version of the Software.
+
 8.8	You shall indemnify Webzakimbo against all liabilities, claims, costs and expenses which Webzakimbo may be suffered arising from or connected to misuse, unlawful use of the Licensed Materials and/or use of third party Intellectual Property Rights.
+
 8.9	The express terms of this Licence are in lieu of all warranties, conditions, terms, undertakings and obligations implied by statute, common law, custom, trade usage, course of dealing or otherwise all of which are hereby excluded to the fullest extent permitted by law.
 
 ### 9. Export Control
@@ -154,11 +180,17 @@ This Agreement supersedes all prior agreements, arrangements and undertakings be
 
 ### 15. Interpretation
 15.1	In this Licence:
+
 a.	reference to any statute or statutory provision includes a reference to that statute or statutory provision as from time to time amended extended or re-enacted;
+
 b.	words importing the singular include the plural, words importing any gender include every gender and words importing persons include bodies corporate and unincorporate; and (in each case) vice versa;
+
 c.	the headings to the Clauses are for ease of reference only and shall not affect the interpretation or construction of this Licence; and
+
 d.	a reference to a person includes a natural person, corporate or unincorporated body (whether or not having separate legal personality);
+
 e.	a reference to a you shall include any company, corporation or other body corporate, wherever and however incorporated or established.; and
+
 f.	a reference to writing or written includes email.
 
 ### 16. Third parties
