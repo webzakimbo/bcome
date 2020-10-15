@@ -1,64 +1,168 @@
-THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE"). THE WORK IS PROTECTED BY COPYRIGHT AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS AUTHORIZED UNDER THIS LICENSE OR COPYRIGHT LAW IS PROHIBITED.
+## Software Licence
 
-BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE MAY BE CONSIDERED TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND CONDITIONS.
+PLEASE READ CAREFULLY BEFORE PROCEEDING WITH DOWNLOADING OR INSTALLING THIS SOFTWARE
 
-1. Definitions
+This end-user licence agreement (“EULA”) is a legal agreement between you and Webzakimbo Limited, a company formed in accordance with the laws of England with registered office situated at 4 Calder Court, Shorebury Point Amy Johnson Way, Blackpool, FY4 2RH, with registered company number 07731326 (“Webzakimbo”) to use a software library to facilitate execution of complex functionality on computer networks. This licence governs your use of our Framework and the web applications created by it.
 
-"Adaptation" means a work based upon the Work, or upon the Work and other pre-existing works, such as a translation, adaptation, derivative work, arrangement of music or other alterations of a literary or artistic work, or phonogram or performance and includes cinematographic adaptations or any other form in which the Work may be recast, transformed, or adapted including in any form recognizably derived from the original, except that a work that constitutes a Collection will not be considered an Adaptation for the purpose of this License. For the avoidance of doubt, where the Work is a musical work, performance or phonogram, the synchronization of the Work in timed-relation with a moving image ("synching") will be considered an Adaptation for the purpose of this License.
+We licence our software to you on the basis of this EULA. 
+We do not sell the software to you or anything created by it. We remain the owners of the Software at all times.
 
-"Collection" means a collection of literary or artistic works, such as encyclopedias and anthologies, or performances, phonograms or broadcasts, or other works or subject matter other than works listed in Section 1(f) below, which, by reason of the selection and arrangement of their contents, constitute intellectual creations, in which the Work is included in its entirety in unmodified form along with one or more other contributions, each constituting separate and independent works in themselves, which together are assembled into a collective whole. A work that constitutes a Collection will not be considered an Adaptation (as defined above) for the purposes of this License.
+### IMPORTANT NOTICE:
 
-"Distribute" means to make available to the public the original and copies of the Work or Adaptation, as appropriate, through sale or other transfer of ownership.
+- By downloading the Software from this website, and/or using the Software, you agree to the terms of this licence, which will legally bind you. The terms of this licence include restrictions in your use of the Software and limitations of liability as set out at clause 8 below.
 
-"Licensor" means the individual, individuals, entity or entities that offer(s) the Work under the terms of this License.
+- If you do not agree to the terms of this licence, you must not download or use the Software.
 
-"Original Author" means, in the case of a literary or artistic work, the individual, individuals, entity or entities who created the Work or if no individual or entity can be identified, the publisher; and in addition (i) in the case of a performance the actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret or otherwise perform literary or artistic works or expressions of folklore; (ii) in the case of a phonogram the producer being the person or legal entity who first fixes the sounds of a performance or other sounds; and, (iii) in the case of broadcasts, the organization that transmits the broadcast.
+### 1	Definitions
+1.1	In this Licence, the following terms shall have the following meanings:
 
-"Work" means the literary and/or artistic work offered under the terms of this License including without limitation any production in the literary, scientific and artistic domain, whatever may be the mode or form of its expression including digital form, such as a book, pamphlet and other writing; a lecture, address, sermon or other work of the same nature; a dramatic or dramatico-musical work; a choreographic work or entertainment in dumb show; a musical composition with or without words; a cinematographic work to which are assimilated works expressed by a process analogous to cinematography; a work of drawing, painting, architecture, sculpture, engraving or lithography; a photographic work to which are assimilated works expressed by a process analogous to photography; a work of applied art; an illustration, map, plan, sketch or three-dimensional work relative to geography, topography, architecture or science; a performance; a broadcast; a phonogram; a compilation of data to the extent it is protected as a copyrightable work; or a work performed by a variety or circus performer to the extent it is not otherwise considered a literary or artistic work.
+<table>
+<tr>
+<td>Generated Source Code</td>
+<td>source code generated by the Light Framework and returned to the command prompt for execution, after invoking the Light Framework with a User Application </td>
+</tr>
+<tr>
+<td>Intellectual Property Rights</td>
+<td>all patents, rights in inventions, rights in designs, trade marks, trade and business names and all associated goodwill, rights to sue for passing off, copyright, moral rights and related rights, rights in databases, domain names, design rights, rights in information (including know how and trade secrets) and all other similar or equivalent rights subsisting now or in the future in any part of the world, in each case whether registered or unregistered and including all applications for, and renewals or extensions of, such rights for their full term.</td>
+</tr>
+<tr>
+<td>Licensed Materials</td>
+<td>the Light Framework as may be released and updated from time to time, and Generated Source Code</td></tr>
+<tr>
+<td>Licensee Materials</td>
+<td>any network infrastructure, literary works, computer programs information, materials or assets owned, controlled and/or lawfully accessible by you for a lawful purpose </td>
+</tr>
+<tr>
+<td>Light Framework</td>
+<td>the software library named the Bcome Framework, as described at the Website</td>
+</tr>
+<tr>
+<td>Minimum Equipment</td>
+<td>the hardware and software prerequisites to use the Licensed Material as described in the documentation at docs.bcome.com, updated from time to time</td>
+</tr>
+<tr>
+<td>Personnel</td>
+<td>your employees and third party contractors which perform services for you</td>
+</tr>
+<tr>
+<td>Term</td>
+<td>the duration of our permission to you to Use the Licensed Materials
+</td></tr>
+<tr>
+<td>Trade Marks</td><td>trade marks and trade names incorporated into the Licensed Materials whether or not used as a trade mark, including but not limited to “bcome” and “Webzakimbo”</td>
+</tr>
+<tr>
+<td>Use</td><td>to store, copy, install, configure, load and/or execute </td></tr>
+<tr>
+<td>User Application</td><td>one or more computer programs written for the purposes of interacting with Light Framework to invoke its functionality, whether written by you, licensed to you or owned by Webzakimbo</td></tr>
+<tr>
+<td>Website</td><td>bcome.com</td>
+</tr>
+</table>
 
-"You" means an individual or entity exercising rights under this License who has not previously violated the terms of this License with respect to the Work, or who has received express permission from the Licensor to exercise rights under this License despite a previous violation.
+### 1. Commencement
+1.1	This Agreement comes into effect on the date that you receive, download or use the Licensed Material, whichever is the earlier.
+1.2	Webzakimbo hereby licenses you to use the Licensed Materials upon the terms and conditions set out below.
 
-"Publicly Perform" means to perform public recitations of the Work and to communicate to the public those public recitations, by any means or process, including by wire or wireless means or public digital performances; to make available to the public Works in such a way that members of the public may access these Works from a place and at a place individually chosen by them; to perform the Work to the public by any means or process and the communication to the public of the performances of the Work, including by public digital performance; to broadcast and rebroadcast the Work by any means including signs, sounds or images.
+### 2. Grant of Licences
+2.1	Webzakimbo hereby grants you a non-exclusive, revocable and non-transferable and personal licence to Use the Licensed Materials in accordance with the express terms of this Licence and not further or otherwise.
 
-"Reproduce" means to make copies of the Work by any means including without limitation by sound or visual recordings and the right of fixation and reproducing fixations of the Work, including storage of a protected performance or phonogram in digital form or other electronic medium.
+2.2	You may Use the Light Framework without charge provided that:
+a.	you use a User Application to invoke the functionality of the Light Framework;
+b.	you do not modify the source code of the Frameworks;
+c.	you retain a copy of this Licence in the root directory of the directory containing the Light Framework, and if a copy does not exist in that location, cause a copy to be placed at that location;
+d.	Use the Licensed Materials in in accordance with laws and regulations in force in the geographic location which it is Used; and
+e.	otherwise comply with the terms of this Licence.
+2.3	You may:
+a.	execute functionality on Licensee Materials;
+b.	authorise Personnel to use Licensed Materials solely for the purpose of providing services to you, subject in any event to their continued compliance with all of terms of this Licence;
+c.	distribute the Light Framework to a third party and other software products, provided that the Light Framework remains an independent, standalone software application and not combined, integrated or incorporated into any other software application and provided that you ensure that a copy of this Licence appears in a file named “LICENCE” in the root directory of the package containing the Light Framework; and
+d.	modify the default functionality of the Frameworks at runtime provided that you do not alter the original source code of a Framework (including but not limited to code comments) and/or alter, remove, obfuscate or suppress any Trade Mark which appears as part of the functioning of the Light Framework.
 
-2. Fair Dealing Rights. Nothing in this License is intended to reduce, limit, or restrict any uses free from copyright or rights arising from limitations or exceptions that are provided for in connection with the copyright protection under copyright law or other applicable laws.
+2.4	You shall not:
+a.	Use a version of the Light Framework other than one made available from the Website from time to time.
+b.	modify, adapt, translate, develop or make derivative works of the Light Framework, and/or combine, link to, incorporate and/or monitor the Light Framework in any way other than with a User Application, except and only to the extent that it is expressly permitted by applicable law;
+c.	invoke the functionality of the Light Framework other than with a User Application;
+d.	extract or use any part of the Light Framework as part of another software application or device, other than for your own private, personal use for a purpose which is neither directly or indirectly commercial;
+e.	use the Light Framework or any part of it to create, support similar functionality or facilitate similar service to that provided by the Light Framework;
+f.	use the Framework other than with a User Application;
+g.	Use the Licensed Materials or any part of any of them except to the extent and for the purposes expressly permitted by this agreement; and
+h.	accept payment or raise any charge for supplying, using or making available the Light Framework.
+2.5	If you Use the Light Framework or any part of it contrary to the terms of this Licence, your licence shall automatically terminate and you will not be entitled to use it.
 
-3. License Grant. Subject to the terms and conditions of this License, Licensor hereby grants You a worldwide, royalty-free, non-exclusive, perpetual (for the duration of the applicable copyright) license to exercise the rights in the Work as stated below:
+### 3. Support
+3.1	Support is not available for the Licensed Materials. However, you may find answers to your queries at https://github.com/webzakimbo/bcome or htttps://docs.bcome.com
 
-to Reproduce the Work, to incorporate the Work into one or more Collections, and to Reproduce the Work as incorporated in the Collections;
-to create and Reproduce Adaptations provided that any such Adaptation, including any translation in any medium, takes reasonable steps to clearly label, demarcate or otherwise identify that changes were made to the original Work. For example, a translation could be marked "The original work was translated from English to Spanish," or a modification could indicate "The original work has been modified.";
-to Distribute and Publicly Perform the Work including as incorporated in Collections; and,
-to Distribute and Publicly Perform Adaptations.
-The above rights may be exercised in all media and formats whether now known or hereafter devised. The above rights include the right to make such modifications as are technically necessary to exercise the rights in other media and formats. Subject to Section 8(f), all rights not expressly granted by Licensor are hereby reserved, including but not limited to the rights set forth in Section 4(d).
+### 4. Warranties
+4.1	You shall:
+a.	ensure that the Licensed Materials are used with equipment and on systems for which it is designed, in a proper manner by competent and expert Personnel only or by persons under their supervision;
+b.	not use any advertising materials and promotional literature containing the Trade Marks or other references to the Licensed Materials, without the prior written consent of the Webzakimbo;
+c.	shall not make any written statement as to the quality or capabilities of Webzakimbo and/or the Licensed Materials without the prior written approval of the Webzakimbo;
+d.	use the Licensed Materials using hardware and software which satisfy the requirements of the Minimum Equipment;
+e.	at your own expense comply with all laws and regulations relating to your activities, as they may change from time to time, and with any conditions binding on you in any applicable licences, registrations, permits and approvals; and
+f.	observe all recommendations given to you by Webzakimbo in relation to the Use of the Licensed Materials;
+4.2	You shall not engage in or cooperate with any deceptive, misleading or unethical practices that are, or might be, detrimental to the Webzakimbo, the Licensed Materials or the public and you shall not publish, employ, or co-operate in the publication or employment of any false, misleading or deceptive advertising material or other representations or statements with regard to the Webzakimbo or the Licensed Materials.
+4.3	The Licensed Materials have not been developed for your particular needs. No warranty is given by Webzakimbo that the Licensed Materials will be suitable for any particular purpose.
 
-4. Restrictions. The license granted in Section 3 above is expressly made subject to and limited by the following restrictions:
+### 5. Intellectual Property Rights
+5.1	The Intellectual Property Rights vesting in the Licensed Materials are and shall remain the property of Webzakimbo. Intellectual Property Rights created by the Licensee by modifying the Light Framework shall be owned by Webzakimbo. The Licensee shall confirm the assignment of modifications to the Light Framework to Webzakimbo promptly upon request in writing.
+5.2	The Intellectual Property Rights vesting in User Applications made by you are and shall remain your property; you are entitled to licence and sell User Applications as you wish for reward or otherwise, provided that at all times you do not attempt or purpose to licence and/or sell the Light Framework.
+5.3	You shall not do or authorise any third party to do any act which would or might invalidate or be inconsistent with any Intellectual Property Rights of Webzakimbo and you shall not omit or authorise any third party to omit to do any act which, by its omission, would have that effect or character.
+5.4	You shall not remove or obscure in any way Webzakimbo copyright and trade mark notices incorporated into the Licensed Materials.
 
-You may Distribute or Publicly Perform the Work only under the terms of this License. You must include a copy of, or the Uniform Resource Identifier (URI) for, this License with every copy of the Work You Distribute or Publicly Perform. You may not offer or impose any terms on the Work that restrict the terms of this License or the ability of the recipient of the Work to exercise the rights granted to that recipient under the terms of the License. You may not sublicense the Work. You must keep intact all notices that refer to this License and to the disclaimer of warranties with every copy of the Work You Distribute or Publicly Perform. When You Distribute or Publicly Perform the Work, You may not impose any effective technological measures on the Work that restrict the ability of a recipient of the Work from You to exercise the rights granted to that recipient under the terms of the License. This Section 4(a) applies to the Work as incorporated in a Collection, but this does not require the Collection apart from the Work itself to be made subject to the terms of this License. If You create a Collection, upon notice from any Licensor You must, to the extent practicable, remove from the Collection any credit as required by Section 4(c), as requested. If You create an Adaptation, upon notice from any Licensor You must, to the extent practicable, remove from the Adaptation any credit as required by Section 4(c), as requested.
+### 6. Termination
+Webzakimbo may terminate this Licence at any time without notice by any means and without cause, whereupon you shall permanently cease to use the Licensed Materials and irretrievably delete all copies in your possession or control.
 
-You may not exercise any of the rights granted to You in Section 3 above in any manner that is primarily intended for or directed toward commercial advantage or private monetary compensation. The exchange of the Work for other copyrighted works by means of digital file-sharing or otherwise shall not be considered to be intended for or directed toward commercial advantage or private monetary compensation, provided there is no payment of any monetary compensation in connection with the exchange of copyrighted works.
-If You Distribute, or Publicly Perform the Work or any Adaptations or Collections, You must, unless a request has been made pursuant to Section 4(a), keep intact all copyright notices for the Work and provide, reasonable to the medium or means You are utilizing: (i) the name of the Original Author (or pseudonym, if applicable) if supplied, and/or if the Original Author and/or Licensor designate another party or parties (e.g., a sponsor institute, publishing entity, journal) for attribution ("Attribution Parties") in Licensor's copyright notice, terms of service or by other reasonable means, the name of such party or parties; (ii) the title of the Work if supplied; (iii) to the extent reasonably practicable, the URI, if any, that Licensor specifies to be associated with the Work, unless such URI does not refer to the copyright notice or licensing information for the Work; and, (iv) consistent with Section 3(b), in the case of an Adaptation, a credit identifying the use of the Work in the Adaptation (e.g., "French translation of the Work by Original Author," or "Screenplay based on original Work by Original Author"). The credit required by this Section 4(c) may be implemented in any reasonable manner; provided, however, that in the case of a Adaptation or Collection, at a minimum such credit will appear, if a credit for all contributing authors of the Adaptation or Collection appears, then as part of these credits and in a manner at least as prominent as the credits for the other contributing authors. For the avoidance of doubt, You may only use the credit required by this Section for the purpose of attribution in the manner set out above and, by exercising Your rights under this License, You may not implicitly or explicitly assert or imply any connection with, sponsorship or endorsement by the Original Author, Licensor and/or Attribution Parties, as appropriate, of You or Your use of the Work, without the separate, express prior written permission of the Original Author, Licensor and/or Attribution Parties.
-For the avoidance of doubt:
+### 7. Consequences of Termination
+7.1	Upon the expiry or termination of this Licence for whatever reason:
+a.	any rights, remedies, obligations or liabilities of the parties that have accrued up to the date of termination or expiry, including the right to claim damages and/or interim injunctive relief in respect of any breach of the agreement which existed at or before the date of termination or expiry shall not be affected or prejudiced;
+b.	 the continuation after termination of any provision expressly stated to survive or implicitly surviving termination shall not be affected or prejudiced; and
+c.	all rights and licences granted to you and your Personnel under this agreement shall terminate.
+7.2	The rights and remedies provided to you under this Licence are your sole remedies under this Licence and inclusive of any rights or remedies provided by law.
 
-Non-waivable Compulsory License Schemes. In those jurisdictions in which the right to collect royalties through any statutory or compulsory licensing scheme cannot be waived, the Licensor reserves the exclusive right to collect such royalties for any exercise by You of the rights granted under this License;
-Waivable Compulsory License Schemes. In those jurisdictions in which the right to collect royalties through any statutory or compulsory licensing scheme can be waived, the Licensor reserves the exclusive right to collect such royalties for any exercise by You of the rights granted under this License if Your exercise of such rights is for a purpose or use which is otherwise than noncommercial as permitted under Section 4(b) and otherwise waives the right to collect royalties through any statutory or compulsory licensing scheme; and,
-Voluntary License Schemes. The Licensor reserves the right to collect royalties, whether individually or, in the event that the Licensor is a member of a collecting society that administers voluntary licensing schemes, via that society, from any exercise by You of the rights granted under this License that is for a purpose or use which is otherwise than noncommercial as permitted under Section 4(c).
-Except as otherwise agreed in writing by the Licensor or as may be otherwise permitted by applicable law, if You Reproduce, Distribute or Publicly Perform the Work either by itself or as part of any Adaptations or Collections, You must not distort, mutilate, modify or take other derogatory action in relation to the Work which would be prejudicial to the Original Author's honor or reputation. Licensor agrees that in those jurisdictions (e.g. Japan), in which any exercise of the right granted in Section 3(b) of this License (the right to make Adaptations) would be deemed to be a distortion, mutilation, modification or other derogatory action prejudicial to the Original Author's honor and reputation, the Licensor will waive or not assert, as appropriate, this Section, to the fullest extent permitted by the applicable national law, to enable You to reasonably exercise Your right under Section 3(b) of this License (right to make Adaptations) but not otherwise.
-5. Representations, Warranties and Disclaimer
+### 8. Limitations of Liability
+8.1	The following provisions set out the entire financial liability of the parties including without limitation any liability for the acts or omissions of its employees, agents and sub-contractors in respect of:
+a.	any breach of this Licence howsoever arising;
+b.	any use made by the Licensee or its Personnel of the Licensed Materials or any part of them; and
+c.	any representation (whether innocent or negligent), statement or tortious act or omission (including without limitation negligence) arising under or in connection with this Licence.
+8.2	Nothing in this clause 8 shall limit either party's liability for death or personal injury resulting from negligence or for fraud, fraudulent misstatement or fraudulent misrepresentation under this Licence.
+8.3	Except as expressly provided in this Licence (a) the Licensed Materials are provided on an “as is” basis, (b) you assume responsibility for the use and results of use of the Licensed Materials and for the conclusions drawn from such use, and (c) all warranties, conditions and other terms implied by statute or common law are to the fullest extent permitted by law are excluded.
+8.4	Webzakimbo shall not be liable (in contract, tort (including negligence) or for breach of statutory duty or in any other way) for loss of profits, loss of business, depletion of goodwill or similar losses, loss of anticipated savings, loss of goods, loss of use, loss or corruption of data or information; any loss of goodwill or reputation; or any special, indirect, consequential loss, or pure economic loss, costs, damages, charges or expenses suffered or incurred by the other party arising out of or in connection with the use of the Licensed Materials, or any other matter arising under or connected with this Licence.
+8.5	Other than in relation to any liability under clause 8.2, the Licensor’s total aggregate liability in contract, tort (including negligence or breach of statutory duty howsoever arising), misrepresentation (whether innocent or negligent), restitution or otherwise, arising in connection with the performance or contemplated performance of this agreement shall in all circumstances be limited to £1.00.
+8.6	The provisions of this clause 8 shall continue to apply notwithstanding the termination or expiry of this Licence for any reason or cause.
+8.7	Webzakimbo shall not be responsible for the maintenance, accuracy or good running of any version of the Software.
+8.8	You shall indemnify Webzakimbo against all liabilities, claims, costs and expenses which Webzakimbo may be suffered arising from or connected to misuse, unlawful use of the Licensed Materials and/or use of third party Intellectual Property Rights.
+8.9	The express terms of this Licence are in lieu of all warranties, conditions, terms, undertakings and obligations implied by statute, common law, custom, trade usage, course of dealing or otherwise all of which are hereby excluded to the fullest extent permitted by law.
 
-UNLESS OTHERWISE MUTUALLY AGREED TO BY THE PARTIES IN WRITING, LICENSOR OFFERS THE WORK AS-IS AND MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE WORK, EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING, WITHOUT LIMITATION, WARRANTIES OF TITLE, MERCHANTIBILITY, FITNESS FOR A PARTICULAR PURPOSE, NONINFRINGEMENT, OR THE ABSENCE OF LATENT OR OTHER DEFECTS, ACCURACY, OR THE PRESENCE OF ABSENCE OF ERRORS, WHETHER OR NOT DISCOVERABLE. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES, SO SUCH EXCLUSION MAY NOT APPLY TO YOU.
+### 9. Export Control
+9.1	Neither party shall export, directly or indirectly, any technical data or information acquired from the other party under this Licence (or any products, including software, incorporating any such data) in breach of any applicable laws or regulations, including the Export Control Act and United States export laws and regulations, to any country for which the government or any agency thereof at the time of export requires an export licence or other governmental approval without first obtaining such licence or approval.
 
-6. Limitation on Liability. EXCEPT TO THE EXTENT REQUIRED BY APPLICABLE LAW, IN NO EVENT WILL LICENSOR BE LIABLE TO YOU ON ANY LEGAL THEORY FOR ANY SPECIAL, INCIDENTAL, CONSEQUENTIAL, PUNITIVE OR EXEMPLARY DAMAGES ARISING OUT OF THIS LICENSE OR THE USE OF THE WORK, EVEN IF LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+### 10. Entire agreement
+This Agreement supersedes all prior agreements, arrangements and undertakings between the parties and constitutes the entire agreement between the parties relating to its subject matter.  Each party acknowledges that in entering into this agreement it does not rely on, and shall have no remedies in respect of, any statement, representation, assurance or warranty (whether made innocently or negligently) that is not set out in this agreement. Each party agrees that it shall have no claim for innocent or negligent misrepresentation or negligent misstatement based on any statement in this agreement. No variation of this agreement shall be effective unless it is in writing and signed by the parties.
 
-7. Termination
+### 11. Waiver
+11.1	Unless a party expressly waives its rights in writing, no delay, neglect or forbearance by either party in enforcing against the other party any term or condition of this Licence shall either be or be deemed to be a waiver or in any way prejudice any right of that party under this Licence. No right, power or remedy in this Licence conferred upon or reserved for either party is exclusive of any other right, power or remedy available to that party.
 
-This License and the rights granted hereunder will terminate automatically upon any breach by You of the terms of this License. Individuals or entities who have received Adaptations or Collections from You under this License, however, will not have their licenses terminated provided such individuals or entities remain in full compliance with those licenses. Sections 1, 2, 5, 6, 7, and 8 will survive any termination of this License.
-Subject to the above terms and conditions, the license granted here is perpetual (for the duration of the applicable copyright in the Work). Notwithstanding the above, Licensor reserves the right to release the Work under different license terms or to stop distributing the Work at any time; provided, however that any such election will not serve to withdraw this License (or any other license that has been, or is required to be, granted under the terms of this License), and this License will continue in full force and effect unless terminated as stated above.
-8. Miscellaneous
+### 12. Agency
+12.1	Nothing in this Licence is intended to or shall be deemed to establish any partnership or joint venture between any of the parties, constitute any party the agent of another party, or authorise any party to make or enter into any commitments for or on behalf of any other party.
 
-Each time You Distribute or Publicly Perform the Work or a Collection, the Licensor offers to the recipient a license to the Work on the same terms and conditions as the license granted to You under this License.
-Each time You Distribute or Publicly Perform an Adaptation, Licensor offers to the recipient a license to the original Work on the same terms and conditions as the license granted to You under this License.
-If any provision of this License is invalid or unenforceable under applicable law, it shall not affect the validity or enforceability of the remainder of the terms of this License, and without further action by the parties to this agreement, such provision shall be reformed to the minimum extent necessary to make such provision valid and enforceable.
-No term or provision of this License shall be deemed waived and no breach consented to unless such waiver or consent shall be in writing and signed by the party to be charged with such waiver or consent.
-This License constitutes the entire agreement between the parties with respect to the Work licensed here. There are no understandings, agreements or representations with respect to the Work not specified here. Licensor shall not be bound by any additional provisions that may appear in any communication from You. This License may not be modified without the mutual written agreement of the Licensor and You.
-The rights granted under, and the subject matter referenced, in this License were drafted utilizing the terminology of the Berne Convention for the Protection of Literary and Artistic Works (as amended on September 28, 1979), the Rome Convention of 1961, the WIPO Copyright Treaty of 1996, the WIPO Performances and Phonograms Treaty of 1996 and the Universal Copyright Convention (as revised on July 24, 1971). These rights and subject matter take effect in the relevant jurisdiction in which the License terms are sought to be enforced according to the corresponding provisions of the implementation of those treaty provisions in the applicable national law. If the standard suite of rights granted under applicable copyright law includes additional rights not granted under this License, such additional rights are deemed to be included in the License; this License is not intended to restrict the license of any rights under applicable law.
+### 13. Notices
+13.1	All notices which are required to be given hereunder shall be in writing and may be sent to any known email address of the party. If an email address is not known for the party, notice may be delivered to the last known email address of the party and/or posted such other online presence as the recipient may have. Any such notice may also be delivered personally or by first class pre-paid letter and shall be deemed to have been served if by hand when delivered if by first class post 48 hours after posting and if by email or post when dispatched or posted.
+
+### 14. Updates
+14.1	Webzakimbo may update the terms of this time from time to time. Should you not approve of the terms of the then amended Licence, you must cease to use the Light Framework.
+
+### 15. Interpretation
+15.1	In this Licence:
+a.	reference to any statute or statutory provision includes a reference to that statute or statutory provision as from time to time amended extended or re-enacted;
+b.	words importing the singular include the plural, words importing any gender include every gender and words importing persons include bodies corporate and unincorporate; and (in each case) vice versa;
+c.	the headings to the Clauses are for ease of reference only and shall not affect the interpretation or construction of this Licence; and
+d.	a reference to a person includes a natural person, corporate or unincorporated body (whether or not having separate legal personality);
+e.	a reference to a you shall include any company, corporation or other body corporate, wherever and however incorporated or established.; and
+f.	a reference to writing or written includes email.
+
+### 16. Third parties
+No one other than a party to this Licence shall have any right to enforce this agreement.
+
+### 17. Choice of Law and Jurisdiction
+This Licence is governed by English law and you irrevocably submit to the exclusive jurisdiction of English Courts to decide any dispute or claim arising out of or in connection with this agreement or its subject matter or formation, including non-contractual claims.  Webzakimbo may issue proceedings in the Courts of any place where infringement of its rights takes place or the terms of this contract are breached by you.

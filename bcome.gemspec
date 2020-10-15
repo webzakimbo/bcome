@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
     'homepage_uri' => 'https://bcome.com',
     'source_code_uri' => 'https://github.com/webzakimbo/bcome'
   }
-  spec.license = 'WBZ'
+  spec.license = 'EULA'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
   spec.required_ruby_version = '>= 2.5.0'
