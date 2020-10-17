@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Webzakimbo']
   spec.email         = ['info@webzakimbo.com']
   spec.summary       = 'The DevOps Control Panel Framework'
-  spec.description   = "Generate custom management interfaces from simple configuration and Ruby code. On-premise, cloud, hybrid & multi-cloud. Amazon AWS (EC2) & Google Cloud (GCP) integration with more cloud providers coming. Fully extensible."
+  spec.description   = 'Generate custom management interfaces from simple configuration and Ruby code. On-premise, cloud, hybrid & multi-cloud. Amazon AWS (EC2) & Google Cloud (GCP) integration with more cloud providers coming. Fully extensible.'
   spec.homepage      = 'https://bcome.com'
   spec.metadata = {
     'documentation_uri' => 'https://docs.bcome.com',
@@ -41,13 +41,13 @@ Gem::Specification.new do |spec|
 
   Welcome to Bcome, the DevOps Control Panel Framework
 
-  2.0.0 introduces a wealth of new features, and some breaking changes.
+  2.0.0 introduces a wealth of new features (including GCP integration), and some breaking changes.
 
   Visit our new documentation site here: https://docs.bcome.com/en/2.0.0
 
   See implementation demos at our guides site: https://guides.bcome.com/en/2.0.0
 
-  For full release notes see: 
-  https://github.com/webzakimbo/bcome/releases/tag/2.0.0
+  For full release notes see: https://github.com/webzakimbo/bcome/releases/tag/2.0.0
+
 END
 end
