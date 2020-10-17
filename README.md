@@ -1,8 +1,8 @@
-## Bcome is The DevOps Console 
+## Welcome to Bcome, the DevOps Control Panel Framework
 
 [![Gem Version](https://badge.fury.io/rb/bcome.svg)](https://badge.fury.io/rb/bcome)
 
-Create your own DevOps Console on top of your infrastructure - wherever it may be - all driven from simple YAML configuration.
+Create your own interface on top of your infrastructure - wherever it may be - all driven from simple YAML configuration.
 
 - Real-time orchestration
 - On-premise, cloud, hybrid & multi-cloud
