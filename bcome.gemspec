@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
     'homepage_uri' => 'https://bcome.com',
     'source_code_uri' => 'https://github.com/webzakimbo/bcome'
   }
-  spec.license = 'EULA'
+  spec.license = 'Nonstandard'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
   spec.required_ruby_version = '>= 2.5.0'
@@ -37,5 +37,18 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'strings-ansi', '0.2.0'
   spec.add_dependency 'tty-cursor', '0.2.0'
-  spec.post_install_message = "\nWelcome to Bcome\n\nTo get started see https://docs.bcome.com/en/latest\n"
+  spec.post_install_message = <<-END
+
+  Welcome to \e[38;5;37mBcome\e[0m, the DevOps Control Panel Framework
+
+  2.0.0 introduces a wealth of new features, and some breaking changes.
+
+  Visit our new documentation site here: https://docs.bcome.com/en/2.0.0
+
+  See implementation demos at our guides site: https://guides.bcome.com/en/2.0.0
+
+  For full release notes see: 
+  https://github.com/webzakimbo/bcome/releases/tag/2.0.0
+
+END
 end
