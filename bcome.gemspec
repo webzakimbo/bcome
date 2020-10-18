@@ -11,10 +11,10 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Webzakimbo']
   spec.email         = ['info@webzakimbo.com']
   spec.summary       = 'The DevOps Control Panel Framework'
-  spec.description   = 'Generate custom management interfaces from simple configuration and Ruby code. On-premise, cloud, hybrid & multi-cloud. Amazon AWS (EC2) & Google Cloud (GCP) integration with more cloud providers coming. Fully extensible.'
+  spec.description   = 'Generate custom management interfaces from simple configuration and Ruby code. On-premise, cloud, hybrid & multi-cloud. Amazon AWS (EC2) & Google Cloud (GCP) integration with more cloud providers coming. Fully extensible. Free for commercial and non-commercial use.'
   spec.homepage      = 'https://bcome.com'
   spec.metadata = {
-    'documentation_uri' => 'https://docs.bcome.com',
+    'documentation_uri' => 'https://docs.bcome.com/en/2.0.0',
     'homepage_uri' => 'https://bcome.com',
     'source_code_uri' => 'https://github.com/webzakimbo/bcome'
   }
