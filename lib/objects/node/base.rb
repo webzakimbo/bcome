@@ -77,6 +77,10 @@ module Bcome::Node
       false
     end
 
+    def container_cluster?
+      false
+    end
+
     def enabled_menu_items
       %i[ls lsa workon enable disable enable! disable! run tree ping put put_str rsync cd meta registry interactive execute_script]
     end

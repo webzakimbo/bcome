@@ -12,6 +12,7 @@ module Bcome::Node
     LOCAL_OVERRIDE_CONFIG_NAME = 'me.yml'
 
     INVENTORY_KEY = 'inventory'
+    KUBE_COLLECTION_KEY = 'kube_collection'
     COLLECTION_KEY = 'collection'
     SUBSELECT_KEY = 'inventory-subselect'
     MERGE_KEY = 'inventory-merge'
@@ -84,7 +85,8 @@ module Bcome::Node
 
     def klass_for_view_type
       {
-        COLLECTION_KEY => ::Bcome::Node::Collection,
+        KUBE_COLLECTION_KEY => ::Bcome::Node::Collection::Kube,
+        COLLECTION_KEY => ::Bcome::Node::Collection::Base,
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
         SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,
         MERGE_KEY => ::Bcome::Node::Inventory::Merge,

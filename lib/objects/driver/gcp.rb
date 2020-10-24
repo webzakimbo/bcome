@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'google/apis/compute_beta'
+require 'google/cloud/container'
 
 module Bcome::Driver
   class Gcp < Bcome::Driver::Base
@@ -20,11 +21,16 @@ module Bcome::Driver
       "#{@params[:project]}/#{@params[:zone]}"
     end
 
-    def fetch_server_list(_filters)
+    def authorize
       unless authentication_scheme.authorized?
-        get_authenticated_gcp_service
+        authenticated_service = get_authenticated_gcp_service
         raise ::Bcome::Exception::Generic, 'GCP authentication process failed' unless authentication_scheme.authorized?
       end
+      return authenticated_service
+    end
+
+    def fetch_server_list(_filters)
+      authorize 
 
       wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
         begin

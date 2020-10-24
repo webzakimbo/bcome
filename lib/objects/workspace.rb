@@ -17,6 +17,7 @@ class ::Bcome::Workspace
 
     @context = params[:context]
     @context.load_nodes if @context.inventory? && !@context.nodes_loaded?
+    @context.init_container_cluster if @context.container_cluster? && !@context.container_cluster_initialized?
 
     main_context = IRB.conf[:MAIN_CONTEXT]
 
@@ -30,7 +31,7 @@ class ::Bcome::Workspace
   end
 
   def show_welcome
-    puts "\n\n"
+    print "\n"
     puts "Welcome to bcome v#{::Bcome::Version.release}".bc_yellow
     puts "\nType\s" + 'menu'.underline + "\sfor a command list, or\s" + 'registry'.underline + "\sfor your custom tasks."
     puts "\n\n"

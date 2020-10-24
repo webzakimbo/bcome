@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'diffy', '3.1.0'
   spec.add_dependency 'fog-aws', '~> 0.12.0'
   spec.add_dependency 'google-api-client', '0.29.1'
+  spec.add_dependency 'google-cloud-container', '1.1.1'
   spec.add_dependency 'launchy', '2.4.3'
   spec.add_dependency 'net-scp', '~> 1.2', '>= 1.2.1'
   spec.add_dependency 'net-ssh', '4.1.0'

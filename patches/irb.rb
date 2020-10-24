@@ -34,6 +34,8 @@ module IRB
       @CONF[:IRB_RC]&.call(irb.context)
       @CONF[:MAIN_CONTEXT] = irb.context
 
+      #irb.context.echo = false
+
       catch(:IRB_EXIT) do
         irb.eval_input
       end

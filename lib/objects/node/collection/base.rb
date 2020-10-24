@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Bcome::Node
-  class Collection < ::Bcome::Node::Base
+module Bcome::Node::Collection
+  class Base < ::Bcome::Node::Base
     def inventories
       inv = []
       @resources.active.each do |r|
