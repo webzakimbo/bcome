@@ -9,8 +9,8 @@ module Bcome::Driver
 
     def initialize(*params)
       super
-      validate_service_scopes
       validate_authentication_scheme
+      validate_service_scopes unless auth_scheme_key == :basic_oauth
     end
 
     def pretty_provider_name
@@ -79,7 +79,7 @@ module Bcome::Driver
       raise ::Bcome::Exception::MissingGcpAuthenticationScheme, "node #{@node.namespace}" if @params[:authentication_scheme].nil? || @params[:authentication_scheme].empty?
       raise ::Bcome::Exception::InvalidGcpAuthenticationScheme, "Invalid GCP authentication scheme '#{@params[:authentication_scheme]}' for node #{@node.namespace}" unless auth_scheme
     end
-
+   
     def invalid_auth_scheme?
       !auth_schemes.keys.include?(@params[:authentication_scheme].to_sym)
     end
@@ -90,9 +90,9 @@ module Bcome::Driver
 
     def auth_schemes
       {
-        oauth: ::Bcome::Driver::Gcp::Authentication::Oauth,
+        basic_oauth: ::Bcome::Driver::Gcp::Authentication::Oauth::Basic,
+        oauth: ::Bcome::Driver::Gcp::Authentication::Oauth::UserApplication,
         service_account: ::Bcome::Driver::Gcp::Authentication::ServiceAccount
-        # api_key: ::Bcome::Driver::Gcp::Authentication::ApiKey
       }
     end
 
@@ -105,42 +105,48 @@ module Bcome::Driver
       compute_service
     end
 
+    def auth_scheme_key
+      @params[:authentication_scheme].to_sym
+    end
+
     def authentication_scheme
       # Service scopes are specified directly from the network config
       # A minumum scope of https://www.googleapis.com/auth/compute.readonly is required in order to list resources.
 
-      auth_scheme_key = @params[:authentication_scheme].to_sym
       auth_scheme = auth_schemes[auth_scheme_key]
       raise ::Bcome::Exception::InvalidGcpAuthenticationScheme, "Invalid GCP authentication scheme '#{auth_scheme_key}' for node #{@node.namespace}" unless auth_scheme
 
       case auth_scheme_key
-      when :oauth
-
-        client_config = ::Bcome::Driver::Gcp::Authentication::OauthClientConfig.new(service_scopes, oauth_filename)
-
-        # Prevent second oauth flow during same session with same credentials, different inventory.
-        # If we already have an outh authentication scheme for the same scopes & oauth credentials, then we'll return that one
-
-        # If the scheme is set, return it
-        return @authentication_scheme if @authentication_scheme
-
-        # Look to see if we have an existing oauth scheme setup for the same scopes & credentials file
-        if @authentication_scheme = ::Bcome::Driver::Gcp::Authentication::OauthSessionStore.instance.in_memory_session_for(client_config)
-          @compute_service = @authentication_scheme.service
-
-          return @authentication_scheme
+        when :basic_oauth
+          setup_oauth_authenticator
+        when :oauth
+          setup_oauth_authenticator
+        when :service_account
+          @authentication_scheme ||= auth_scheme.new(compute_service, service_scopes, @node, @params[:service_account_credentials], self)
+        else
+          raise ::Bcome::Exception::InvalidGcpAuthenticationScheme, "Invalid GCP authentication scheme '#{auth_scheme_key}' for node #{@node.namespace}"
         end
+    end
 
-        # Otherwise, we'll create a new outh scheme and register it with the session store
-        @authentication_scheme = auth_scheme.new(self, compute_service, client_config, @node)
-        ::Bcome::Driver::Gcp::Authentication::OauthSessionStore.instance << @authentication_scheme
-        @authentication_scheme
+    def setup_oauth_authenticator
+      client_config = ::Bcome::Driver::Gcp::Authentication::OauthClientConfig.new(service_scopes, oauth_filename)
 
-      when :service_account
-        @authentication_scheme ||= auth_scheme.new(compute_service, service_scopes, @node, @params[:service_account_credentials], self)
-      else
-        raise ::Bcome::Exception::InvalidGcpAuthenticationScheme, "Invalid GCP authentication scheme '#{auth_scheme_key}' for node #{@node.namespace}"
+      # Prevent second oauth flow during same session with same credentials, different inventory.
+      # If we already have an outh authentication scheme for the same scopes & oauth credentials, then we'll return that one
+
+      # If the scheme is set, return it
+      return @authentication_scheme if @authentication_scheme
+
+      # Look to see if we have an existing oauth scheme setup for the same scopes & credentials file
+      if @authentication_scheme = ::Bcome::Driver::Gcp::Authentication::OauthSessionStore.instance.in_memory_session_for(client_config)
+        @compute_service = @authentication_scheme.service
+        return @authentication_scheme
       end
+
+      # Otherwise, we'll create a new outh scheme and register it with the session store
+      @authentication_scheme = auth_scheme.new(self, compute_service, client_config, @node)
+      ::Bcome::Driver::Gcp::Authentication::OauthSessionStore.instance << @authentication_scheme
+      @authentication_scheme
     end
 
     def oauth_filename

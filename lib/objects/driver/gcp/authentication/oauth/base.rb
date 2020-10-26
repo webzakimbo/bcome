@@ -4,9 +4,10 @@ require 'google/api_client/auth/storage'
 require 'google/api_client/auth/storages/file_store'
 require 'google/api_client/client_secrets'
 
-module Bcome::Driver::Gcp::Authentication
-  class Oauth < Base
-    include Utilities
+module Bcome::Driver::Gcp::Authentication::Oauth
+  class Base < Bcome::Driver::Gcp::Authentication::Base
+
+    include ::Bcome::Driver::Gcp::Authentication::Utilities
 
     credential_directory = '.gauth'
 
@@ -69,7 +70,7 @@ module Bcome::Driver::Gcp::Authentication
           flow = Google::APIClient::InstalledAppFlow.new(
             client_id: client_secrets.client_id,
             client_secret: client_secrets.client_secret,
-            scope: @scopes
+            scope: @scopes 
           )
  
           ## Override the redirected-to screen so that clearer instruction can be given          
