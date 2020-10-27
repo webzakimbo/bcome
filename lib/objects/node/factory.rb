@@ -72,6 +72,10 @@ module Bcome::Node
         node.load_nodes unless node.nodes_loaded?
       end
 
+      if node.is_a?(Bcome::Node::Collection::Kube)
+        node.load_nodes unless node.container_cluster_initialized?
+      end
+
       bucket[node.keyed_namespace] = node
 
       node

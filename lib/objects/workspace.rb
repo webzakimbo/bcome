@@ -16,8 +16,7 @@ class ::Bcome::Workspace
     init_irb unless console_set?
 
     @context = params[:context]
-    @context.load_nodes if @context.inventory? && !@context.nodes_loaded?
-    @context.init_container_cluster if @context.container_cluster? && !@context.container_cluster_initialized?
+    @context.load_nodes if (@context.inventory? || @context.container_cluster?) && !@context.nodes_loaded?
 
     main_context = IRB.conf[:MAIN_CONTEXT]
 

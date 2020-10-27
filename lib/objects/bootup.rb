@@ -40,8 +40,7 @@ module Bcome
       crumbs.each_with_index do |crumb, _index|
         # Some contexts' resources are loaded dynamically and do not come from the estate config. As we're traversing, we'll need to load
         # them if necessary
-        starting_context.load_nodes if starting_context.inventory? && !starting_context.nodes_loaded?
-        starting_context.init_container_cluster if starting_context.container_cluster? && !starting_context.container_cluster_initialized?
+        starting_context.load_nodes if (starting_context.inventory? || starting_context.container_cluster?) && !starting_context.nodes_loaded?
 
         # Attempt to load our next context resource
         next_context = starting_context.resources.active.first if crumb == 'first'
