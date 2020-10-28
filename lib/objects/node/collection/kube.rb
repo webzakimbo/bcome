@@ -2,6 +2,9 @@
 
 # note: gcloud auth only for the time being.
 
+# todo:  this is a dynamic node (is_dynamic), and so like an inventory, cannot have any namespaces defined below it.
+# Enshrine is_dynamic in code, and guard against putting anything below this namespace as we already for inventories
+
 module Bcome::Node::Collection
   class Kube < ::Bcome::Node::Collection::Base
 

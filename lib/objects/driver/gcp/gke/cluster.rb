@@ -2,6 +2,8 @@ module ::Bcome::Driver::Gcp::Gke
   class Cluster
 
     # Note: Oauth only for now
+    # Need to guard against this
+    # Quite possible, we can ENFORCE oauth? And force them down the generic google oauth path with the not so secret client?
  
     def initialize(node)
       raise "Invalid collection class for #{self.class}" unless node.is_a?(::Bcome::Node::Collection::Kube)
