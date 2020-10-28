@@ -58,6 +58,10 @@ module Bcome::Node::Collection
     end
 
     def set_namespaces
+      # We delegate everything to kubectl. We're a wrapper, rather than re-implementing what is a massive wheel.
+      ::Bcome::EnsureBinary.do(GCLOUD_BINARY)
+
+
       title = 'Loading' + "\sCACHE".bc_orange.bold + "\s" + namespace.to_s.underline
         wrap_indicator type: :basic, title: title, completed_title: '' do
      
@@ -65,6 +69,12 @@ module Bcome::Node::Collection
           # HERE: Lookup call to Kubectl.
 	  # TODO:  Class to execute kubectl command and retrieve json
           # We only deal in Json
+
+          # We're store the whole JSON result and mark this as "nodes_loaded" or something
+          # then, a reload will re-load and re-create the structure (from this point onwwards - can do the same 
+          # for pods and containers.
+          # WE'LL ABSTRACT THIS INTO A MODULE so same functionality can be pasted into Pods & Container
+          # ALWAYS store whole JSON. Make it accessible and then can be used to enrich the data we then show.
 
           [ { identifier: "foo", description: "A foo" } ].each do |namespace_data|
             resources << ::Bcome::Node::K8Cluster::Namespace.new(views: namespace_data, parent: self)
@@ -74,6 +84,31 @@ module Bcome::Node::Collection
     end
 
     def get_cluster_credentials
+      # Todo: we expect a gcloud auth login to have occured...
+   
+      ## Perform an Oauth and get a token 
+      network_driver.authorize
+
+      # get the cluster data using the call poced in call.sh
+  
+      # then
+      # read this: https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/
+      # aim to construct one cluster config per cluster collection namespace
+      # we can prepend the call to kubectl with the path to this config.
+      # Failing that, we'll use one file
+
+      # GOAL: We wrap kubectl, but we do not need to use gcloud (and so need a separate login via gcloud auth login)
+      # The data from call.sh gives us a wealth of metadata that we can use to enrich the collection namespace itself.
+
+      ::Bcome::EnsureBinary.do(KUBECTL_BINARY)
+
+
+
+      ## PASS access token to gcloud?? That way. OAUTH is VIA THE APP
+
+
+    
+
       # this is effectively 'pull down the Kubectl credentials from GCP'.
       wrap_indicator type: :basic, title: "authorising\s".informational + cluster_id.bc_orange, completed_title: 'done' do
         begin

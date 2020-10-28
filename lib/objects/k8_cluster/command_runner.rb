@@ -11,10 +11,6 @@ module Bcome::K8Cluster
     end
  
     def initialize(command_suffix)
-      # Ensure that we have kubectl in PATH before proceeding
-      # TODO - MOVE THIS to the kube collection initializer
-      ::Bcome::EnsureBinary.do(KC_BIN)
-
       @command_suffix = command_suffix
     end
 

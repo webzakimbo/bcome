@@ -3,7 +3,7 @@ module Bcome
 
     class << self
       def do(bin_name)
-        new(bin_name).do
+        new(bin_name)
       end
     end
 
@@ -13,7 +13,7 @@ module Bcome
 
     def do
       unless run_which.process_status.exitstatus == 0
-        raise ::Bcome::Exception::Generic, "Could not find '#{@bin_name}' in PATH. Please ensure that it is installed and in PATH"
+        raise ::Bcome::Exception::Generic, "Could not find '#{@bin_name}' in PATH."
       end
     end
 
