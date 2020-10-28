@@ -63,6 +63,9 @@ module Bcome::Node::Collection
      
 
           # HERE: Lookup call to Kubectl.
+	  # TODO:  Class to execute kubectl command and retrieve json
+          # We only deal in Json
+
           [ { identifier: "foo", description: "A foo" } ].each do |namespace_data|
             resources << ::Bcome::Node::K8Cluster::Namespace.new(views: namespace_data, parent: self)
           end
