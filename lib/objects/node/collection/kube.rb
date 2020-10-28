@@ -87,7 +87,11 @@ module Bcome::Node::Collection
       # Todo: we expect a gcloud auth login to have occured...
    
       ## Perform an Oauth and get a token 
+
       network_driver.authorize
+
+
+
 
       # get the cluster data using the call poced in call.sh
   
