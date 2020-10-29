@@ -61,34 +61,29 @@ module Bcome::Node::Collection
       get_cluster_credentials unless container_cluster_initialized?
 
       @nodes_loaded = true
-      set_namespaces
+      set_child_nodes
       print "\n"
     end
 
-    def set_namespaces
-      # We delegate everything to kubectl. We're a wrapper, rather than re-implementing what is a massive wheel.
-      #::Bcome::EnsureBinary.do(GCLOUD_BINARY)
+    def run_kc(command)
+      @k8_cluster.run_kubectl(command)
+    end 
 
-
-        title = 'Loading' + "\sGke".bc_orange.bold + "\s" + namespace.to_s.underline
-        wrap_indicator type: :basic, title: title, completed_title: '' do
-     
-
-          # HERE: Lookup call to Kubectl.
-	  # TODO:  Class to execute kubectl command and retrieve json
-          # We only deal in Json
-
-          # We're store the whole JSON result and mark this as "nodes_loaded" or something
-          # then, a reload will re-load and re-create the structure (from this point onwwards - can do the same 
-          # for pods and containers.
-          # WE'LL ABSTRACT THIS INTO A MODULE so same functionality can be pasted into Pods & Container
-          # ALWAYS store whole JSON. Make it accessible and then can be used to enrich the data we then show.
-
-          [ { identifier: "foo", description: "A foo" } ].each do |namespace_data|
-            resources << ::Bcome::Node::K8Cluster::Namespace.new(views: namespace_data, parent: self)
-          end
-          signal_success
-       end
+    def set_child_nodes
+      title = 'Loading' + "\sGke".bc_orange.bold + "\s" + namespace.to_s.underline
+      wrap_indicator type: :basic, title: title, completed_title: '' do
+      
+        raw_nodes = run_kc("get namespaces")
+        raw_nodes["items"].each do |item_data|
+          config = { 
+            identifier: item_data["metadata"]["name"],
+            description: "namespace",
+            raw_data: item_data
+          }
+          resources << ::Bcome::Node::K8Cluster::Namespace.new(views: config, parent: self)
+        end
+        signal_success
+      end
     end
 
     def k8_cluster

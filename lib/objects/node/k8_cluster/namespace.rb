@@ -3,10 +3,9 @@
 module Bcome::Node::K8Cluster
   class Namespace < Bcome::Node::Base
 
+    # TODO - make raw config accessible
+
     def initialize(params)
-      @view_config = params[:views]
-      @identifier = @view_config[:identifier].dup
-      @description = @view_config[:description]
       super
     end
 
