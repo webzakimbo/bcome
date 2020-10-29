@@ -25,6 +25,10 @@ module Bcome::Node::Collection
       "#{cluster_name}/#{project}:#{region}"
     end
 
+    def container_cluster_initialized?
+      @container_cluster_initialized
+    end  
+
     def cluster_name
       cluster[:name]
     end
@@ -45,7 +49,7 @@ module Bcome::Node::Collection
       "#{KUBECTL_BINARY}"
     end
 
-    def container_cluster_initialized?
+    def ontainer_cluster_initialized?
       @container_cluster_initialized
     end 
 
@@ -63,10 +67,10 @@ module Bcome::Node::Collection
 
     def set_namespaces
       # We delegate everything to kubectl. We're a wrapper, rather than re-implementing what is a massive wheel.
-      ::Bcome::EnsureBinary.do(GCLOUD_BINARY)
+      #::Bcome::EnsureBinary.do(GCLOUD_BINARY)
 
 
-      title = 'Loading' + "\sCACHE".bc_orange.bold + "\s" + namespace.to_s.underline
+        title = 'Loading' + "\sGke".bc_orange.bold + "\s" + namespace.to_s.underline
         wrap_indicator type: :basic, title: title, completed_title: '' do
      
 
@@ -87,47 +91,34 @@ module Bcome::Node::Collection
        end
     end
 
+    def k8_cluster
+      @k8_cluster 
+    end
+
     def get_cluster_credentials
+      # Validate the user's configuration is complete
+      validate!
 
+      # Ensure that we have kubectl installed and in PATH.
+      # We'll do this early enough
+      ::Bcome::EnsureBinary.do(KUBECTL_BINARY)
 
-
-
-
-      # then
-      # read this: https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/
-      # aim to construct one cluster config per cluster collection namespace
-      # we can prepend the call to kubectl with the path to this config.
-      # Failing that, we'll use one file
-
-      # GOAL: We wrap kubectl, but we do not need to use gcloud (and so need a separate login via gcloud auth login)
-      # The data from call.sh gives us a wealth of metadata that we can use to enrich the collection namespace itself.
-
-      #::Bcome::EnsureBinary.do(KUBECTL_BINARY)
-      ## PASS access token to gcloud?? That way. OAUTH is VIA THE APP
-      # this is effectively 'pull down the Kubectl credentials from GCP'.
-      #wrap_indicator type: :basic, title: "authorising\s".informational + cluster_id.bc_orange, completed_title: 'done' do
-      #  begin
-      #    validate!
-      #    command_result = ::Bcome::Command::Local.run(authorize_namespace_command)
-      #    raise command_result.stderr unless command_result.is_success?
-      #    @container_cluster_initialized = true
-      #   rescue Exception => e
-      #    raise ::Bcome::Exception::Generic, "Could not retrieve credentials for #{cluster_id}. Failed with: #{e.message}"
-      #  end
-      #end
+      wrap_indicator type: :basic, title: "authorising\s".informational + cluster_id.bc_orange, completed_title: 'done' do
+        begin
+          @k8_cluster = ::Bcome::Driver::Gcp::Gke::Cluster.new(self)
+        rescue StandardError => e
+          raise ::Bcome::Exception::Generic, "Could not retrieve credentials for #{cluster_id}. Failed with: #{e.message}"
+        end  
+      end
     end  
 
     def resources
       @resources ||= ::Bcome::Node::Resources::Base.new(self)
     end
 
-    def authorize_namespace_command
-      "#{GCLOUD_BINARY} container clusters get-credentials #{cluster_name} --region #{region} --project #{project}"
-    end
-
     def validate!
       [:cluster_name, :region, :project].each do |required_attribute|
-        raise "Missing cluster configuration attribute '#{require_attribute}'" unless send(required_attribute)
+        raise ::Bcome::Exception::Generic, "Missing cluster configuration attribute '#{require_attribute}'" unless send(required_attribute)
       end
     end
 
