@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-# note: gcloud auth only for the time being.
+# note: gcloud auth only for the time being (We need to guard against NON-OAUTH for now).
 
-# todo:  this is a dynamic node (is_dynamic), and so like an inventory, cannot have any namespaces defined below it.
+# todo: this is a dynamic node (is_dynamic), and so like an inventory, cannot have any namespaces defined below it.
+# todo: clean up error message when auth fails (bearer auth)
+# todo: situation will arise where token is invalid. Need to re-auth
 # Enshrine is_dynamic in code, and guard against putting anything below this namespace as we already for inventories
 
 module Bcome::Node::Collection
   class Kube < ::Bcome::Node::Collection::Base
 
-    # todo - ensure these are in PATH
     GCLOUD_BINARY = "gcloud".freeze
     KUBECTL_BINARY = "kubectl".freeze
  
@@ -87,17 +88,11 @@ module Bcome::Node::Collection
     end
 
     def get_cluster_credentials
-      # Todo: we expect a gcloud auth login to have occured...
-   
-      ## Perform an Oauth and get a token 
-
-      network_driver.authorize
 
 
 
 
-      # get the cluster data using the call poced in call.sh
-  
+
       # then
       # read this: https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/
       # aim to construct one cluster config per cluster collection namespace
@@ -107,26 +102,19 @@ module Bcome::Node::Collection
       # GOAL: We wrap kubectl, but we do not need to use gcloud (and so need a separate login via gcloud auth login)
       # The data from call.sh gives us a wealth of metadata that we can use to enrich the collection namespace itself.
 
-      ::Bcome::EnsureBinary.do(KUBECTL_BINARY)
-
-
-
+      #::Bcome::EnsureBinary.do(KUBECTL_BINARY)
       ## PASS access token to gcloud?? That way. OAUTH is VIA THE APP
-
-
-    
-
       # this is effectively 'pull down the Kubectl credentials from GCP'.
-      wrap_indicator type: :basic, title: "authorising\s".informational + cluster_id.bc_orange, completed_title: 'done' do
-        begin
-          validate!
-          command_result = ::Bcome::Command::Local.run(authorize_namespace_command)
-          raise command_result.stderr unless command_result.is_success?
-          @container_cluster_initialized = true
-         rescue Exception => e
-          raise ::Bcome::Exception::Generic, "Could not retrieve credentials for #{cluster_id}. Failed with: #{e.message}"
-        end
-      end
+      #wrap_indicator type: :basic, title: "authorising\s".informational + cluster_id.bc_orange, completed_title: 'done' do
+      #  begin
+      #    validate!
+      #    command_result = ::Bcome::Command::Local.run(authorize_namespace_command)
+      #    raise command_result.stderr unless command_result.is_success?
+      #    @container_cluster_initialized = true
+      #   rescue Exception => e
+      #    raise ::Bcome::Exception::Generic, "Could not retrieve credentials for #{cluster_id}. Failed with: #{e.message}"
+      #  end
+      #end
     end  
 
     def resources
