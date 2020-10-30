@@ -38,6 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'strings-ansi', '0.2.0'
   spec.add_dependency 'tty-cursor', '0.2.0'
+  spec.add_dependency 'awesome_print', '2.0.0.pre2'
   spec.post_install_message = <<-END
 
   Welcome to Bcome, the DevOps Control Panel Framework

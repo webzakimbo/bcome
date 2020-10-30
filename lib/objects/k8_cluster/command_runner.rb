@@ -7,15 +7,23 @@ module Bcome::K8Cluster
     class << self
       def exec(cluster, command_suffix, output, is_config)
         runner = new(cluster, command_suffix, output, is_config)
-        return runner.data
+
+        if is_config == :command_call
+          runner.run_local
+        else
+          return runner.data
+        end
       end
     end
  
-    def initialize(cluster, command_suffix, output, is_config)
+    def initialize(cluster, command_suffix, output, call_type)
       @command_suffix = command_suffix
       @output = output
       @cluster = cluster
-      @is_config = is_config == :config_call
+
+      @is_config = call_type == :config_call
+      @is_command = call_type == :command_call 
+      @cluster_call = @is_command || call_type == :cluster_call   
     end
 
     def as_json?
@@ -28,14 +36,19 @@ module Bcome::K8Cluster
 
     def add_access_token_if_necessary
       # If we're not making a config call (a call to configure kubectl
-      @is_config ? "\s" : "\s--token=#{access_token}\s"
+      !@cluster_call ? "\s" : "\s--token=#{access_token}\s"
     end
 
     def target_cluster_if_necessary
       # If we're not making a config call (a call to configure kubectl), we'll explicitly set the 
       # cluster name. We'll not set contexts as we're going to want to be able to play with
       # all our clusters at the same
-      @is_config ? "\s" : "\s--cluster=#{@cluster.name}\s" 
+      !@cluster_call ? "\s" : "\s--cluster=#{@cluster.name}\s" 
+    end
+
+    def run_local
+      system(full_command)
+      puts ''
     end
 
     def data
@@ -67,7 +80,7 @@ module Bcome::K8Cluster
     end
   
     def result 
-      #puts "#{full_command}\n"
+      puts "#{full_command}\n"
       @result ||= ::Bcome::Command::Local.run(full_command)
     end
 

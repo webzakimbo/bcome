@@ -10,10 +10,8 @@
 module Bcome::Node::Collection
   class Kube < ::Bcome::Node::Collection::Base
 
-    GCLOUD_BINARY = "gcloud".freeze
-    KUBECTL_BINARY = "kubectl".freeze
- 
     include ::Bcome::LoadingBar::Handler
+    include ::Bcome::Node::KubeHelper
 
     def initialize(*params)
       super
@@ -45,10 +43,6 @@ module Bcome::Node::Collection
       true
     end
 
-    def kubectl_command_prefix
-      "#{KUBECTL_BINARY}"
-    end
-
     def ontainer_cluster_initialized?
       @container_cluster_initialized
     end 
@@ -60,30 +54,33 @@ module Bcome::Node::Collection
     def load_nodes
       get_cluster_credentials unless container_cluster_initialized?
 
-      @nodes_loaded = true
-      set_child_nodes
-      print "\n"
+      title = 'Loading' + "\sGke cluster".bc_orange.bold + "\s" + namespace.to_s.underline
+      wrap_indicator type: :basic, title: title, completed_title: '' do
+        @nodes_loaded = true
+        set_child_nodes
+        print "\n"
+        signal_success
+      end
     end
+  
+    def raw_config_data
+      run_kc("get config")
+    end 
 
     def run_kc(command)
       @k8_cluster.run_kubectl(command)
     end 
 
-    def set_child_nodes
-      title = 'Loading' + "\sGke".bc_orange.bold + "\s" + namespace.to_s.underline
-      wrap_indicator type: :basic, title: title, completed_title: '' do
-      
-        raw_nodes = run_kc("get namespaces")
-        raw_nodes["items"].each do |item_data|
-          config = { 
-            identifier: item_data["metadata"]["name"],
-            description: "namespace",
-            raw_data: item_data
-          }
-          resources << ::Bcome::Node::K8Cluster::Namespace.new(views: config, parent: self)
-        end
-        signal_success
-      end
+    def get_children_command
+      "get namespaces"
+    end
+
+    def gk3_child_node_description
+      "namespace"
+    end 
+
+    def gke_child_node_class
+      ::Bcome::Node::K8Cluster::Namespace
     end
 
     def k8_cluster
@@ -96,7 +93,7 @@ module Bcome::Node::Collection
 
       # Ensure that we have kubectl installed and in PATH.
       # We'll do this early enough
-      ::Bcome::EnsureBinary.do(KUBECTL_BINARY)
+      ::Bcome::EnsureBinary.do(::Bcome::K8Cluster::CommandRunner::KUBECTL_BINARY)
 
       wrap_indicator type: :basic, title: "authorising\s".informational + cluster_id.bc_orange, completed_title: 'done' do
         begin

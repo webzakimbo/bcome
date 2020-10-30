@@ -19,6 +19,10 @@ module ::Bcome::Driver::Gcp::Gke
       @config ||= get_config
     end
 
+    def run_kubectl_cmd(command)
+      kubectl_exec(command, :no_json, :command_call)
+    end
+
     def run_kubectl_config(command)
       kubectl_exec(command, :no_json, :config_call)
     end
@@ -27,8 +31,8 @@ module ::Bcome::Driver::Gcp::Gke
       kubectl_exec(command, :as_json, :cluster_call)
     end
 
-    def kubectl_exec(command_suffix, output, is_config)
-      result = ::Bcome::K8Cluster::CommandRunner.exec(self, command_suffix, output, is_config)
+    def kubectl_exec(command_suffix, output, call_type)
+      result = ::Bcome::K8Cluster::CommandRunner.exec(self, command_suffix, output, call_type)
       return result
     end
 
