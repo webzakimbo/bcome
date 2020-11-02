@@ -5,8 +5,7 @@ module Bcome::Node::K8Cluster
 
     include ::Bcome::Node::KubeHelper
 
-    def initialize(params)
-      super
+    def load
       set_containers
     end
 

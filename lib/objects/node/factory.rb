@@ -93,8 +93,7 @@ module Bcome::Node
         COLLECTION_KEY => ::Bcome::Node::Collection::Base,
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
         SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,
-        MERGE_KEY => ::Bcome::Node::Inventory::Merge,
-        KUBE_CLUSTER => ::Bcome::Node::Kube::Estate
+        MERGE_KEY => ::Bcome::Node::Inventory::Merge
       }
     end
 

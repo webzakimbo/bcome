@@ -4,9 +4,13 @@ module Bcome::Node::K8Cluster
   class Namespace < Bcome::Node::Base
 
     include ::Bcome::Node::KubeHelper
-
+    
     def initialize(params)
       super
+      @nodes_loaded = false
+    end
+
+    def load
       set_child_nodes
     end
 

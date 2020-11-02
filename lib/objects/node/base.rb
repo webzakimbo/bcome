@@ -81,6 +81,10 @@ module Bcome::Node
       false
     end
 
+    def should_load_nodes_when_traversing?
+      false 
+    end
+
     def enabled_menu_items
       %i[ls lsa workon enable disable enable! disable! run tree ping put put_str rsync cd meta registry interactive execute_script]
     end

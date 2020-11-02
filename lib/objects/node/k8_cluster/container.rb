@@ -5,6 +5,10 @@ module Bcome::Node::K8Cluster
 
     include ::Bcome::Node::KubeHelper
 
+    def machines
+      [self]
+    end
+  
     def type
       "container"
     end
@@ -18,13 +22,24 @@ module Bcome::Node::K8Cluster
       parent.k8_namespace
     end 
 
+    ## Get a shell onto the container
     def shell
-      exec("/bin/sh")
+      exec("/bin/bash")
     end
 
+    ## Execute an arbitrary command
+    def run(args)
+      command = "#{exec_preamble} sh -c '#{args}'"
+      run_kubectl_cmd(command)
+    end
+ 
     def exec(args)
-      command = "exec -it -n #{k8_namespace.hyphenated_identifier} #{parent.hyphenated_identifier} - container #{hyphenated_identifier} -- #{args}"
+      command = "#{exec_preamble} #{args}"
       run_kubectl_cmd(command)     
+    end
+
+    def exec_preamble
+      "exec -it -n #{k8_namespace.hyphenated_identifier} #{parent.hyphenated_identifier} - container #{hyphenated_identifier} --"
     end
 
     def run_kubectl_cmd(command)
