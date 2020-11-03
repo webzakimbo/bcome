@@ -6,7 +6,6 @@ module Bcome::Node::KubeHelper
     raw_nodes["items"].each do |item_data|
       config = {
         identifier: item_data["metadata"]["name"],
-        description: gk3_child_node_description,
         raw_data: item_data
       }
       resources << gke_child_node_class.new(views: config, parent: self)
@@ -15,8 +14,7 @@ module Bcome::Node::KubeHelper
 
   ## Shared utility methods
   def config
-    colour = "purpleish" ; 
-    ap(raw_config_data, indent: -3, color:  { hash: colour, symbol: colour, string: colour, keyword: colour, variable: colour, array: colour })
+    ap(raw_config_data)
   end
 
   def raw_config_data

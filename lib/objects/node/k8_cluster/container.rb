@@ -4,6 +4,7 @@ module Bcome::Node::K8Cluster
   class Container < Bcome::Node::Base
 
     include ::Bcome::Node::KubeHelper
+    include ::Bcome::Node::KubeListHelper
 
     def machines
       [self]
@@ -18,13 +19,17 @@ module Bcome::Node::K8Cluster
       parent.run_kc(command_in_context)
     end
 
+    def requires_description?
+      false
+    end
+
     def k8_namespace
       parent.k8_namespace
     end 
 
     ## Get a shell onto the container
     def shell
-      exec("/bin/bash")
+      exec("/bin/bash")  # TODO allow set path to shell, so that can specify "/bin/bash", "/bin/sh", "/bin/ash" etc
     end
 
     ## Execute an arbitrary command

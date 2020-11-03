@@ -4,6 +4,7 @@ module Bcome::Node::K8Cluster
   class Namespace < Bcome::Node::Base
 
     include ::Bcome::Node::KubeHelper
+    include ::Bcome::Node::KubeListHelper
     
     def initialize(params)
       super
@@ -14,9 +15,17 @@ module Bcome::Node::K8Cluster
       set_child_nodes
     end
 
+    def requires_description?
+      false
+    end
+
     def type
       "namespace"
     end
+
+    def ingresses
+      run_kc("get ingresses")
+    end  
 
     def run_kc(command)
       command_in_context = append_namespace_to(command)
@@ -29,10 +38,6 @@ module Bcome::Node::K8Cluster
 
     def get_children_command
       "get pods"
-    end
-
-    def gk3_child_node_description
-      "pod"
     end
 
     def gke_child_node_class

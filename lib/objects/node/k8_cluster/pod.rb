@@ -4,7 +4,8 @@ module Bcome::Node::K8Cluster
   class Pod < Bcome::Node::Base
 
     include ::Bcome::Node::KubeHelper
-
+    include ::Bcome::Node::KubeListHelper
+  
     def load
       set_containers
     end
@@ -14,11 +15,14 @@ module Bcome::Node::K8Cluster
       raw_nodes["spec"]["containers"].each do |item_data|
         config = {
           identifier: item_data["name"],
-          description: item_data["description"],
           raw_data: item_data
         }
         resources << gke_child_node_class.new(views: config, parent: self)
       end
+    end
+
+    def requires_description?
+      false
     end
 
     def type

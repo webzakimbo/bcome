@@ -21,7 +21,7 @@ module Bcome
             next if resource.hide?
 
             is_active = resources.is_active_resource?(resource)
-            puts resource.pretty_description(is_active)
+            puts resource.pretty_description(is_active) 
 
             puts "\n"
           end
@@ -90,7 +90,7 @@ module Bcome
 
         desc += "\t"
         desc += is_active ? key.to_s.resource_key : key.to_s.resource_key_inactive
-        desc += "\s" * (12 - key.length)
+        desc += "\s" * (13 - key.length)
         desc += is_active ? attribute_value.resource_value : attribute_value.resource_value_inactive
         desc += "\n"
         desc = desc unless is_active

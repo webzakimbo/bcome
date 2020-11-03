@@ -75,10 +75,6 @@ module Bcome::Node::Collection
       "get namespaces"
     end
 
-    def gk3_child_node_description
-      "namespace"
-    end 
-
     def gke_child_node_class
       ::Bcome::Node::K8Cluster::Namespace
     end
