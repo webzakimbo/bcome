@@ -11,9 +11,14 @@ module Bcome::Node::K8Cluster
       @nodes_loaded = false
     end
 
-    def load
+    def load_nodes
       set_child_nodes
+      @nodes_loaded =  true
     end
+
+    def nodes_loaded?
+      @nodes_loaded
+    end  
 
     def requires_description?
       false

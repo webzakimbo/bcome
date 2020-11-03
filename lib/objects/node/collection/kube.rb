@@ -43,7 +43,7 @@ module Bcome::Node::Collection
       true
     end
 
-    def ontainer_cluster_initialized?
+    def container_cluster_initialized?
       @container_cluster_initialized
     end 
 
@@ -54,13 +54,13 @@ module Bcome::Node::Collection
     def load_nodes
       get_cluster_credentials unless container_cluster_initialized?
 
-      title = 'Loading' + "\sGke cluster".bc_orange.bold + "\s" + namespace.to_s.underline
+      title = "Loading\s" + "GKE Cluster\s".bc_cyan + namespace.to_s.underline
       wrap_indicator type: :basic, title: title, completed_title: '' do
         @nodes_loaded = true
         set_child_nodes
-        print "\n"
         signal_success
       end
+      print "\n"
     end
   
     def raw_config_data
@@ -91,7 +91,7 @@ module Bcome::Node::Collection
       # We'll do this early enough
       ::Bcome::EnsureBinary.do(::Bcome::K8Cluster::CommandRunner::KUBECTL_BINARY)
 
-      wrap_indicator type: :basic, title: "authorising\s".informational + cluster_id.bc_orange, completed_title: 'done' do
+      wrap_indicator type: :basic, title: "Authorising\s" + "GCP\s".bc_cyan + cluster_id.underline, completed_title: 'done' do
         begin
           @k8_cluster = ::Bcome::Driver::Gcp::Gke::Cluster.new(self)
         rescue StandardError => e

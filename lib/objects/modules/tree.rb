@@ -57,9 +57,7 @@ module Bcome
       resources.sort_by(&:identifier).each do |resource|
         next if resource.hide?
 
-        if resource.inventory?
-          resource.load_nodes unless resource.nodes_loaded?
-        end
+        resource.load_nodes if resource.respond_to?(:load_nodes) && !resource.nodes_loaded?
 
         unless resource.is_a?(Bcome::Node::Inventory::Merge)
           next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
@@ -71,8 +69,6 @@ module Bcome
     end
 
     def namespace_tree_line
-      return "#{type.bc_green} #{identifier} (empty set)" if !server? && !resources.has_active_nodes?
-
       "#{type.bc_green} #{identifier}"
     end
 

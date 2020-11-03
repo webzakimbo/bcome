@@ -6,8 +6,13 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
   
-    def load
+    def load_nodes
       set_containers
+      @nodes_loaded =  true
+    end
+
+    def nodes_loaded?
+      @nodes_loaded
     end
 
     def set_containers
