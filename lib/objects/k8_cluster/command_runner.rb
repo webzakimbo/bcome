@@ -4,17 +4,7 @@ module Bcome::K8Cluster
     KUBECTL_BINARY = "kubectl".freeze
     BCOME_K8_CONFIG_FILE_PATH = ".kubectl/conf".freeze
 
-    class << self
-      def exec(cluster, command_suffix, output, is_config)
-        runner = new(cluster, command_suffix, output, is_config)
-
-        if is_config == :command_call
-          runner.run_local
-        else
-          return runner.data
-        end
-      end
-    end
+    attr_reader :local_command
  
     def initialize(cluster, command_suffix, output, call_type)
       @command_suffix = command_suffix
@@ -47,8 +37,7 @@ module Bcome::K8Cluster
     end
 
     def run_local
-      system(full_command)
-      puts ''
+      @local_command ||= ::Bcome::Command::Local.run(full_command)
     end
 
     def data
@@ -80,7 +69,7 @@ module Bcome::K8Cluster
     end
   
     def result 
-      puts "#{full_command}\n"
+      #puts "#{full_command}\n"
       @result ||= ::Bcome::Command::Local.run(full_command)
     end
 

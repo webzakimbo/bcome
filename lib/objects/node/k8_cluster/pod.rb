@@ -30,6 +30,12 @@ module Bcome::Node::K8Cluster
       false
     end
 
+    def run(command)
+      resources.active.pmap do |container|
+        container.run(command)
+      end      
+    end
+
     def type
       "pod"
     end

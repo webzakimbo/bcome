@@ -19,21 +19,29 @@ module ::Bcome::Driver::Gcp::Gke
       @config ||= get_config
     end
 
+    def get_kubectl_cmd(command)
+      command_runner = runner(command, :no_json, :command_call)
+      return command_runner.full_command
+    end
+
     def run_kubectl_cmd(command)
-      kubectl_exec(command, :no_json, :command_call)
+      command_runner = runner(command, :no_json, :command_call)
+      command_runner.run_local
+      return command_runner
     end
 
     def run_kubectl_config(command)
-      kubectl_exec(command, :no_json, :config_call)
+      command_runner = runner(command, :no_json, :config_call)
+      return command_runner.data
     end
  
     def run_kubectl(command)
-      kubectl_exec(command, :as_json, :cluster_call)
+      command_runner = runner(command, :as_json, :cluster_call)
+      return command_runner.data
     end
 
-    def kubectl_exec(command_suffix, output, call_type)
-      result = ::Bcome::K8Cluster::CommandRunner.exec(self, command_suffix, output, call_type)
-      return result
+    def runner(command_suffix, output, call_type)
+      ::Bcome::K8Cluster::CommandRunner.new(self, command_suffix, output, call_type)
     end
 
     def network_driver
