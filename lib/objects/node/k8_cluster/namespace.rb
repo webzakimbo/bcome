@@ -32,6 +32,13 @@ module Bcome::Node::K8Cluster
       run_kc("get ingresses")
     end  
 
+    # Run a command against every container in every active pod.
+    def run(command)
+      resources.active.pmap do |pod|
+        pod.run(command)
+      end
+    end
+
     def run_kc(command)
       command_in_context = append_namespace_to(command)
       parent.k8_cluster.run_kubectl(command_in_context)

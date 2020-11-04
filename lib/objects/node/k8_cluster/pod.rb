@@ -30,7 +30,10 @@ module Bcome::Node::K8Cluster
       false
     end
 
+    # Run a command against every container in the pod
     def run(command)
+      # todo: output which node we're running the command for
+
       resources.active.pmap do |container|
         container.run(command)
       end      
