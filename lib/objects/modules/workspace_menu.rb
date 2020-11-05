@@ -5,11 +5,15 @@ module Bcome
     def menu
       print "\n\n"
       puts 'COMMAND MENU'.bc_cyan + "\sfor #{self.class} #{namespace}".resource_value
-
+  
       grouped_menu_items = menu_items.group_by { |m| m[1][:group] }
+
       grouped_menu_items.each do |group_key, items|
         # If we're not in a console session, we filter out console only methods
         items = items.reject { |item| item[1][:console_only] } unless ::Bcome::System::Local.instance.in_console_session?
+
+        # reject disabled menu items that
+        items = items.reject { |item| !enabled_menu_items.include?(item[0]) }
 
         next if items.empty?
 

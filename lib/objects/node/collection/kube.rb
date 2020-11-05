@@ -12,6 +12,7 @@ module Bcome::Node::Collection
 
     include ::Bcome::LoadingBar::Handler
     include ::Bcome::Node::KubeHelper
+    include ::Bcome::Node::KubeGenericMenuItems
 
     def initialize(*params)
       super

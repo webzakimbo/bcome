@@ -27,4 +27,9 @@ module Bcome::Node::KubeHelper
     identifier.gsub("_", "-")
   end
 
+  ## Overrides
+  def non_k8_menu_items
+    %i[get put put_str rsync execute_script ping routes workon enable disable enable! disable!]
+  end
+
 end

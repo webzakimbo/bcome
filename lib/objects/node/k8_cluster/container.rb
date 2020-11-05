@@ -33,6 +33,27 @@ module Bcome::Node::K8Cluster
       parent.k8_namespace
     end 
 
+    def enabled_menu_items
+      (super + %i[shell config pseudo_tty]) - non_k8_menu_items
+    end
+
+    def menu_items
+      base_items = super.dup
+      base_items[:shell] = {
+        description: 'Enter a shell',
+        group: :ssh
+      }
+      base_items[:pseudo_tty] = {
+        description: 'Execute a command using an interactive session',
+        group: :ssh
+      }
+      base_items[:config] = {
+        description: 'Display the k8 configuration for this node',
+        group: :informational
+      }
+      base_items
+    end
+    
     ## Get a shell onto the container--
 
     ## todo: Default shell may be overriden, but should be a configuration option. 
