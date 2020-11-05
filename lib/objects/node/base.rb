@@ -77,6 +77,10 @@ module Bcome::Node
       false
     end
 
+    def container?
+     false
+    end  
+
     def container_cluster?
       false
     end

@@ -5,6 +5,7 @@ module Bcome::Node::K8Cluster
 
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
+    include ::Bcome::Node::KubeCommandHelper
   
     def load_nodes
       set_containers
@@ -13,6 +14,12 @@ module Bcome::Node::K8Cluster
 
     def nodes_loaded?
       @nodes_loaded
+    end
+
+    def machines(skip_for_hidden = true)
+      load_nodes unless nodes_loaded?
+      resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
+      return resources.collect(&:machines).flatten
     end
 
     def set_containers
@@ -28,15 +35,6 @@ module Bcome::Node::K8Cluster
 
     def requires_description?
       false
-    end
-
-    # Run a command against every container in the pod
-    def run(command)
-      # todo: output which node we're running the command for
-
-      resources.active.pmap do |container|
-        container.run(command)
-      end      
     end
 
     def type

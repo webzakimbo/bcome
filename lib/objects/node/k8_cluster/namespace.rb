@@ -5,10 +5,24 @@ module Bcome::Node::K8Cluster
 
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
+    include ::Bcome::Node::KubeCommandHelper
     
     def initialize(params)
       super
       @nodes_loaded = false
+    end
+
+    def machines(skip_for_hidden = true)
+      load_nodes unless nodes_loaded?
+  
+      resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
+      set = []
+      resources.each do |resource|
+        resource.load_nodes unless resource.nodes_loaded?
+        set << resource.machines(skip_for_hidden)
+      end
+
+      return set.flatten!
     end
 
     def load_nodes
@@ -31,13 +45,6 @@ module Bcome::Node::K8Cluster
     def ingresses
       run_kc("get ingresses")
     end  
-
-    # Run a command against every container in every active pod.
-    def run(command)
-      resources.active.pmap do |pod|
-        pod.run(command)
-      end
-    end
 
     def run_kc(command)
       command_in_context = append_namespace_to(command)

@@ -11,7 +11,11 @@ module Bcome::Node::K8Cluster
     def machines
       [self]
     end
-  
+
+    def container?
+      true
+    end   
+   
     def type
       "container"
     end
@@ -58,20 +62,19 @@ module Bcome::Node::K8Cluster
       "#{exec_preamble} sh -c '#{raw_command}'"
     end
 
-    ## Execute an arbitrary command
-    def run(args)
-      command = form_command_for_container(args)
-    
-      result = run_kubectl_cmd(command)
-      print "\n"
-      local_command = result.local_command
-      unless local_command.is_success?
-        print local_command.stderr
-        print "\n" 
-      end
-    
-      print local_command.stdout
-      return result
+    def run(*raw_commands)
+      raw_commands = raw_commands.is_a?(String) ? [raw_commands] : raw_commands
+      raise ::Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
+      runner = ::Bcome::K8Cluster::ContainerCommand.exec(self, raw_commands)
+      ## Commands may be run in parallel over many machines (servers and/or containers) at the same time.
+      ## We output the command output at the end to prevent interspersing different machines' output.
+      runner.print_output
+    end
+ 
+    def pseudo_tty(command)
+      get_pseudo_tty_command = form_command_for_container(command)
+      command = get_kubectl_cmd(get_pseudo_tty_command)
+      system(command)
     end
  
     def exec(args)
