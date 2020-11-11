@@ -8,13 +8,24 @@ module Bcome::Node::KubeHelper
         identifier: item_data["metadata"]["name"],
         raw_data: item_data
       }
-      resources << gke_child_node_class.new(views: config, parent: self)
+
+      child_node = gke_child_node_class.new(views: config, parent: self)
+      resources << gke_child_node_class.new(views: config, parent: self) 
+      ::Bcome::Node::Factory.instance.bucket[child_node.keyed_namespace] = child_node  
     end
   end
 
   ## Shared utility methods
   def config
     ap(raw_config_data)
+  end
+
+  def k8_metadata
+    @k8_metadata ||= raw_config_data["metadata"]
+  end
+
+  def k8_labels
+    @k8_labels ||= k8_metadata["labels"]
   end
 
   def raw_config_data
@@ -24,7 +35,7 @@ module Bcome::Node::KubeHelper
   def hyphenated_identifier
     # Kubernetes identifiers do not support underscores, but Bcome swaps all -'s to _'s in order to be able
     # to contantise identifier for traversing in the CLi.
-    identifier.gsub("_", "-")
+    @original_identifier.gsub("_", "-")
   end
 
   ## Overrides

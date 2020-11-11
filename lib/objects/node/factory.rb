@@ -12,11 +12,12 @@ module Bcome::Node
     LOCAL_OVERRIDE_CONFIG_NAME = 'me.yml'
 
     INVENTORY_KEY = 'inventory'
-    KUBE_COLLECTION_KEY = 'k8s_cluster'
+    KUBE_COLLECTION_KEY = 'k8s-cluster'
     COLLECTION_KEY = 'collection'
     SUBSELECT_KEY = 'inventory-subselect'
     MERGE_KEY = 'inventory-merge'
-    KUBE_CLUSTER = 'kube-cluster'
+
+    K8_SUBSELECT = 'kubernetes-subselect'
 
     BCOME_RC_FILENAME = '.bcomerc'
 
@@ -93,7 +94,8 @@ module Bcome::Node
         COLLECTION_KEY => ::Bcome::Node::Collection::Base,
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
         SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,
-        MERGE_KEY => ::Bcome::Node::Inventory::Merge
+        MERGE_KEY => ::Bcome::Node::Inventory::Merge,
+        K8_SUBSELECT => ::Bcome::Node::K8Cluster::Subselect
       }
     end
 
