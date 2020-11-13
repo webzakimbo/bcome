@@ -35,6 +35,13 @@ module Bcome::Node::K8Cluster
       @nodes_loaded
     end  
 
+    def log
+      resources.active.each do |resource|
+        puts "#{resource.keyed_namespace}".bc_cyan + " / log" 
+        resource.log
+      end  
+    end
+
     def requires_description?
       false
     end

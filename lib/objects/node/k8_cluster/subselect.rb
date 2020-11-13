@@ -4,6 +4,9 @@ module Bcome
   module Node
     module K8Cluster
       class Subselect < ::Bcome::Node::Base
+
+        include ::Bcome::Node::KubeCommandHelper
+
         def initialize(*params)
           super
           raise Bcome::Exception::MissingSubselectionKey, @views unless @views[:subselect_from]
@@ -42,6 +45,19 @@ module Bcome
           parent_namespace.hyphenated_identifier
         end
 
+        def machines(skip_for_hidden = true)
+          parent_namespace.load_nodes unless parent_namespace.nodes_loaded?
+          active_resources = skip_for_hidden ? resources.active : resources.active.reject(&:hide?)
+
+          set = []
+          active_resources.each do |resource|
+            resource.load_nodes unless resource.nodes_loaded?
+            set << resource.machines(skip_for_hidden)
+          end
+
+          return set.flatten!
+        end
+  
         def resources
           @resources ||= do_set_resources
         end
