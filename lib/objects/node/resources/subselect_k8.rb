@@ -13,7 +13,7 @@ module Bcome::Node::Resources
       parent_namespace.load_nodes unless parent_namespace.nodes_loaded?
       new_set = parent_namespace.resources.nodes
 
-      new_set = filter_by_label(new_set)
+      new_set = filter(new_set)
 
       @nodes = new_set
     end
@@ -44,19 +44,13 @@ module Bcome::Node::Resources
       end
     end
 
-    def filter_labels
-      @config[:labels]
+    def filters
+      @config[:filters]
     end
 
-    def filter_by_label(nodes)
-       
-      filtered_nodes = []
-
-      filter_labels.each do |key, values|
-        filtered_nodes = nodes.select {|node| node.k8_labels[key.to_s] && values.include?(node.k8_labels[key.to_s]) }
-      end
-  
-      filtered_nodes
+    def filter(nodes)
+      filtered_nodes = nodes.select{|node| node.matches_filters?(filters) }
+      return filtered_nodes
     end
 
     def parent_crumb

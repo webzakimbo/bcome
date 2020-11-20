@@ -1,5 +1,17 @@
 module Bcome::Node::KubeHelper
 
+  def matches_filter?(filter)
+    k8_path_filter = ::Bcome::Node::Resources::K8PathFilter.new(self, filter)
+    return k8_path_filter.match?
+  end
+
+  def matches_filters?(filters)
+    # get result of all matches
+    all_matches = filters.collect{|filter| matches_filter?(filter) }
+    # test we don't have any false results
+    !(all_matches.select{|result| !result }.size > 0)
+  end
+
   ## Abstracted loader for populating child nodes
   def set_child_nodes
     raw_nodes = run_kc(get_children_command)

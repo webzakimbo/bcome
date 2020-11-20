@@ -67,7 +67,7 @@ module Bcome
         end
 
         def do_set_resources
-          ::Bcome::Node::Resources::SubselectK8.new(origin_namespace: self, parent_namespace: parent_namespace, labels: labels)
+          ::Bcome::Node::Resources::SubselectK8.new(origin_namespace: self, parent_namespace: parent_namespace, filters: filters)
         end
 
         def run_kc(command)
@@ -79,7 +79,7 @@ module Bcome
         end
 
         def filters
-          @views[:sub_filter] || @views[:filters] || {}
+          @views[:filters] || []
         end
 
         def reload
