@@ -26,6 +26,10 @@ module Bcome::Node::K8Cluster
       return set.flatten!
     end
 
+    def update_nodes
+      resources.update_nodes(self)
+    end
+
     def load_nodes
       set_child_nodes
       @nodes_loaded =  true
