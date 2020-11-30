@@ -22,23 +22,23 @@ module Bcome
       else
         bootup
       end
-#    rescue Bcome::Exception::Base => e
-#      e.pretty_display
+    rescue Bcome::Exception::Base => e
+      e.pretty_display
     end
 
     def bootup
       spawn_into_console = true
       ::Bcome::Bootup.set_and_do({ breadcrumbs: @breadcrumbs, arguments: @arguments }, spawn_into_console)
       clean_up
-#    rescue ::Bcome::Exception::Base => e
-#      clean_up
-#      e.pretty_display
-#    rescue Excon::Error::Socket => e
-#      clean_up
-#      puts "\nNo network access - please check your connection and try again\n".error
-#    rescue Exception => e
-#      clean_up
-#      raise e
+    rescue ::Bcome::Exception::Base => e
+      clean_up
+      e.pretty_display
+    rescue Excon::Error::Socket => e
+      clean_up
+      puts "\nNo network access - please check your connection and try again\n".error
+    rescue Exception => e
+      clean_up
+      raise e
     end
 
     def clean_up
