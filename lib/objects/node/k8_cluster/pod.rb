@@ -38,7 +38,7 @@ module Bcome::Node::K8Cluster
     end
 
     def number_running
-      container_states.select{|cs| cs == RUNNING_STATE }.size
+      container_states.select{|cs| cs == RUNNING_STATE.upcase }.size
     end
 
     def running_status
@@ -56,7 +56,7 @@ module Bcome::Node::K8Cluster
       raw_states.each_with_index do |cs, index|
         top_level_status = cs.keys.first
         if top_level_status == RUNNING_STATE
-          states << "#{RUNNING_STATE}".upcase
+          states << RUNNING_STATE.upcase
         else
           states << "#{cs[top_level_status]["reason"]}".upcase
         end
