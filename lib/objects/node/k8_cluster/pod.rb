@@ -12,17 +12,25 @@ module Bcome::Node::K8Cluster
       raw_config_data["spec"]["containers"][0]["env"].select{|env| env["name"] == "POSTGRES_HOST" && env["value"] == "dev-ecosystem-postgres-event" }.any?
     end
   
-    def load_nodes
-      set_containers
-      @nodes_loaded =  true
+    def nodes_loaded?
+      true
     end
 
-    def nodes_loaded?
-      @nodes_loaded
+    def set_containers
+      raw_container_data = views[:raw_data]["spec"]["containers"]
+      raw_container_data.each do |container_data|
+        container_config = {
+          identifier: container_data["name"],
+          raw_data: container_data
+        }
+        container = gke_child_node_class.new(views: container_config, parent: self)
+        resources << container
+        ::Bcome::Node::Factory.instance.bucket[container.keyed_namespace] = container
+      end
+      return
     end
 
     def machines(skip_for_hidden = true)
-      load_nodes unless nodes_loaded?
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
       return resources.collect(&:machines).flatten
     end
@@ -39,17 +47,6 @@ module Bcome::Node::K8Cluster
 
     def update_parent(new_parent)
       @parent = new_parent
-    end
-
-    def set_containers
-      raw_nodes = run_kc(get_children_command)
-      raw_nodes["spec"]["containers"].each do |item_data|
-        config = {
-          identifier: item_data["name"],
-          raw_data: item_data
-        }
-        resources << gke_child_node_class.new(views: config, parent: self)
-      end
     end
 
     def requires_description?

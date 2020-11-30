@@ -12,21 +12,6 @@ module Bcome::Node::KubeHelper
     !(all_matches.select{|result| !result }.size > 0)
   end
 
-  ## Abstracted loader for populating child nodes
-  def set_child_nodes
-    raw_nodes = run_kc(get_children_command)
-    raw_nodes["items"].each do |item_data|
-      config = {
-        identifier: item_data["metadata"]["name"],
-        raw_data: item_data
-      }
-
-      child_node = gke_child_node_class.new(views: config, parent: self)
-      resources << gke_child_node_class.new(views: config, parent: self) 
-      ::Bcome::Node::Factory.instance.bucket[child_node.keyed_namespace] = child_node  
-    end
-  end
-
   ## Shared utility methods
   def config
     ap(raw_config_data)

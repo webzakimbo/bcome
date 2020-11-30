@@ -14,25 +14,33 @@ module Bcome::Node::K8Cluster
     end
 
     def machines(skip_for_hidden = true)
-      load_nodes unless nodes_loaded?
-  
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
       set = []
       resources.each do |resource|
-        resource.load_nodes unless resource.nodes_loaded?
         set << resource.machines(skip_for_hidden)
       end
 
       return set.flatten!
     end
 
-    def load_nodes
-      set_child_nodes
-      @nodes_loaded =  true
+    def set_pods_from_raw_data(raw_pods_data)
+      raw_pods_data.pmap do |pod_data|
+        pod_identifier = pod_data["metadata"]["name"]
+
+        namespace_config = {
+          identifier: pod_identifier,
+          raw_data: pod_data
+        }
+        pod = gke_child_node_class.new(views: namespace_config, parent: self)
+        resources << pod
+        pod.set_containers
+        ::Bcome::Node::Factory.instance.bucket[pod.keyed_namespace] = pod
+      end
+      return
     end
 
     def nodes_loaded?
-      @nodes_loaded
+      true 
     end  
 
     def log

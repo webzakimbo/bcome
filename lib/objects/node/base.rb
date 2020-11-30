@@ -43,6 +43,7 @@ module Bcome::Node
       @original_identifier = @identifier
 
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
+      return
     end
 
     attr_reader :parent
