@@ -20,6 +20,19 @@ module Bcome::Node::K8Cluster
       "container"
     end
 
+    def list_attributes
+      attribs = {
+      "k8/#{type}": :identifier,
+      "state": :state
+      }
+      attribs
+    end
+ 
+    def state
+      #binding.pry
+      #views[:raw_data]["status"]["phase"]
+    end
+
     def run_kc(command)
       command_in_context = "#{command}\s#{hyphenated_identifier}"
       parent.run_kc(command_in_context)

@@ -4,9 +4,10 @@ module Bcome::Node::K8Cluster
   class Pod < Bcome::Node::Base
 
     include ::Bcome::Node::KubeHelper
-    include ::Bcome::Node::KubeListHelper
     include ::Bcome::Node::KubeCommandHelper
     include ::Bcome::Node::KubeGenericMenuItems
+
+    RUNNING_STATE="running".freeze
 
     def is_event?
       raw_config_data["spec"]["containers"][0]["env"].select{|env| env["name"] == "POSTGRES_HOST" && env["value"] == "dev-ecosystem-postgres-event" }.any?
@@ -14,6 +15,50 @@ module Bcome::Node::K8Cluster
   
     def nodes_loaded?
       true
+    end
+
+    def description
+      identifier
+    end
+
+    def list_attributes
+      attribs = {
+      "k8/#{type}": :identifier,
+      "state": :state
+      }
+      attribs    
+    end
+
+    def state
+      "#{running_status}\s" + container_states.sort.uniq.join(" | ")
+    end
+   
+    def container_states
+      @container_states ||= get_container_states
+    end
+
+    def number_running
+      container_states.collect{|cs| cs == RUNNING_STATE }.size
+    end
+
+    def running_status
+      "[#{number_running}/#{resources.size}]"
+    end
+
+    def get_container_states
+      # containers are either running, waiting, or terminated
+      raw_states = views[:raw_data]["status"]["containerStatuses"].collect{|cs| cs["state"] }
+
+      states = []
+      raw_states.each_with_index do |cs, index|
+        top_level_status = cs.keys.first
+        if top_level_status == RUNNING_STATE
+          states << "#{RUNNING_STATE}".upcase
+        else
+          states << "#{cs[top_level_status]["reason"]}".upcase
+        end
+      end
+      states
     end
 
     def set_containers
