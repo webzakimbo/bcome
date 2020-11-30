@@ -6,6 +6,7 @@ module Bcome::Node::Resources
     def initialize(config)
       @config = config
       super
+      @new_set = []
       run_subselect
     end
 
@@ -19,18 +20,41 @@ module Bcome::Node::Resources
     end
 
     def update_nodes(k8_subselect_node)
-      new_set = []
-
       @nodes.collect do |node|
         new_node = node.dup_with_new_parent(k8_subselect_node)
         set_overrides(k8_subselect_node, new_node)
 
+        if existing_node = for_identifier(new_node.identifier)
+          duplicate_nodes[new_node.identifier] = duplicate_nodes[new_node.identifier] ? (duplicate_nodes[new_node.identifier] + 1) : 2
+          count = duplicate_nodes[new_node.identifier]
+          new_node.identifier = "#{new_node.identifier}_#{count}"
+        end
+
         # Register the new node with the registry
         ::Bcome::Registry::Loader.instance.set_command_group_for_node(new_node)
 
-        new_set << new_node
+        @new_set << new_node
       end
-      @nodes = new_set
+
+      rename_initial_duplicate
+
+      @nodes = @new_set
+    end
+
+    def for_identifier(identifier)
+      resource = @new_set.select { |node| node.identifier == identifier }.last
+      resource
+    end
+
+    def rename_initial_duplicate
+      duplicate_nodes.each do |node_identifier, _count|
+        node = for_identifier(node_identifier)
+        node.identifier = "#{node.identifier}_1"
+      end
+    end
+
+    def duplicate_nodes
+      @duplicate_nodes ||= {}
     end
 
     def set_overrides(k8_subselect_node, node)

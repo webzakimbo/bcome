@@ -34,7 +34,7 @@ module Bcome::Node::K8Cluster
     end 
 
     def enabled_menu_items
-      (super + %i[shell config pseudo_tty]) - non_k8_menu_items
+      (super + %i[logs shell config pseudo_tty]) - non_k8_menu_items
     end
 
     def menu_items
@@ -51,9 +51,19 @@ module Bcome::Node::K8Cluster
         description: 'Display the k8 configuration for this node',
         group: :informational
       }
+      base_items[:logs] = {
+        description: 'Live tail STDOUT',
+        group: :informational
+      }
       base_items
     end
     
+    def logs
+      log_command = "logs #{parent.hyphenated_identifier} -c #{hyphenated_identifier} -n #{k8_namespace.hyphenated_identifier} --tail 1 --follow"
+      full_log_command = get_kubectl_cmd(log_command)
+      system(full_log_command)
+    end
+
     ## Get a shell onto the container--
 
     ## todo: Default shell may be overriden, but should be a configuration option. 
