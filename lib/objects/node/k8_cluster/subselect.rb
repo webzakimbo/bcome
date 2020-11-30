@@ -10,12 +10,30 @@ module Bcome
         def initialize(*params)
           super
           raise Bcome::Exception::MissingSubselectionKey, @views unless @views[:subselect_from]
-
-          update_nodes
+          @nodes_loaded = false
         end
 
         def nodes_loaded?
-          true
+          @nodes_loaded 
+        end
+
+        def nodes_loaded=(whatever)
+          raise 
+        end
+
+        def load_nodes
+          parent_namespace.load_nodes unless parent_namespace.nodes_loaded?
+          update_nodes
+          @nodes_loaded = true
+        end
+
+        def do_reload
+          raise "TODO"
+          #parent_namespace.resources.reset_duplicate_nodes!
+          #parent_namespace.do_reload
+          #resources.run_subselect
+          #update_nodes
+          nil
         end
  
         def enabled_menu_items
@@ -74,25 +92,12 @@ module Bcome
           parent_namespace.run_kc(command)
         end
   
-        def nodes_loaded?
-          true
-        end
-
         def filters
           @views[:filters] || []
         end
 
         def reload
           do_reload
-        end
-
-        def do_reload
-          raise "TODO"
-          #parent_namespace.resources.reset_duplicate_nodes!
-          #parent_namespace.do_reload
-          #resources.run_subselect
-          #update_nodes
-          nil
         end
 
         private
@@ -106,6 +111,13 @@ module Bcome
 
           parent_crumb = @views[:subselect_from]
           parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb]
+ 
+          unless parent
+            # We're lazy loading K8 resources, so we'll need to travers into the parent namespace
+            ::Bcome::Bootup.spider(parent_crumb)
+            parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb]           
+          end
+
           raise Bcome::Exception::CannotFindSubselectionParent, "for key '#{parent_crumb}'" unless parent
           raise Bcome::Exception::Generic, "Subselection target for #{keyed_namespace} must be a K8 Namespace" unless parent.is_a?(::Bcome::Node::K8Cluster::Namespace)
           parent

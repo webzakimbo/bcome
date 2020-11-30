@@ -44,7 +44,9 @@ module Bcome::Node
     end
 
     def create_tree(context_node, views)
-      views.each { |config| create_node(config, context_node) }
+      views.each { |config| 
+        create_node(config, context_node) 
+      }
     end
 
     def reformat_config(config)

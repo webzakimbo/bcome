@@ -12,6 +12,11 @@ module Bcome
       ::Bcome::Bootup.set_and_do({ breadcrumbs: breadcrumbs }, spawn_into_console)
     end
 
+    def self.spider(breadcrumbs = nil)
+      spawn_into_console = false
+      instance.spider({ breadcrumbs: breadcrumbs})
+    end
+
     include Singleton
 
     attr_reader :breadcrumbs, :arguments
@@ -29,11 +34,26 @@ module Bcome
 
     def init_context(context)
       context.load_nodes if context.respond_to?(:load_nodes) && !context.nodes_loaded?
-  
+ 
       if @spawn_into_console
         ::Bcome::Workspace.instance.set(context: context, show_welcome: true)
       else
         context
+      end
+    end
+
+    ## TODO - rationalise this method & #traverse
+    def spider(params)
+      @breadcrumbs = params[:breadcrumbs]
+      starting_context = estate
+
+      crumbs.each_with_index do |crumb, _index|
+        # Some contexts' resources are loaded dynamically and do not come from the estate config. As we're traversing, we'll need to load
+        # them if necessary
+        starting_context.load_nodes if starting_context.respond_to?(:load_nodes) && !starting_context.nodes_loaded?
+        next_context ||= starting_context.resource_for_identifier(crumb)
+        return unless next_context
+        starting_context = next_context
       end
     end
 
