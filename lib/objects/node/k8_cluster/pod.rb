@@ -38,7 +38,7 @@ module Bcome::Node::K8Cluster
     end
 
     def number_running
-      container_states.collect{|cs| cs == RUNNING_STATE }.size
+      container_states.select{|cs| cs == RUNNING_STATE }.size
     end
 
     def running_status
@@ -47,7 +47,10 @@ module Bcome::Node::K8Cluster
 
     def get_container_states
       # containers are either running, waiting, or terminated
-      raw_states = views[:raw_data]["status"]["containerStatuses"].collect{|cs| cs["state"] }
+      raw_cs = views[:raw_data]["status"]["containerStatuses"]
+      return [] unless raw_cs
+
+      raw_states = raw_cs.collect{|cs| cs["state"] }
 
       states = []
       raw_states.each_with_index do |cs, index|
