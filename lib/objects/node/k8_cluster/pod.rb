@@ -29,6 +29,20 @@ module Bcome::Node::K8Cluster
       attribs    
     end
 
+    def enabled_menu_items
+      (super + %i[tunnel]) - non_k8_menu_items
+    end
+
+    def menu_items
+      base_items = super.dup
+      base_items[:tunnel] = {
+        description: 'Forward a Pod port to your local machine',
+        group: :ssh,
+        usage: "tunnel [port]"
+      }
+      base_items
+    end
+
     def state
       "#{running_status}\s" + container_states.sort.uniq.join(" | ")
     end
@@ -109,8 +123,22 @@ module Bcome::Node::K8Cluster
       "get pods"
     end
 
+    def form_tunnel_command_for_container(local_and_remote_port)
+      "port-forward #{hyphenated_identifier} #{local_and_remote_port} -n #{parent.hyphenated_identifier}"
+    end
+
+    def tunnel(local_and_remote_port)
+      get_tunnel_command = form_tunnel_command_for_container(local_and_remote_port)
+      command = get_kubectl_cmd(get_tunnel_command)
+      system(command)
+    end
+
     def log
-      system(k8_cluster.get_kubectl_cmd(log_command_suffix))
+      system(get_kubectl_cmd(log_command_suffix))
+    end
+
+    def get_kubectl_cmd(command)
+      return k8_cluster.get_kubectl_cmd(command)
     end
 
     def log_command_suffix

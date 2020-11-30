@@ -115,7 +115,7 @@ module Bcome::Node::K8Cluster
       command = get_kubectl_cmd(get_pseudo_tty_command)
       system(command)
     end
- 
+
     def exec(args)
       command = "#{exec_preamble} #{args}"
       run_kubectl_cmd(command)     
