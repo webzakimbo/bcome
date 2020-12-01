@@ -74,6 +74,11 @@ module Bcome::Node::K8Cluster
       states
     end
 
+    def reset_resources!
+      @resources = ::Bcome::Node::Resources::Base.new
+      set_containers
+    end
+
     def set_containers
       raw_container_data = views[:raw_data]["spec"]["containers"]
       raw_container_data.each do |container_data|

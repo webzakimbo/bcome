@@ -3,6 +3,8 @@
 module Bcome::Node::Resources
   class SubselectK8 < Bcome::Node::Resources::Base
 
+    ## TODO - can only subselect from namespaces
+
     def initialize(config)
       @config = config
       super
@@ -29,6 +31,8 @@ module Bcome::Node::Resources
           count = duplicate_nodes[new_node.identifier]
           new_node.identifier = "#{new_node.identifier}_#{count}"
         end
+
+        new_node.reset_resources!
 
         # Register the new node with the registry
         ::Bcome::Registry::Loader.instance.set_command_group_for_node(new_node)
