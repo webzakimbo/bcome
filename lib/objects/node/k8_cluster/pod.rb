@@ -9,10 +9,6 @@ module Bcome::Node::K8Cluster
 
     RUNNING_STATE="running".freeze
 
-    def is_event?
-      raw_config_data["spec"]["containers"][0]["env"].select{|env| env["name"] == "POSTGRES_HOST" && env["value"] == "dev-ecosystem-postgres-event" }.any?
-    end
-  
     def nodes_loaded?
       true
     end
