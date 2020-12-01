@@ -45,7 +45,12 @@ module ::Bcome::Ssh
 
     def node_host_or_ip
       return @context_node.internal_ip_address if @context_node.local_network?
-      has_proxy? ? @context_node.internal_ip_address : @context_node.public_ip_address
+
+      if has_proxy? || !@context_node.public_ip_address
+        @context_node.internal_ip_address
+      else
+        @context_node.public_ip_address
+      end 
     end
 
     def net_ssh_params

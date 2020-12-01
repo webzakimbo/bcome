@@ -75,11 +75,13 @@ module Bcome::Ssh
     def target_machine_ingress_ip
       return @context_node.internal_ip_address if @context_node.local_network?
 
-      unless has_hop?
-        raise ::Bcome::Exception::InvalidProxyConfig, "missing target ip address for #{@context_node.identifier}. Perhaps you meant to configure a proxy?" unless @context_node.public_ip_address
+      if has_hop?
+        @context_node.internal_ip_address
+      elsif @context_node.public_ip_address
+        @context_node.public_ip_address
+      else
+        @context_node.internal_ip_address
       end
-
-      has_hop? ? @context_node.internal_ip_address : @context_node.public_ip_address
     end
 
     private

@@ -26,6 +26,10 @@ module Bcome
           base_items
         end
 
+        def description
+          identifier
+        end
+
         def resources
           @resources ||= do_set_resources
         end
