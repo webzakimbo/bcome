@@ -8,7 +8,7 @@ module Bcome::Node::K8Cluster
 
     DEFAULT_SHELL = "/bin/bash"
 
-    def machines
+    def machines(*params)
       [self]
     end
 
