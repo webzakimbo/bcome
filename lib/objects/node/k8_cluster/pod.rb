@@ -131,7 +131,12 @@ module Bcome::Node::K8Cluster
     def tunnel(local_and_remote_port)
       get_tunnel_command = form_tunnel_command_for_container(local_and_remote_port)
       command = get_kubectl_cmd(get_tunnel_command)
-      system(command)
+      runner = ::Bcome::Command::Local.run(command)
+    end
+
+    def deployment
+      get_deployment_command = "get deployment #{hyphenated_identifier} -n #{k8_namespace.hyphenated_identifier}"
+      system(get_kubectl_cmd(get_deployment_command))
     end
 
     def log

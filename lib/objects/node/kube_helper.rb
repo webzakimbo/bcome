@@ -8,6 +8,7 @@ module Bcome::Node::KubeHelper
   def matches_filters?(filters)
     # get result of all matches
     all_matches = filters.collect{|filter| matches_filter?(filter) }
+
     # test we don't have any false results
     !(all_matches.select{|result| !result }.size > 0)
   end
