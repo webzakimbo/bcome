@@ -52,9 +52,6 @@ module Bcome::Ssh
     end
 
     def get_local_port_forward_command(start_port, end_port)
-      # TODO: - below check is not actually true... you might still want to proxy over SSH...
-      raise ::Bcome::Exception::InvalidPortForwardRequest, 'Connections to this node are not via a proxy. Rather than port forward, try connecting directly.' unless has_hop?
-
       cmd = "ssh -N -L #{start_port}:localhost:#{end_port} -J"
       cmd += "\s" + hops.collect(&:get_ssh_string).join(',') if has_hop?
       cmd += "\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
