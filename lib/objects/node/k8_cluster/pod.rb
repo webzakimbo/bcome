@@ -129,6 +129,8 @@ module Bcome::Node::K8Cluster
     end
 
     def tunnel(local_and_remote_port)
+      puts "\nForwarding localhost:#{local_and_remote_port}".informational
+      puts "CTRL+C to close\n"
       get_tunnel_command = form_tunnel_command_for_container(local_and_remote_port)
       command = get_kubectl_cmd(get_tunnel_command)
       runner = ::Bcome::Command::Local.run(command)
