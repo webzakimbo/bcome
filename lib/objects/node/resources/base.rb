@@ -33,6 +33,10 @@ module Bcome::Node::Resources
     end
     alias enable! clear!
 
+    def unset!
+      @nodes = []
+    end
+
     def do_disable(identifier)
       if identifier.is_a?(Array)
         identifier.each { |id| disable(id) }

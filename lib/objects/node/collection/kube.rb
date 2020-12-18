@@ -12,7 +12,6 @@ module Bcome::Node::Collection
 
     include ::Bcome::LoadingBar::Handler
     include ::Bcome::Node::KubeHelper
-    include ::Bcome::Node::KubeGenericMenuItems
 
     def initialize(*params)
       super
@@ -45,6 +44,26 @@ module Bcome::Node::Collection
 
         ::Bcome::Node::Factory.instance.bucket[namespace.keyed_namespace] = namespace
       end
+    end
+
+    def enabled_menu_items
+      (super + %i[config reload]) - non_k8_menu_items
+    end
+
+    def menu_items
+      base_items = super.dup
+
+      base_items[:config] = {
+        description: 'Display the k8 configuration for this node',
+        group: :informational
+      }
+
+      base_items[:reload] = {
+        description: 'Reload all resources',
+        group: :informational
+      }
+
+      base_items
     end
 
     def cluster_id
@@ -91,6 +110,16 @@ module Bcome::Node::Collection
       print "\n"
     end
   
+    def reload
+      do_reload
+      puts "\n\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
+    end
+
+    def do_reload
+      resources.unset!
+      load_nodes
+    end
+
     def raw_config_data
       run_kc("get config")
     end 

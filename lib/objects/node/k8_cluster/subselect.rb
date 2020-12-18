@@ -27,26 +27,21 @@ module Bcome
           @nodes_loaded = true
         end
 
-        def do_reload
-          raise "TODO"
-          #parent_namespace.resources.reset_duplicate_nodes!
-          #parent_namespace.do_reload
-          #resources.run_subselect
-          #update_nodes
-          nil
-        end
- 
         def enabled_menu_items
-          super + %i[reload]
+          (super + %i[reload]) - non_k8_menu_items
+        end
+
+        def non_k8_menu_items
+          %i[get put put_str rsync execute_script ping routes workon enable disable enable! disable!]
         end
 
         def menu_items
           base_items = super.dup
 
           base_items[:reload] = {
-            description: 'Reload this namespace subselect',
+            description: 'Reload resources',
             console_only: true,
-            group: :miscellany
+            group: :informational
           }
           base_items
         end
@@ -98,6 +93,12 @@ module Bcome
 
         def reload
           do_reload
+          other = ::Bcome::Orchestrator.instance.get(keyed_namespace)
+          ::Bcome::Workspace.instance.set(current_context: other, context: other)
+        end
+
+        def do_reload
+          parent_namespace.do_reload
         end
 
         private

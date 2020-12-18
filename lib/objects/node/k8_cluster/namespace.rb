@@ -6,7 +6,6 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
     include ::Bcome::Node::KubeCommandHelper
-    include ::Bcome::Node::KubeGenericMenuItems
     
     def initialize(params)
       super
@@ -37,6 +36,37 @@ module Bcome::Node::K8Cluster
         ::Bcome::Node::Factory.instance.bucket[pod.keyed_namespace] = pod
       end
       return
+    end
+
+    def enabled_menu_items
+      (super + %i[config reload]) - non_k8_menu_items
+    end
+
+    def menu_items
+      base_items = super.dup
+
+      base_items[:config] = {
+        description: 'Display the k8 configuration for this node',
+        group: :informational
+      }
+
+      base_items[:reload] = {
+        description: 'Reload all resources',
+        group: :informational
+      }
+
+      base_items
+    end
+
+    def reload
+      do_reload
+      # We now have an alternative counterpart - reloaded from fresh, a different object.
+      other = ::Bcome::Orchestrator.instance.get(keyed_namespace)
+      ::Bcome::Workspace.instance.set(current_context: other, context: other)
+    end
+
+    def do_reload
+      parent.reload
     end
 
     def nodes_loaded?

@@ -10,6 +10,8 @@ module Bcome::Node
     include Bcome::Node::RegistryManagement
     include Bcome::Tree
 
+    attr_reader :origin_object_id
+
     def inspect
       "<##{self.class}: #{namespace} @network_driver=#{network_driver}>"
     end

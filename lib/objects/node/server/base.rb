@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
-    attr_reader :origin_object_id
 
     def initialize(*params)
       super
