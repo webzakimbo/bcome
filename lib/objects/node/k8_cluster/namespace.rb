@@ -39,7 +39,7 @@ module Bcome::Node::K8Cluster
     end
 
     def enabled_menu_items
-      (super + %i[config reload]) - non_k8_menu_items
+      (super + %i[logs config reload]) - non_k8_menu_items
     end
 
     def menu_items
@@ -55,7 +55,18 @@ module Bcome::Node::K8Cluster
         group: :informational
       }
 
+      base_items[:logs] = {
+        description: 'Live tail stdout (all selected pods)',
+        group: :informational
+      }
+
       base_items
+    end
+
+    def logs
+      resources.active.pmap do |pod|
+        pod.logs
+      end
     end
 
     def reload

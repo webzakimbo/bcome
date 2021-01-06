@@ -26,7 +26,7 @@ module Bcome::Node::K8Cluster
     end
 
     def enabled_menu_items
-      (super + %i[tunnel]) - non_k8_menu_items
+      (super + %i[logs tunnel]) - non_k8_menu_items
     end
 
     def menu_items
@@ -35,6 +35,10 @@ module Bcome::Node::K8Cluster
         description: 'Forward a Pod port to your local machine',
         group: :ssh,
         usage: "tunnel [port]"
+      }
+      base_items[:logs] = {
+        description: 'Live tail stdout (all selected containers)',
+        group: :informational
       }
       base_items
     end
@@ -141,16 +145,16 @@ module Bcome::Node::K8Cluster
       system(get_kubectl_cmd(get_deployment_command))
     end
 
-    def log
-      system(get_kubectl_cmd(log_command_suffix))
+    def logs
+      # We get all the logs for all our containers
+      resources.active.pmap do |container|
+        annotate = true
+        container.logs(annotate)
+      end
     end
 
     def get_kubectl_cmd(command)
       return k8_cluster.get_kubectl_cmd(command)
-    end
-
-    def log_command_suffix
-      "logs -n #{k8_namespace.hyphenated_identifier} #{hyphenated_identifier} --previous"
     end
  
     def gke_child_node_class

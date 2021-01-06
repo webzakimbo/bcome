@@ -66,9 +66,14 @@ module Bcome::Node::K8Cluster
       base_items
     end
     
-    def logs
+    def logs(annotate = false)
       log_command = "logs #{parent.hyphenated_identifier} -c #{hyphenated_identifier} -n #{k8_namespace.hyphenated_identifier} --tail 1 --follow"
       full_log_command = get_kubectl_cmd(log_command)
+
+      # If we're tailing multiple logs, then we annotate each log line with the originating container.
+      if annotate
+        full_log_command = "#{full_log_command} | while read line ; do echo \"#{namespace.terminal_prompt} $line\"; done"
+      end
       system(full_log_command)
     end
 

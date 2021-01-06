@@ -28,7 +28,7 @@ module Bcome
         end
 
         def enabled_menu_items
-          (super + %i[reload]) - non_k8_menu_items
+          (super + %i[logs reload]) - non_k8_menu_items
         end
 
         def non_k8_menu_items
@@ -43,7 +43,19 @@ module Bcome
             console_only: true,
             group: :informational
           }
+
+          base_items[:logs] = {
+            description: 'Live tail stdout (all selected pods)',
+            group: :informational
+          }
+
           base_items
+        end
+
+        def logs
+          resources.active.pmap do |pod|
+            pod.logs
+          end
         end
 
         def override_pod_identifier?
