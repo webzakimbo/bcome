@@ -145,11 +145,11 @@ module Bcome::Node::K8Cluster
       system(get_kubectl_cmd(get_deployment_command))
     end
 
-    def logs
+    def logs(cmd = "")
       # We get all the logs for all our containers
       resources.active.pmap do |container|
         annotate = true
-        container.logs(annotate)
+        container.logs(annotate, cmd)
       end
     end
 

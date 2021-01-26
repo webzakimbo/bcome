@@ -47,7 +47,7 @@ module Bcome::Orchestration
     end
 
     def wait_for_input(message = COMMAND_PROMPT)
-      ::Readline.readline("\n#{message}", true).squeeze('').to_s
+      ::Reline.readline("\n#{message}", true).squeeze('').to_s
     end
 
     # COMMAND PROCESSING

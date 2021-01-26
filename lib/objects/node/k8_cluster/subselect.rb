@@ -52,9 +52,9 @@ module Bcome
           base_items
         end
 
-        def logs
+        def logs(cmd = "")
           resources.active.pmap do |pod|
-            pod.logs
+            pod.logs(cmd)
           end
         end
 

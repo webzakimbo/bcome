@@ -66,14 +66,21 @@ module Bcome::Node::K8Cluster
       base_items
     end
     
-    def logs(annotate = false)
-      log_command = "logs #{parent.hyphenated_identifier} -c #{hyphenated_identifier} -n #{k8_namespace.hyphenated_identifier} --tail 1 --follow"
+    def logs(annotate = false, cmd = "")
+      log_command = "logs #{parent.hyphenated_identifier} -c #{hyphenated_identifier} -n #{k8_namespace.hyphenated_identifier} --follow"
       full_log_command = get_kubectl_cmd(log_command)
 
-      # If we're tailing multiple logs, then we annotate each log line with the originating container.
+      full_log_command = "#{full_log_command} | #{cmd}" unless cmd.empty?
+
       if annotate
-        full_log_command = "#{full_log_command} | while read line ; do echo \"#{namespace.terminal_prompt} $line\"; done"
+        full_log_command = "#{full_log_command} | while read line ; do echo \"#{namespace.terminal_prompt} $line\" ; done"
       end
+
+      # If we're tailing multiple logs, then we annotate each log line with the originating container.
+      # if annotate
+      #  full_log_command = "#{full_log_command} | while read line ; do echo \"#{namespace.terminal_prompt} $line #{cmd}}\"; done"
+      # end
+
       system(full_log_command)
     end
 
@@ -104,6 +111,16 @@ module Bcome::Node::K8Cluster
 
     def form_command_for_container(raw_command)
       "#{exec_preamble} sh -c '#{raw_command}'"
+    end
+
+    def do_run(commands)
+      if commands.is_a?(Array)
+        commands.flatten.each do |command|
+          run(command)
+        end  
+      else
+        run(commands)
+      end 
     end
 
     def run(*raw_commands)

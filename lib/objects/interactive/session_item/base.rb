@@ -32,7 +32,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def get_input(message = terminal_prompt)
-      ::Readline.readline("\n#{message}", true).squeeze('').to_s
+      ::Reline.readline("\n#{message}", true).squeeze('').to_s
     end
   end
 end
