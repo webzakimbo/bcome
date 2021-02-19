@@ -124,7 +124,7 @@ module Bcome
         end
 
         def load_parent_namespace
-          if @views[:subselect_parent] && @views[:subselect_parent].is_a?(::Bcome::Node)
+          if @views[:subselect_parent] && @views[:subselect_parent].is_a?(::Bcome::Node::Base)
             return @views[:subselect_parent]
           end
 

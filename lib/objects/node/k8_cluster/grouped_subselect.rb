@@ -8,6 +8,7 @@ module Bcome
         def initialize(params)
           super
           @pods_data = params[:pods_data]
+          do_set_resources
         end
   
         def is_grouped_subselect?
@@ -20,6 +21,10 @@ module Bcome
 
         def type
           "TODO - skip this"
+        end
+
+        def update_nodes
+          puts "TODO - prob don't need update nodes, but need reload"
         end
 
         def do_set_resources

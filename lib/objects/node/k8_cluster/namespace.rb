@@ -36,7 +36,7 @@ module Bcome::Node::K8Cluster
           subselect_parent: self
         }
 
-        subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, pods_data: group_data) 
+        subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, pods_data: group_data, parent: self) 
         resources << subselect
         ::Bcome::Node::Factory.instance.bucket[subselect.keyed_namespace] = subselect
       end
