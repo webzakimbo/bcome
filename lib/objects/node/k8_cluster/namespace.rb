@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'securerandom'
+
 module Bcome::Node::K8Cluster
   class Namespace < Bcome::Node::Base
 
@@ -20,6 +22,25 @@ module Bcome::Node::K8Cluster
       end
 
       return set.flatten!
+    end
+
+    def set_subselects_from_raw_data(raw_pods_data, path)  
+      # TODO - add in pods not grouped
+
+      json_path = JsonPath.new(path)
+
+      grouped_pod_data = raw_pods_data.group_by{|data| json_path.on(data) }
+      grouped_pod_data.each do |group_name, group_data|
+        views = {
+          identifier: group_name.first,
+          subselect_parent: self
+        }
+
+        subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, pods_data: group_data) 
+        resources << subselect
+        ::Bcome::Node::Factory.instance.bucket[subselect.keyed_namespace] = subselect
+      end
+      return
     end
 
     def set_pods_from_raw_data(raw_pods_data)
