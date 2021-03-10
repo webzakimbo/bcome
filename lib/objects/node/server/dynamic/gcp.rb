@@ -34,9 +34,21 @@ module Bcome::Node::Server::Dynamic
       'GCP'
     end
 
+    def has_tagged_value?(key, values)
+      if key == :network_tags
+        return !values.collect{|key| network_tags.include?(key)}.include?(false)
+      else
+        super
+      end
+    end
+
     def do_generate_cloud_tags
       raw_labels = cloud_server.labels ? cloud_server.labels.deep_symbolize_keys : {}
       ::Bcome::Node::Meta::Cloud.new(raw_labels)
+    end
+
+    def network_tags
+      cloud_server.tags.items
     end
 
     def cloud_server
