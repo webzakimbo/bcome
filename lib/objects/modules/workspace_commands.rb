@@ -39,8 +39,8 @@ module Bcome
       ls(self, show_active_only)
     end
 
-    def interactive
-      ::Bcome::Interactive::Session.run(self, :interactive_ssh)
+    def ping  
+      ssh_connect(is_ping: true, show_progress: true)
     end
 
     def parents
@@ -62,7 +62,7 @@ module Bcome
       end
     end
 
-    def run(*raw_commands)
+    def run(*raw_commands) 
       raise Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
 
       results = {}
@@ -74,10 +74,6 @@ module Bcome
         results[machine.namespace] = commands
       end
       results
-    end
-
-    def ping
-      ssh_connect(is_ping: true, show_progress: true)
     end
 
     def pretty_description(is_active = true)

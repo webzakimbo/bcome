@@ -3,7 +3,7 @@
 module Bcome
   module Node
     module K8Cluster
-      class Subselect < ::Bcome::Node::Base
+      class Subselect < ::Bcome::Node::K8Cluster::Base
 
         include ::Bcome::Node::KubeCommandHelper
 

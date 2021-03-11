@@ -2,6 +2,7 @@
 
 module Bcome::Node::Collection
   class Base < ::Bcome::Node::Base
+
     def inventories
       inv = []
       @resources.active.each do |r|
@@ -28,6 +29,8 @@ module Bcome::Node::Collection
 
     def machines(skip_for_hidden = true)
       set = []
+
+      return [] unless @resources
 
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Bcome::Node::K8Cluster
-  class Pod < Bcome::Node::Base
+  class Pod < Bcome::Node::K8Cluster::Base
 
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeCommandHelper
@@ -159,6 +159,11 @@ module Bcome::Node::K8Cluster
  
     def gke_child_node_class
       ::Bcome::Node::K8Cluster::Container
+    end
+
+    def run_kubectl_cmd(command)
+      command_in_context = "#{command}\s#{hyphenated_identifier}"
+      parent.run_kubectl_cmd(command)
     end
  
     def run_kc(command)

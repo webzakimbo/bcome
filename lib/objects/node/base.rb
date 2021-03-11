@@ -48,6 +48,10 @@ module Bcome::Node
       return
     end
 
+    def interactive 
+      ::Bcome::Interactive::Session.run(self, :interactive_ssh)
+    end
+
     attr_reader :parent
 
     attr_reader :views

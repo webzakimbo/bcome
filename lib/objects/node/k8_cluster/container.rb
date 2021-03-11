@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 module Bcome::Node::K8Cluster
-  class Container < Bcome::Node::Base
+  class Container < Bcome::Node::K8Cluster::Base
 
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
+    include ::Bcome::KubeWorkspaceCommands
 
     DEFAULT_SHELL = "/bin/bash"
 
@@ -26,6 +27,11 @@ module Bcome::Node::K8Cluster
       "state": :state
       }
       attribs
+    end
+
+    def run_kubectl_cmd(command)
+      command_in_context = "#{command}\s#{hyphenated_identifier}"
+      parent.run_kubectl_cmd(command_in_context)
     end
  
     def run_kc(command)

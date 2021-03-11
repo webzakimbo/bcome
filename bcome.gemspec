@@ -41,6 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'tty-cursor', '0.2.0'
   spec.add_dependency 'awesome_print', '2.0.0.pre2'
   spec.add_dependency 'jsonpath', '1.0.5'
+  spec.add_dependency 'reline', '0.2.4'
   spec.post_install_message = <<-END
 
   Welcome to Bcome, the DevOps Control Panel Framework

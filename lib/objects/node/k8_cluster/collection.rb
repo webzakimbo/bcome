@@ -10,6 +10,7 @@
 module Bcome::Node::Collection
   class Kube < ::Bcome::Node::Collection::Base
 
+    include ::Bcome::InteractiveKubectl
     include ::Bcome::LoadingBar::Handler
     include ::Bcome::Node::KubeHelper
 
@@ -21,6 +22,10 @@ module Bcome::Node::Collection
 
     def get_children_command
       "get namespaces,pods -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
+    end
+
+    def interactive
+      kubectl
     end
 
     def set_child_nodes
@@ -124,9 +129,17 @@ module Bcome::Node::Collection
       run_kc("get config")
     end 
 
+    def run_kubectl_cmd(command)
+      @k8_cluster.run_kubectl_cmd(command)
+    end
+
     def run_kc(command)
       @k8_cluster.run_kubectl(command)
     end 
+
+    def kubectl_context
+      identifier
+    end
 
     def gke_child_node_class
       ::Bcome::Node::K8Cluster::Namespace

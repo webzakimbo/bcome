@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Bcome::Node::K8Cluster
-  class Namespace < Bcome::Node::Base
+  class Namespace < Bcome::Node::K8Cluster::Base
 
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
@@ -103,13 +103,18 @@ module Bcome::Node::K8Cluster
       run_kc("get ingresses")
     end  
 
+    def run_kubectl_cmd(command)
+      command_in_context = append_namespace_to(command)
+      parent.run_kubectl_cmd(command_in_context)
+    end
+
     def run_kc(command)
       command_in_context = append_namespace_to(command)
       parent.k8_cluster.run_kubectl(command_in_context)
     end
 
     def append_namespace_to(command)
-      "#{command} -n #{identifier}"
+      "#{command} -n #{hyphenated_identifier}"
     end 
 
     def get_children_command
