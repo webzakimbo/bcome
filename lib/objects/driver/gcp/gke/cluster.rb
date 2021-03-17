@@ -19,6 +19,11 @@ module ::Bcome::Driver::Gcp::Gke
       @config ||= get_config
     end
 
+    def delegated_kubectl_cmd(command)
+      command_runner = runner(command, :no_json, :command_call)
+      command_runner.run_hand_off
+    end
+
     def get_kubectl_cmd(command)
       command_runner = runner(command, :no_json, :command_call)
       return command_runner.full_command

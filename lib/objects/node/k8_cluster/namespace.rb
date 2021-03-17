@@ -120,6 +120,11 @@ module Bcome::Node::K8Cluster
       run_kc("get ingresses")
     end  
 
+    def delegated_kubectl_cmd(command)
+      command_in_context = append_namespace_to(command)
+      parent.delegated_kubectl_cmd(command_in_context)
+    end
+
     def run_kubectl_cmd(command)
       command_in_context = append_namespace_to(command)
       parent.run_kubectl_cmd(command_in_context)

@@ -298,7 +298,6 @@ module Bcome::Node
     end
 
     def execute_local(command)
-      puts "(local) > #{command}" unless ::Bcome::Orchestrator.instance.command_output_silenced?
       system(command)
       puts ''
     end

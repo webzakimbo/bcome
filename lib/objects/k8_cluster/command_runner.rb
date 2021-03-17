@@ -40,6 +40,12 @@ module Bcome::K8Cluster
       @local_command ||= ::Bcome::Command::Local.run(full_command)
     end
 
+    def run_hand_off
+      puts "(local) > #{full_command}" unless ::Bcome::Orchestrator.instance.command_output_silenced?
+      system(full_command)
+      puts ''
+    end
+
     def data
       @data ||= parse_data
     end

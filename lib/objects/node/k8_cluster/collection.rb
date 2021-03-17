@@ -133,6 +133,10 @@ module Bcome::Node::Collection
       run_kc("get config")
     end 
 
+    def delegated_kubectl_cmd(command)
+      @k8_cluster.delegated_kubectl_cmd(command)
+    end
+
     def run_kubectl_cmd(command)
       @k8_cluster.run_kubectl_cmd(command)
     end

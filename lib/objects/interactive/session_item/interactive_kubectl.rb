@@ -30,8 +30,9 @@ module Bcome::Interactive::SessionItem
 
     def run_kc(command)
       begin
-        runner = node.run_kubectl_cmd(command)
-        puts runner.data.stdout
+        runner = node.delegated_kubectl_cmd(command)
+        puts runner
+        #puts runner.data.stdout
       rescue JSON::ParserError
         puts "Invalid command '#{command}'".error
       end

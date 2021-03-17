@@ -12,7 +12,7 @@ module Bcome
           @pods_data = params[:pods_data]
           do_set_resources
         end
-  
+
         def is_grouped_subselect?
           true
         end
@@ -31,6 +31,10 @@ module Bcome
 
         def nodes_loaded?
           true
+        end
+
+        def hyphenated_identifier
+          @original_identifier.gsub("_", "-")
         end
 
         def do_set_resources
