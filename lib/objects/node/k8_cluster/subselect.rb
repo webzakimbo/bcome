@@ -9,8 +9,12 @@ module Bcome
 
         def initialize(*params)
           super
-          raise Bcome::Exception::MissingSubselectionKey, @views unless @views[:subselect_from]
+          raise Bcome::Exception::MissingSubselectionKey, @views if !is_grouped_subselect? && !@views[:subselect_from]
           @nodes_loaded = false
+        end
+
+        def is_grouped_subselect?
+          false
         end
 
         def nodes_loaded?
@@ -120,6 +124,10 @@ module Bcome
         end
 
         def load_parent_namespace
+          if @views[:subselect_parent] && @views[:subselect_parent].is_a?(::Bcome::Node::Base)
+            return @views[:subselect_parent]
+          end
+
           raise ::Bcome::Exception::Generic, "Missing 'subselect_from' attribute on inventory-subselect with config #{@views}" unless @views[:subselect_from]
 
           parent_crumb = @views[:subselect_from]
