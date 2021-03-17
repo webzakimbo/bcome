@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'securerandom'
-
 module Bcome::Node::K8Cluster
   class Namespace < Bcome::Node::Base
 
@@ -25,8 +23,6 @@ module Bcome::Node::K8Cluster
     end
 
     def set_subselects_from_raw_data(raw_pods_data, path)  
-      # TODO - add in pods not grouped
-
       json_path = JsonPath.new(path)
 
       grouped_pod_data = raw_pods_data.group_by{|data| json_path.on(data) }

@@ -5,6 +5,8 @@ module Bcome
     module K8Cluster
       class GroupedSubselectK8 < Subselect
 
+        include ::Bcome::Node::KubeCommandHelper
+ 
         def initialize(params)
           super
           @pods_data = params[:pods_data]
@@ -15,16 +17,20 @@ module Bcome
           true
         end
 
-        def description
-          "TODO - skip this"
-        end
-
         def type
-          "TODO - skip this"
+          "group"  
         end
 
-        def update_nodes
-          puts "TODO - prob don't need update nodes, but need reload"
+        def description
+          identifier
+        end
+
+        def list_attributes
+          {:"k8/group"=>:identifier}
+        end
+
+        def nodes_loaded?
+          true
         end
 
         def do_set_resources

@@ -40,7 +40,11 @@ module Bcome::Node::Collection
         namespace = gke_child_node_class.new(views: config, parent: self)
         resources << namespace
         
-        namespace.set_pods_from_raw_data(pod_data_for_namespace)
+        if respond_to?(:namespace_subdivisions)
+          namespace.set_subselects_from_raw_data(pod_data_for_namespace, namespace_subdivisions)
+        else
+          namespace.set_pods_from_raw_data(pod_data_for_namespace)
+        end
 
         ::Bcome::Node::Factory.instance.bucket[namespace.keyed_namespace] = namespace
       end
@@ -102,11 +106,11 @@ module Bcome::Node::Collection
       get_cluster_credentials unless container_cluster_initialized?
 
       title = "Loading\s" + "GKE Cluster\s".bc_cyan + namespace.to_s.underline
-      wrap_indicator type: :basic, title: title, completed_title: '' do
+      #wrap_indicator type: :basic, title: title, completed_title: '' do
         @nodes_loaded = true
         set_child_nodes
-        signal_success
-      end
+      #  signal_success
+      #end
       print "\n"
     end
   

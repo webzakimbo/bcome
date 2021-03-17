@@ -49,16 +49,16 @@ module Bcome
       ps.flatten
     end
 
-    def cd(identifier)
-      if (resource = resources.for_identifier(identifier))
+    def cd(other_identifier)
+      if (resource = resources.for_identifier(other_identifier))
         if resource.parent.resources.is_active_resource?(resource)
           ::Bcome::Workspace.instance.set(current_context: self, context: resource)
         else
-          puts "\nCannot enter context - #{identifier} is disabled. To enable enter 'enable #{identifier}'\n".error
+          puts "\nCannot enter context - #{other_identifier} is disabled. To enable enter 'enable #{other_identifier}'\n".error
         end
       else
-        raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
-        puts "#{identifier} not found"
+        raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{other_identifier}'"
+        puts "#{other_identifier} not found"
       end
     end
 
