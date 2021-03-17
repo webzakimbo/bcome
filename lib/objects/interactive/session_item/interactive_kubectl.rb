@@ -39,7 +39,7 @@ module Bcome::Interactive::SessionItem
 
     def show_menu
       info = "\\q to quit\n\\? this message".informational
-      puts "\n#{info}\n"
+      puts "\n#{info}\n\n"
     end
 
     def terminal_prompt
