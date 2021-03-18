@@ -46,7 +46,7 @@ module Bcome::Node::Collection
         resources << namespace
         
         if respond_to?(:subdivide_namespaces_on_label)
-          namespace.set_subselects_from_raw_data(pod_data_for_namespace, "metadata.labels.#{subdivide_namespaces_on_label}")
+          namespace.set_subselects_from_raw_data(pod_data_for_namespace, subdivide_namespaces_on_label) 
         else
           namespace.set_pods_from_raw_data(pod_data_for_namespace)
         end

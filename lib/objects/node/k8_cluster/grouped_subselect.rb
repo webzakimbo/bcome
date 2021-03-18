@@ -10,6 +10,7 @@ module Bcome
         def initialize(params)
           super
           @pods_data = params[:pods_data]
+          @grouped_by_label = params[:grouped_by_label]
           do_set_resources
         end
 
@@ -42,7 +43,7 @@ module Bcome
         end
 
         def delegated_kubectl_cmd(command)
-          command += " -l 'release=#{hyphenated_identifier}'"
+          command += " -l '#{@grouped_by_label}=#{hyphenated_identifier}'"
           parent_namespace.delegated_kubectl_cmd(command)
         end
 

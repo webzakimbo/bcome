@@ -22,17 +22,22 @@ module Bcome::Node::K8Cluster
       return set.flatten!
     end
 
-    def set_subselects_from_raw_data(raw_pods_data, path)  
-      json_path = JsonPath.new(path)
+    def set_subselects_from_raw_data(raw_pods_data, label_name)  
+      @raw_pods_data = raw_pods_data
+      json_path = JsonPath.new("metadata.labels.#{label_name}")
 
       grouped_pod_data = raw_pods_data.group_by{|data| json_path.on(data) }
+    
+      # Could not group by, so return flat structure within namespace instead.
+      return set_pods_from_raw_data(raw_pods_data) if grouped_pod_data.keys.flatten.empty?
+
       grouped_pod_data.each do |group_name, group_data|
         views = {
-          identifier: group_name.first,
+          identifier: group_name.first.nil? ? "ungrouped" : group_name.first,
           subselect_parent: self
         }
 
-        subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, pods_data: group_data, parent: self) 
+        subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, pods_data: group_data, parent: self, grouped_by_label: label_name) 
         resources << subselect
         ::Bcome::Node::Factory.instance.bucket[subselect.keyed_namespace] = subselect
       end
