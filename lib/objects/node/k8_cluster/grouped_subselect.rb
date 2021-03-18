@@ -33,8 +33,17 @@ module Bcome
           true
         end
 
+        def k8_namespace
+          parent_namespace
+        end
+
         def hyphenated_identifier
           @original_identifier.gsub("_", "-")
+        end
+
+        def delegated_kubectl_cmd(command)
+          command += " -l 'release=#{hyphenated_identifier}'"
+          parent_namespace.delegated_kubectl_cmd(command)
         end
 
         def do_set_resources

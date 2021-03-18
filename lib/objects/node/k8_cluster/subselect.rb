@@ -66,6 +66,10 @@ module Bcome
           respond_to?(:override_identifier) && !override_identifier.nil?
         end
 
+        def k8_namespace
+          parent_namespace
+        end
+
         def k8_cluster
           parent_namespace.k8_cluster
         end

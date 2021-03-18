@@ -45,8 +45,8 @@ module Bcome::Node::Collection
         namespace = gke_child_node_class.new(views: config, parent: self)
         resources << namespace
         
-        if respond_to?(:namespace_subdivisions)
-          namespace.set_subselects_from_raw_data(pod_data_for_namespace, namespace_subdivisions)
+        if respond_to?(:subdivide_namespaces_on_label)
+          namespace.set_subselects_from_raw_data(pod_data_for_namespace, "metadata.labels.#{subdivide_namespaces_on_label}")
         else
           namespace.set_pods_from_raw_data(pod_data_for_namespace)
         end

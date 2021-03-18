@@ -39,6 +39,10 @@ module Bcome::Node::K8Cluster
       return
     end
 
+    def k8_namespace
+      self
+    end
+
     def set_pods_from_raw_data(raw_pods_data)
       raw_pods_data.pmap do |pod_data|
         pod_identifier = pod_data["metadata"]["name"]

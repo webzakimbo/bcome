@@ -177,7 +177,7 @@ module Bcome::Node::K8Cluster
     end
 
     def k8_namespace
-      parent
+      parent.k8_namespace
     end
 
     def k8_cluster
