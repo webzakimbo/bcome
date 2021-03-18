@@ -3,10 +3,6 @@ module Bcome::Node::K8Cluster
 
     include ::Bcome::InteractiveKubectl
 
-    def interactive
-      kubectl
-    end
-
     def kubectl_context
       "#{parent.kubectl_context}.#{hyphenated_identifier}"
     end
