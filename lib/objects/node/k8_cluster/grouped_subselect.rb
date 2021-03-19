@@ -43,7 +43,8 @@ module Bcome
         end
 
         def delegated_kubectl_cmd(command)
-          command += " -l '#{@grouped_by_label}=#{hyphenated_identifier}'"
+          command.lstrip!
+          command += " -l '#{@grouped_by_label}=#{hyphenated_identifier}'" if command  =~ /^get.+/
           parent_namespace.delegated_kubectl_cmd(command)
         end
 
