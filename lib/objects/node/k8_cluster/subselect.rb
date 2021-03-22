@@ -127,6 +127,11 @@ module Bcome
           @parent_namespace ||= load_parent_namespace
         end
 
+        #def do_load_parent_namespace
+        #  p_namespace = load_parent_namespace
+        #  p_namespace.is_a?(::Bcome::Node::K8Cluster::GroupedSubselectK8) ? p_namespace.k8_namespace : p_namespace
+        #end
+
         def load_parent_namespace
           if @views[:subselect_parent] && @views[:subselect_parent].is_a?(::Bcome::Node::Base)
             return @views[:subselect_parent]
@@ -138,13 +143,16 @@ module Bcome
           parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb]
  
           unless parent
-            # We're lazy loading K8 resources, so we'll need to travers into the parent namespace
+            # We're lazy loading K8 resources, so we'll need to traverse into the parent namespace
             ::Bcome::Bootup.spider(parent_crumb)
             parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb]           
           end
 
           raise Bcome::Exception::CannotFindSubselectionParent, "for key '#{parent_crumb}'" unless parent
-          raise Bcome::Exception::Generic, "Subselection target for #{keyed_namespace} must be a K8 Namespace" unless parent.is_a?(::Bcome::Node::K8Cluster::Namespace)
+
+          unless [::Bcome::Node::K8Cluster::GroupedSubselectK8,::Bcome::Node::K8Cluster::Namespace].include?(parent.class)
+            raise Bcome::Exception::Generic, "Subselection target for #{keyed_namespace} must be a K8 Namespace or K8 Grouped subselect"
+          end
           parent
         end
       end
