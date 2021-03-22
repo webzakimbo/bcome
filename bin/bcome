@@ -15,6 +15,6 @@ trap('INT') do
   handler.stop_loading_bars
 end
 
-Thread.report_on_exception = false
+Thread.report_on_exception = true
 
 handler.do

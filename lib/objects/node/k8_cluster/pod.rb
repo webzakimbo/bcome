@@ -129,7 +129,7 @@ module Bcome::Node::K8Cluster
     end
 
     def form_tunnel_command_for_container(local_and_remote_port)
-      "port-forward #{hyphenated_identifier} #{local_and_remote_port} -n #{parent.hyphenated_identifier}"
+      "port-forward #{hyphenated_identifier} #{local_and_remote_port} -n #{k8_namespace.hyphenated_identifier}"
     end
 
     def tunnel(local_and_remote_port)

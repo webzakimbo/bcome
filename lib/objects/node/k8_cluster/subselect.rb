@@ -66,10 +66,6 @@ module Bcome
           respond_to?(:override_identifier) && !override_identifier.nil?
         end
 
-        def k8_namespace
-          parent_namespace
-        end
-
         def k8_cluster
           parent_namespace.k8_cluster
         end
@@ -121,16 +117,15 @@ module Bcome
           parent_namespace.do_reload
         end
 
+        def k8_namespace 
+          parent_namespace.is_a?(::Bcome::Node::K8Cluster::GroupedSubselectK8) ? parent_namespace.parent : parent_namespace  
+        end
+
         private
 
         def parent_namespace
           @parent_namespace ||= load_parent_namespace
         end
-
-        #def do_load_parent_namespace
-        #  p_namespace = load_parent_namespace
-        #  p_namespace.is_a?(::Bcome::Node::K8Cluster::GroupedSubselectK8) ? p_namespace.k8_namespace : p_namespace
-        #end
 
         def load_parent_namespace
           if @views[:subselect_parent] && @views[:subselect_parent].is_a?(::Bcome::Node::Base)
