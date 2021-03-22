@@ -71,6 +71,14 @@ module IRB
 
   class Context
     def overriden_evaluate(*_params)
+
+      # Allow the user to directly invoke cd path:to:namespace where
+      # the input after "cd" matches the bcome breadcrumb format. This can have no conflict with user generated methods
+      # or other framework hooks as 'cd' is a reserved word, and we are explicitly matching on cd path:to:node 
+      if _params[0] =~ /^cd ([a-z0-9_]+(\:[a-z0-9_]+)+)$/i
+        _params[0] = "cd \"#{$1}\""
+      end
+
       if _params.last.is_a?(Hash)
         # Ruby 2.7.0 compatibility: "Using the last argument as keyword parameters is deprecated" ; hence splat the last argument
         last = _params.pop

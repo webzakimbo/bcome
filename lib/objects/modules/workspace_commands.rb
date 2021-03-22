@@ -49,17 +49,23 @@ module Bcome
       ps.flatten
     end
 
-    def cd(other_identifier)
-      if (resource = resources.for_identifier(other_identifier))
-        if resource.parent.resources.is_active_resource?(resource)
-          ::Bcome::Workspace.instance.set(current_context: self, context: resource)
+    def cd(breadcrumb)
+      crumbs = breadcrumb.split(":")
+      step = self
+
+      crumbs.each do |crumb|
+        step.load_nodes if step.respond_to?(:load_nodes) && !step.nodes_loaded?
+
+        if step = step.resources.for_identifier(crumb)
+          unless step.parent.resources.is_active_resource?(step)
+            puts "\nCannot enter context - #{breadcrumb} is disabled\n".error
+            return
+          end
         else
-          puts "\nCannot enter context - #{other_identifier} is disabled. To enable enter 'enable #{other_identifier}'\n".error
+          raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node at '#{crumb}'"
         end
-      else
-        raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{other_identifier}'"
-        puts "#{other_identifier} not found"
       end
+      ::Bcome::Workspace.instance.set(current_context: self, context: step)
     end
 
     def run(*raw_commands) 
