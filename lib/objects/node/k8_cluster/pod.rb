@@ -43,6 +43,10 @@ module Bcome::Node::K8Cluster
       base_items
     end
 
+    def kubectl
+      puts "Kubectl is not available from pod level".warning
+    end
+
     def state
       "#{running_status}\s" + container_states.sort.uniq.join(" | ")
     end

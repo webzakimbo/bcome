@@ -29,6 +29,10 @@ module Bcome::Node::K8Cluster
       attribs
     end
 
+    def kubectl
+       puts "Kubectl is not available from pod level".warning
+    end
+
     def delegated_kubectl_cmd(command)
       command_in_context = "#{command}\s#{hyphenated_identifier}"
       parent.delegated_kubectl_cmd(command_in_context)
