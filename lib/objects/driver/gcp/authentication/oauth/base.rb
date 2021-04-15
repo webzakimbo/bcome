@@ -36,10 +36,15 @@ module Bcome::Driver::Gcp::Authentication::Oauth
       'oauth2.json'
     end
 
-    def authorize!
-      @service.authorization = storage.authorize
+    def authorize!(reauth = false)
+      if reauth
+        storage.refresh_authorization 
+        @service.authorization = storage.authorize
+      else
+        @service.authorization = storage.authorize
+      end
     end
-
+ 
     def client_secrets
       @client_secrets ||= load_client_secrets
     end
@@ -60,8 +65,8 @@ module Bcome::Driver::Gcp::Authentication::Oauth
       "#{@client_config.checksum}:#{credential_file_suffix}"
     end
 
-    def do!
-      authorize!
+    def do!(reauth = false)
+      authorize!(reauth)
       if @storage.authorization.nil?
         # Total bloat from google here. Thanks google... requiring at last possible moment.
         require 'google/api_client/auth/installed_app'

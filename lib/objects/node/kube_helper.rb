@@ -32,7 +32,7 @@ module Bcome::Node::KubeHelper
 
   def hyphenated_identifier
     # Kubernetes identifiers do not support underscores, but Bcome swaps all -'s to _'s in order to be able
-    # to contantise identifier for traversing in the CLi.
+    # to constantise identifier for traversing in the CLi.
     @original_identifier.gsub("_", "-")
   end
 

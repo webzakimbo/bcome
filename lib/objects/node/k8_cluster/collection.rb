@@ -168,8 +168,11 @@ module Bcome::Node::Collection
       wrap_indicator type: :basic, title: "Authorising\s" + "GCP\s".bc_cyan + cluster_id.underline, completed_title: 'done' do
         begin
           @k8_cluster = ::Bcome::Driver::Gcp::Gke::Cluster.new(self)
+        rescue ::Bcome::Exception::ReauthGcp
+          puts "Re-authorizing"
+          network_driver.reauthorize        
         rescue StandardError => e
-          raise ::Bcome::Exception::Generic, "Could not retrieve credentials for #{cluster_id}. Failed with: #{e.message}"
+          raise ::Bcome::Exception::Generic, "Could not retrieve credentials for #{cluster_id}. Failed with: #{e.class} #{e.message}"
         end  
       end
     end  

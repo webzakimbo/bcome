@@ -21,13 +21,18 @@ module Bcome::Driver
       "#{@params[:project]}/#{@params[:zone]}"
     end
 
-    def authorize
-      unless authentication_scheme.authorized?
-        authenticated_service = get_authenticated_gcp_service
+    def authorize(reauth = false)
+      if reauth || !authentication_scheme.authorized?
+        authenticated_service = get_authenticated_gcp_service(reauth)
         raise ::Bcome::Exception::Generic, 'GCP authentication process failed' unless authentication_scheme.authorized?
       end
       return authenticated_service
     end
+
+    def reauthorize
+      reauth = true
+      authorize(reauth)
+    end   
 
     def fetch_server_list(_filters)
       authorize 
@@ -100,8 +105,8 @@ module Bcome::Driver
       @compute_service ||= ::Google::Apis::ComputeBeta::ComputeService.new
     end
 
-    def get_authenticated_gcp_service
-      authentication_scheme.do!
+    def get_authenticated_gcp_service(reauth = false)
+      authentication_scheme.do!(reauth)
       compute_service
     end
 

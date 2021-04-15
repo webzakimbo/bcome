@@ -149,12 +149,19 @@ module Bcome::Node::K8Cluster
       system(get_kubectl_cmd(get_deployment_command))
     end
 
-    def logs(cmd = "")
-      # We get all the logs for all our containers
-      resources.active.pmap do |container|
-        annotate = true
-        container.logs(annotate, cmd)
-      end
+    #def logs(cmd = "")
+    #  # We get all the logs for all our containers
+    #  resources.active.pmap do |container|
+    #    annotate = true
+    #    container.logs(annotate, cmd)
+    #  end
+    #end
+
+    def logs(*params)
+      # Get all logs for all containers (i.e. previously failed containers too)
+      all_logs_command = "logs #{hyphenated_identifier} --all-containers -n #{k8_namespace.hyphenated_identifier}"
+      k = get_kubectl_cmd(all_logs_command)
+      system(get_kubectl_cmd(all_logs_command))
     end
 
     def get_kubectl_cmd(command)

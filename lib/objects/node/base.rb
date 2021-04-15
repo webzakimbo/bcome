@@ -184,7 +184,7 @@ module Bcome::Node
 
 
       @identifier.gsub!(/\s/, '_') # Remove whitespace
-      @identifier.gsub!('-', '_') # change hyphens to undescores, hyphens don't play well in var names in irb
+      #@identifier.gsub!('-', '_') # change hyphens to undescores, hyphens don't play well in var names in irb
     end
 
     def requires_description?

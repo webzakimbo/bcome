@@ -6,6 +6,11 @@ module Bcome
       ::Bcome::Ssh::Connector.connect(self, params)
     end
 
+    def lsr
+      reload if respond_to?(:reload)
+      ls
+    end
+
     def ls(node = self, active_only = false)
       if node != self && (resource = resources.for_identifier(node))
         resource.send(:ls, active_only)
@@ -148,7 +153,11 @@ module Bcome
     end
 
     def method_is_available_on_node?(method_sym)
-      resource_identifiers.include?(method_sym.to_s) || method_in_registry?(method_sym) || respond_to?(method_sym) || instance_variable_defined?("@#{method_sym}")
+      begin
+        resource_identifiers.include?(method_sym.to_s) || method_in_registry?(method_sym) || respond_to?(method_sym) || instance_variable_defined?("@#{method_sym}")
+      rescue NameError
+        return false
+      end
     end
 
     def visual_hierarchy
