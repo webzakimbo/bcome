@@ -52,7 +52,8 @@ module Bcome::Ssh
     end
 
     def get_local_port_forward_command(start_port, end_port)
-      cmd = "ssh -N -L #{start_port}:localhost:#{end_port} -J"
+      cmd = "ssh -N -L #{start_port}:localhost:#{end_port}"
+      cmd += " -J" if has_hop?
       cmd += "\s" + hops.collect(&:get_ssh_string).join(',') if has_hop?
       cmd += "\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
 
