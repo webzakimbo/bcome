@@ -75,6 +75,16 @@ module IRB
       # Allow the user to directly invoke cd path:to:namespace where
       # the input after "cd" matches the bcome breadcrumb format. This can have no conflict with user generated methods
       # or other framework hooks as 'cd' is a reserved word, and we are explicitly matching on cd path:to:node 
+
+      #string.gsub!(/Look ahead pattern/, \"pattern\")
+
+      #commands = "cd|ssh|ls|workon|disable"
+
+      # MATCH ANF GSUB FOR single e.g. command single_namespace
+      #_params[0].gsub!(/(|ls|ssh|workon|disable)\s([a-z\-0-9A-Z_]+(?:[a-z\-0-9A-Z_]+)*)/,"\"\\1\"")
+
+      # THEN match and gsub for multiple e.g. command namespace:namespace:namespace
+
       if _params[0] =~ /^cd ([a-z\-0-9A-Z_]+(:[a-z\-0-9A-Z_]+)?)$/i
         _params[0] = "cd \"#{$1}\""
       end
