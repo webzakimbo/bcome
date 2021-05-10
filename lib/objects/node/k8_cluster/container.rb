@@ -38,11 +38,6 @@ module Bcome::Node::K8Cluster
       parent.delegated_kubectl_cmd(command_in_context)
     end
 
-    def run_kubectl_cmd(command)
-      command_in_context = "#{command}\s#{hyphenated_identifier}"
-      parent.run_kubectl_cmd(command_in_context)
-    end
- 
     def run_kc(command)
       command_in_context = "#{command}\s#{hyphenated_identifier}"
       parent.run_kc(command_in_context)

@@ -142,6 +142,7 @@ module Bcome::Node::K8Cluster
       get_tunnel_command = form_tunnel_command_for_container(local_and_remote_port)
       command = get_kubectl_cmd(get_tunnel_command)
       runner = ::Bcome::Command::Local.run(command)
+      return runner
     end
 
     def deployment
@@ -149,18 +150,10 @@ module Bcome::Node::K8Cluster
       system(get_kubectl_cmd(get_deployment_command))
     end
 
-    #def logs(cmd = "")
-    #  # We get all the logs for all our containers
-    #  resources.active.pmap do |container|
-    #    annotate = true
-    #    container.logs(annotate, cmd)
-    #  end
-    #end
-
     def logs(*params)
       # Get all logs for all containers (i.e. previously failed containers too)
       all_logs_command = "logs #{hyphenated_identifier} --all-containers -n #{k8_namespace.hyphenated_identifier}"
-      k = get_kubectl_cmd(all_logs_command)
+      get_kubectl_cmd(all_logs_command)
       system(get_kubectl_cmd(all_logs_command))
     end
 
@@ -173,17 +166,14 @@ module Bcome::Node::K8Cluster
     end
 
     def delegated_kubectl_cmd(command)
-      command_in_context = "#{command}\s#{hyphenated_identifier}"
       parent.delegated_kubectl_cmd(command)
     end
 
     def run_kubectl_cmd(command)
-      command_in_context = "#{command}\s#{hyphenated_identifier}"
       parent.run_kubectl_cmd(command)
     end
  
     def run_kc(command)
-      command_in_context = "#{command}\s#{hyphenated_identifier}"
       parent.run_kc(command_in_context)
     end
 

@@ -99,10 +99,6 @@ module Bcome::Node::Collection
       true
     end
 
-    def container_cluster_initialized?
-      @container_cluster_initialized
-    end 
-
     def nodes_loaded?
       @nodes_loaded 
     end
@@ -110,12 +106,8 @@ module Bcome::Node::Collection
     def load_nodes
       get_cluster_credentials unless container_cluster_initialized?
 
-      title = "Loading\s" + "GKE Cluster\s".bc_cyan + namespace.to_s.underline
-      #wrap_indicator type: :basic, title: title, completed_title: '' do
-        @nodes_loaded = true
-        set_child_nodes
-      #  signal_success
-      #end
+      @nodes_loaded = true
+      set_child_nodes
       print "\n"
     end
   

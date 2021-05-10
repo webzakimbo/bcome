@@ -85,10 +85,6 @@ module Bcome::Node::Resources
       @config[:parent_crumb]
     end
 
-    def filters
-      @config[:filters]
-    end
-
     def parent_namespace
       @config[:parent_namespace]
     end

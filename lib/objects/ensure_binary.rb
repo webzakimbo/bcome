@@ -18,7 +18,7 @@ module Bcome
     end
 
     def run_which
-      result = ::Bcome::Command::Local.run("which #{@bin_name}")
+      ::Bcome::Command::Local.run("which #{@bin_name}")
     end 
 
   end

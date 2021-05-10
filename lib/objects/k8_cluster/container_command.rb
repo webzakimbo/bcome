@@ -24,7 +24,7 @@ module Bcome::K8Cluster
 
     def print_output
       print "#{@output_string}\n\n"
-    rescue StandardError => e
+    rescue StandardError
       puts "Could not print #{@output_string.inspect}"
     end
 

@@ -13,7 +13,6 @@ module Bcome
     end
 
     def self.spider(breadcrumbs = nil)
-      spawn_into_console = false
       instance.spider({ breadcrumbs: breadcrumbs})
     end
 
@@ -42,7 +41,6 @@ module Bcome
       end
     end
 
-    ## TODO - rationalise this method & #traverse
     def spider(params)
       @breadcrumbs = params[:breadcrumbs]
       starting_context = estate

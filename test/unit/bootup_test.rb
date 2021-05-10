@@ -48,7 +48,7 @@ class BootupTest < ActiveSupport::TestCase
     ::Bcome::Bootup.instance.set(breadcrumbs: nil)
     bootup = ::Bcome::Bootup.instance
 
-    estate = Bcome::Node::Collection.new(given_estate_setup_params)
+    estate = Bcome::Node::Collection::Base.new(given_estate_setup_params)
     factory = ::Bcome::Node::Factory.send(:new)
     factory.expects(:init_tree).returns(estate)
 
@@ -67,7 +67,7 @@ class BootupTest < ActiveSupport::TestCase
     ::Bcome::Bootup.instance.set({ breadcrumbs: nil }, spawn_into_context)
     bootup = ::Bcome::Bootup.instance
 
-    estate = Bcome::Node::Collection.new(given_estate_setup_params)
+    estate = Bcome::Node::Collection::Base.new(given_estate_setup_params)
     bootup.expects(:estate).returns(estate)
     workspace_instance = ::Bcome::Workspace.send(:new) 
     workspace_instance.expects(:set).with(context: estate, :show_welcome => true).returns(nil)
@@ -85,7 +85,7 @@ class BootupTest < ActiveSupport::TestCase
 
     assert bootup.crumbs.size == 2
 
-    estate = Bcome::Node::Collection.new(given_estate_setup_params)
+    estate = Bcome::Node::Collection::Base.new(given_estate_setup_params)
     bootup.expects(:estate).returns(estate)
     bootup.expects(:traverse).with(estate)
 

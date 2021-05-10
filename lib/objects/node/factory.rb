@@ -21,6 +21,11 @@ module Bcome::Node
 
     BCOME_RC_FILENAME = '.bcomerc'
 
+    def initialize(*params)
+      @config_file_name = nil
+      super
+    end
+
     def bucket
       @bucket ||= {}
     end

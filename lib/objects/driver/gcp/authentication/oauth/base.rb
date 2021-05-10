@@ -9,8 +9,6 @@ module Bcome::Driver::Gcp::Authentication::Oauth
 
     include ::Bcome::Driver::Gcp::Authentication::Utilities
 
-    credential_directory = '.gauth'
-
     attr_reader :scopes, :secrets_filename, :service, :client_config
 
     def initialize(driver, service, client_config, node)
@@ -88,7 +86,7 @@ module Bcome::Driver::Gcp::Authentication::Oauth
           rescue ArgumentError => e
             signal_failure
             raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
-           end
+          end
         end
       end
 
