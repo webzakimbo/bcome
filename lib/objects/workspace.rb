@@ -31,7 +31,7 @@ class ::Bcome::Workspace
 
   def show_welcome
     print "\n"
-    puts "Welcome to bcome v#{::Bcome::Version.release}".bc_yellow
+    puts "\nWelcome to bcome v#{::Bcome::Version.release}".bc_yellow
     puts "\nType\s" + 'menu'.underline + "\sfor a command list, or\s" + 'registry'.underline + "\sfor your custom tasks."
     puts "\n\n"
   end
