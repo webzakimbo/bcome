@@ -157,7 +157,7 @@ module Bcome::Node::Collection
       # We'll do this early enough
       ::Bcome::EnsureBinary.do(::Bcome::K8Cluster::CommandRunner::KUBECTL_BINARY)
 
-      wrap_indicator type: :basic, title: "Authorising\s" + "GCP\s".bc_cyan + cluster_id.underline, completed_title: 'done' do
+      wrap_indicator type: :basic, title: "Authorising\s" + "GCP\s".bc_blue.bold + cluster_id.underline, completed_title: 'done' do
         begin
           @k8_cluster = ::Bcome::Driver::Gcp::Gke::Cluster.new(self)
         rescue ::Bcome::Exception::ReauthGcp
