@@ -30,6 +30,11 @@ module Bcome::Driver::Gcp::ApiClient
         return response.json_body
       else
         raise ::Bcome::Exception::ReauthGcp, "GCP session needs to be reauthenticatd" if response.error_status == "UNAUTHENTICATED"
+
+        if response.error_status == "NOT_FOUND"
+          raise ::Bcome::Exception::GcpResourceNotFound, "at node #{@node.namespace}. API request failed with message: #{response.error_message}" 
+        end
+
         raise ::Bcome::Exception::Generic, "Status #{response.error_status} received from GCP API for node #{@node.namespace}.\nHTTP #{response.http_code} \nMessage: #{response.error_message}"
       end
     end

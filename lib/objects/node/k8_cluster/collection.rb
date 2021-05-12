@@ -4,8 +4,7 @@
 
 # todo: this is a dynamic node (is_dynamic), and so like an inventory, cannot have any namespaces defined below it.
 # todo: clean up error message when auth fails (bearer auth)
-# todo: situation will arise where token is invalid. Need to re-auth
-# Enshrine is_dynamic in code, and guard against putting anything below this namespace as we already for inventories
+# Enshrine is_dynamic in code, and guard against putting anything below this namespace as we already have for standard inventories
 
 module Bcome::Node::Collection
   class Kube < ::Bcome::Node::Collection::Base
@@ -162,6 +161,8 @@ module Bcome::Node::Collection
           @k8_cluster = ::Bcome::Driver::Gcp::Gke::Cluster.new(self)
         rescue ::Bcome::Exception::ReauthGcp
           network_driver.reauthorize        
+        rescue ::Bcome::Exception::GcpResourceNotFound
+          raise ::Bcome::Exception::Generic, "Cluster #{cluster_id} not found - is your network configuration correct?"
         rescue StandardError => e
           raise ::Bcome::Exception::Generic, "Could not retrieve credentials for #{cluster_id}. Failed with: #{e.class} #{e.message}"
         end  
