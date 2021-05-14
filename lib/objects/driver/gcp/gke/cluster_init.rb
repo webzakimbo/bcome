@@ -9,7 +9,10 @@ module ::Bcome::Driver::Gcp::Gke::ClusterInit
   end
 
   def register_user_in_config
-    run_kubectl_config("config set credentials #{username} --username=#{username}")
+    run_kubectl_config("config set-credentials #{username} --token=#{access_token}")
   end  
 
+  def access_token
+    @node.network_driver.network_credentials[:access_token]
+  end
 end
