@@ -20,7 +20,7 @@ class InputParser
   private
 
   def node_methods
-    # All methods  expect (or may optionally have) one or more namespaces as arguments
+    # All methods expect (or may optionally have) one or more namespaces as arguments
     %w(cd ls workon disable ssh tree)  
   end
 
