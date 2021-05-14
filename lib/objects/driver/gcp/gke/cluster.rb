@@ -9,11 +9,16 @@ module ::Bcome::Driver::Gcp::Gke
     def initialize(node)
       raise "Invalid collection class for #{self.class}" unless node.is_a?(::Bcome::Node::Collection::Kube)
       @node = node
+      register_cluster
+    end  
+
+    def register_cluster
       register_cluster_in_config
       register_cluster_certificate_in_config
       register_user_in_config
-    end  
-
+      register_cluster_context
+    end
+ 
     ## The config for this particular cluster --
     def config 
       @config ||= get_config
