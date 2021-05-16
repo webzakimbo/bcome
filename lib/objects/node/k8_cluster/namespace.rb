@@ -6,6 +6,7 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
     include ::Bcome::Node::KubeCommandHelper
+    include ::Bcome::Node::K8Cluster::HelmWrap
     
     def initialize(params)
       super
