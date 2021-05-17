@@ -13,6 +13,7 @@ module Bcome::Node::Collection
     include ::Bcome::LoadingBar::Handler
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::K8Cluster::HelmWrap
+    include ::Bcome::InteractiveHelm
 
     def initialize(*params)
       super

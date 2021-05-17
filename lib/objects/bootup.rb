@@ -2,18 +2,21 @@
 
 module Bcome
   class Bootup
-    def self.set_and_do(params, spawn_into_console = true)
-      instance.set(params, spawn_into_console)
-      instance.do
-    end
 
-    def self.traverse(breadcrumbs = nil, _spawn_into_console = false)
-      spawn_into_console = false
-      ::Bcome::Bootup.set_and_do({ breadcrumbs: breadcrumbs }, spawn_into_console)
-    end
+    class << self
+      def set_and_do(params, spawn_into_console = true)
+        instance.set(params, spawn_into_console)
+        instance.do
+      end
 
-    def self.spider(breadcrumbs = nil)
-      instance.spider({ breadcrumbs: breadcrumbs})
+      def traverse(breadcrumbs = nil, _spawn_into_console = false)
+        spawn_into_console = false
+        ::Bcome::Bootup.set_and_do({ breadcrumbs: breadcrumbs }, spawn_into_console)
+      end
+
+      def spider(breadcrumbs = nil)
+        instance.spider({ breadcrumbs: breadcrumbs})
+      end
     end
 
     include Singleton

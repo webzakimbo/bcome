@@ -18,6 +18,10 @@ module ::Bcome::Driver::Gcp::Gke::ClusterAttributes
       "#{@node.cluster_name}-#{@node.region}_#{@node.project}"
     end
 
+    def remote_name
+      @node.cluster_name
+    end
+
     def running?
       status == "RUNNING"
     end

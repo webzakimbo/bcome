@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Helm
   class Wrap
 
@@ -10,15 +12,28 @@ module Helm
     end
 
     def run(command)
-      wrapped_command = wrap(command)
-      runner = ::Bcome::Command::Local.run(wrapped_command)
+      cmd = contextualized_command(command)
+      #puts cmd
+      runner = ::Bcome::Command::Local.run(cmd)
       parse_runner(runner)
     end
 
-    private
+    def contextualized_command(command)
+      cmd = "#{::Helm::Validate::HELM_BINARY} #{command} #{context_string}"
+      cmd += "\s" + namespace_flag if namespace_commands.include?(command)
+      cmd
+    end 
 
-    def wrap(command)
-      "#{::Helm::Validate::HELM_BINARY} #{command} --kubeconfig=#{config_path} --kube-context=#{context}"  
+    def namespace_commands
+      %w(ls)
+    end  
+
+    def namespace_flag
+      is_collection? ? "--all-namespaces" : "--namespace #{@node.identifier}"
+    end
+ 
+    def context_string
+      "--kubeconfig=#{config_path} --kube-context=#{context}"
     end
 
     def parse_runner(runner)

@@ -8,15 +8,19 @@ module Helm::Validate
     validate_env
   end
 
+  def is_collection?
+    @node.is_a?(::Bcome::Node::Collection::Kube)
+  end
+
+  def is_namespace?
+    @node.is_a?(Bcome::Node::K8Cluster::Namespace)
+  end
+
   private
 
   def validate_node
-    raise ::Bcome::Exception::Generic, "Node type #{@node.class} is not enabled for Helm contextual wrapping." unless valid_node_types.include?(@node.class)
+    raise ::Bcome::Exception::Generic, "Node type #{@node.class} is not enabled for Helm contextual wrapping." unless is_collection? || is_namespace? 
   end
- 
-  def valid_node_types
-    [::Bcome::Node::Collection::Kube, Bcome::Node::K8Cluster::Namespace]
-  end  
 
   def validate_env
     ::Bcome::EnsureBinary.do(HELM_BINARY)

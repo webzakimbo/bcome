@@ -2,7 +2,8 @@
 
 module Bcome::Orchestration
   class InteractiveTerraform < Bcome::Orchestration::Base
-    ## Prototype interactive terraform shell embedded within bcome.
+
+    ## Contextual Terraform shell
 
     # * Provides access to the metadata framework, so that data may be shared between Orchestrative processes and Terraform
     # * Transparent authorization, by passing in cloud authorisation details from the bcome session
