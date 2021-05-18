@@ -1,25 +1,32 @@
 # frozen_string_literal: true
 
-module Helm
+module Bcome::Helm
   class Wrap
 
-    include Helm::Validate
-    include Helm::ContextualAttributes
+    include Validate
+    include ContextualAttributes
 
     def initialize(node)
       @node = node
       validate
     end
 
+    def helm_bin
+      ::Bcome::Helm::Validate::HELM_BINARY
+    end 
+
     def run(command)
       cmd = contextualized_command(command)
-      #puts cmd
+
+      puts "\nRUN\s".bc_green + "#{helm_bin} #{command}"
+
       runner = ::Bcome::Command::Local.run(cmd)
       parse_runner(runner)
+      return runner
     end
 
     def contextualized_command(command)
-      cmd = "#{::Helm::Validate::HELM_BINARY} #{command} #{context_string}"
+      cmd = "#{helm_bin} #{command} #{context_string}"
       cmd += "\s" + namespace_flag if namespace_commands.include?(command)
       cmd
     end 

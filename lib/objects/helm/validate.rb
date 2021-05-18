@@ -1,4 +1,4 @@
-module Helm::Validate
+module Bcome::Helm::Validate
 
   REQUIRED_HELM_MAJOR_VERSION="3".freeze
   HELM_BINARY="helm".freeze

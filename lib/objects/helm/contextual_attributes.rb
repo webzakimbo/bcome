@@ -1,4 +1,4 @@
-module Helm::ContextualAttributes
+module Bcome::Helm::ContextualAttributes
 
   def cluster
     @node.k8_cluster

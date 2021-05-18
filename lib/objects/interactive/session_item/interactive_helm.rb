@@ -7,8 +7,7 @@ module Bcome::Interactive::SessionItem
     # * Wraps helm commands for kubernetes collections and namespaces
     # * Contextual command execution within the node's kubectl context
 
-    QUIT = '\\q'
-    COMMAND_PROMPT = "enter command or '#{QUIT}' to quit>".informational + "\s#{::Helm::Validate::HELM_BINARY}" 
+    QUIT_HELM = '\\q'.freeze
 
     def do
       wait_for_input
@@ -25,6 +24,10 @@ module Bcome::Interactive::SessionItem
       puts "\nAny commands you enter here will be passed directly to Helm scoped to your current Kubernetes node's kubectl context.\n\n"
     end
 
+    def command_prompt
+      "enter command or '#{QUIT_HELM}' to quit>".informational + "\s#{::Bcome::Helm::Validate::HELM_BINARY}"
+    end
+
     def k8_cluster
       node.k8_cluster
     end
@@ -34,11 +37,12 @@ module Bcome::Interactive::SessionItem
     end 
 
     def wait_for_input
-      raw_command = ::Reline.readline("#{COMMAND_PROMPT}\s", true).squeeze('').to_s
+      raw_command = ::Reline.readline("#{command_prompt}\s", true).squeeze('').to_s
 
-      return if raw_command == QUIT
-
-      process(raw_command) unless raw_command == QUIT
+      return if raw_command == QUIT_HELM
+     
+      puts "\n"
+      process(raw_command) unless raw_command == QUIT_HELM
     end
 
     def process(command)
