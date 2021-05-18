@@ -15,10 +15,10 @@ module Bcome::Helm
       ::Bcome::Helm::Validate::HELM_BINARY
     end 
 
-    def run(command)
+    def run(command, skip_output = false)
       cmd = contextualized_command(command)
 
-      puts "\nRUN\s".bc_green + "#{helm_bin} #{command}"
+      puts "\nRUN\s".bc_green + "#{helm_bin} #{command}" unless skip_output
 
       runner = ::Bcome::Command::Local.run(cmd)
       parse_runner(runner)

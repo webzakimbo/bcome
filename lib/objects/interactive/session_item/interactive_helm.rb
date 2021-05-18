@@ -45,8 +45,9 @@ module Bcome::Interactive::SessionItem
       process(raw_command) unless raw_command == QUIT_HELM
     end
 
-    def process(command)
-      @helm_wrapper.run(command)
+    def process(command)  
+      skip_output = true
+      @helm_wrapper.run(command, skip_output)
       puts "\n"
       wait_for_input
     end
