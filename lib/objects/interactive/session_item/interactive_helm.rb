@@ -25,7 +25,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def command_prompt
-      "enter command or '#{QUIT_HELM}' to quit>".informational + "\s#{::Bcome::Helm::Validate::HELM_BINARY}"
+      "enter command or '#{QUIT_HELM}' to quit:" + "\s#{::Bcome::Helm::Validate::HELM_BINARY}".informational
     end
 
     def k8_cluster

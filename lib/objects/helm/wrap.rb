@@ -32,7 +32,7 @@ module Bcome::Helm
     end 
 
     def namespace_commands
-      %w(ls)
+      %w(ls uninstall)
     end  
 
     def namespace_flag
