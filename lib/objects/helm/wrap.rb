@@ -18,8 +18,6 @@ module Bcome::Helm
     def run(command, skip_output = false)
       cmd = contextualized_command(command)
 
-      puts "\nRUN\s".bc_green + "#{helm_bin} #{command}" unless skip_output
-
       runner = ::Bcome::Command::Local.run(cmd)
       parse_runner(runner)
       return runner
@@ -27,12 +25,13 @@ module Bcome::Helm
 
     def contextualized_command(command)
       cmd = "#{helm_bin} #{command} #{context_string}"
-      cmd += "\s" + namespace_flag if namespace_commands.include?(command)
+      verb = command.split("\s").first                                                            
+      cmd += "\s" + namespace_flag if namespace_commands.include?(verb)
       cmd
     end 
 
     def namespace_commands
-      %w(ls uninstall)
+      %w(ls install uninstall)
     end  
 
     def namespace_flag
