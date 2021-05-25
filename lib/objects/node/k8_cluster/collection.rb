@@ -22,7 +22,7 @@ module Bcome::Node::Collection
     end
 
     def get_children_command
-      "get namespaces,pods -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
+      "get namespaces,pods,ingresses -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
     end
 
     def interactive
@@ -30,30 +30,7 @@ module Bcome::Node::Collection
     end
 
     def set_child_nodes
-      raw_config = run_kc(get_children_command)
-      items = raw_config["items"]
-
-      namespaces_data = items.select{|item| item["kind"] == "Namespace" }
-      pods_data = items.select{|item| item["kind"] == "Pod" }
-      namespaces_data.pmap do |namespace_data|
-        namespace_identifier = namespace_data["metadata"]["name"]
-        pod_data_for_namespace = pods_data.select{|pod_data| pod_data["metadata"]["namespace"] == namespace_identifier }
-
-        config = {
-          identifier: namespace_identifier,
-          raw_data: namespace_data
-        }
-        namespace = gke_child_node_class.new(views: config, parent: self)
-        resources << namespace
-        
-        if respond_to?(:subdivide_namespaces_on_label)
-          namespace.set_subselects_from_raw_data(pod_data_for_namespace, subdivide_namespaces_on_label) 
-        else
-          namespace.set_pods_from_raw_data(pod_data_for_namespace)
-        end
-
-        ::Bcome::Node::Factory.instance.bucket[namespace.keyed_namespace] = namespace
-      end
+      Snapshot.do(self)
     end
 
     def enabled_menu_items
