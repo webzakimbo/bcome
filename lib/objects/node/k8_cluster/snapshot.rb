@@ -1,4 +1,8 @@
-# Todo - benchmark get all with goal of dynamically grabbing all
+# TODO - benchmark get all with goal of dynamically grabbing all
+# TODO - set one type of object as FOCUSED and allow FOCUS on any other
+#  ~ maybe we can focus on more that one at a time?  This would play havoc with log, run etc from namespace level 
+#  Perhaps on a snapshot reload, menu changes dynamically as to what is in focus?
+# TODO - deployment accessor on POD ?!
 
 module Bcome::Node::Collection
   class Snapshot < ::Bcome::Node::Collection::Base
@@ -45,13 +49,11 @@ module Bcome::Node::Collection
     def assign_resources_to_namespaces
       wrap_indicator type: :progress, size: @items.keys.size, title: loader_title, completed_title: loader_completed_title do
         do_assign
-      end
+      end 
     end
 
     def do_assign
       @items.each do |namespace_identifier, resources|
-
-        # code smell in porting this over
         namespace_data = raw_items.select{|item| item["kind"] == "Namespace" }
 
         namespace = @k8.gke_child_node_class.new(views: { identifier: namespace_identifier, raw_data: namespace_data }, parent: @k8)
@@ -60,8 +62,8 @@ module Bcome::Node::Collection
         if resources["Pod"] && !resources["Pod"].empty?
           if @k8.respond_to?(:subdivide_namespaces_on_label)
             namespace.set_subselects_from_raw_data(resources["Pod"], @k8.subdivide_namespaces_on_label)
-          else
-            namespace.set_pods_from_raw_data(resources["Pod"])
+          else 
+            namespace.set_resources(resources)
           end
         end
 

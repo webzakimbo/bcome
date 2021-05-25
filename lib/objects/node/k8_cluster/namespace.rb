@@ -45,6 +45,9 @@ module Bcome::Node::K8Cluster
       end
       return
     end
+    def gke_child_node_class
+      ::Bcome::Node::K8Cluster::Pod
+    end
 
     def k8_namespace
       self
@@ -64,6 +67,42 @@ module Bcome::Node::K8Cluster
         ::Bcome::Node::Factory.instance.bucket[pod.keyed_namespace] = pod
       end
       return
+    end
+
+    def crds
+      @crds ||= {}
+    end
+
+    def set_resources(raw_resources)
+      raw_resources.each do |resource_type, raw_resource|
+        resource_klass = resource_klasses[resource_type]
+        resource_klass = crd_resource_klass unless resource_klass 
+
+        raw_resource.each do |raw_resource|
+          resource = resource_klass.new(views: {identifier: raw_resource["metadata"]["name"], raw_data: raw_resource}, parent: self)
+
+          if resource_klass == ::Bcome::Node::K8Cluster::Pod  ## Focus on       
+            resources << resource 
+            resource.set_containers
+          else
+            crds[resource_type] = crds[resource_type] ? (crds[resource_type] << resource) : [resource]
+          end
+         
+          ::Bcome::Node::Factory.instance.bucket[resource.keyed_namespace] = resource
+        end
+      end
+
+      return
+    end
+
+    def resource_klasses
+      {
+        "Pod" => ::Bcome::Node::K8Cluster::Pod
+      }
+    end
+  
+    def crd_resource_klass
+      ::Bcome::Node::K8Cluster::Crd
     end
 
     def enabled_menu_items
@@ -152,10 +191,6 @@ module Bcome::Node::K8Cluster
 
     def get_children_command
       "get pods"
-    end
-
-    def gke_child_node_class
-      ::Bcome::Node::K8Cluster::Pod
     end
 
     def k8_cluster
