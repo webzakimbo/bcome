@@ -6,10 +6,11 @@ module Bcome
       class GroupedSubselectK8 < Subselect
 
         include ::Bcome::Node::KubeCommandHelper
+        include ::Bcome::Node::K8Cluster::ResourceMappings
  
         def initialize(params)
           super
-          @pods_data = params[:pods_data]
+          @data = params[:data]
           @grouped_by_label = params[:grouped_by_label]
           do_set_resources
         end
@@ -52,26 +53,18 @@ module Bcome
         end
 
         def do_set_resources
-          @pods_data.each do |pod_data|
-            pod_identifier = pod_data["metadata"]["name"]
-
-            namespace_config = {
-               identifier: pod_identifier,
-               raw_data: pod_data
-             } 
-            pod = ::Bcome::Node::K8Cluster::Pod.new(views: namespace_config, parent: self)     
-            resources << pod
-            pod.set_containers
-            ::Bcome::Node::Factory.instance.bucket[pod.keyed_namespace] = pod
+          @data.each do |data|
+            resource_type = data["kind"] 
+            resource_klass = resource_klasses[resource_type]
+            resource_klass = crd_resource_klass unless resource_klass
+            add_resource(resource_klass, resource_type, data)
           end
-
-          return resources
+          return
         end
 
         def resources
           @resources ||= ::Bcome::Node::Resources::Base.new
         end
-
       end
     end
   end

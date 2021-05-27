@@ -7,6 +7,7 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::KubeListHelper
     include ::Bcome::Node::KubeCommandHelper
     include ::Bcome::Node::K8Cluster::HelmWrap
+    include ::Bcome::Node::K8Cluster::ResourceMappings
     include ::Bcome::InteractiveHelm
     
     def initialize(params)
@@ -24,27 +25,6 @@ module Bcome::Node::K8Cluster
       return set.flatten!
     end
 
-    def set_subselects_from_raw_data(raw_pods_data, label_name)  
-      @raw_pods_data = raw_pods_data
-      json_path = JsonPath.new("metadata.labels.#{label_name}")
-
-      grouped_pod_data = raw_pods_data.group_by{|data| json_path.on(data) }
-    
-      # Could not group by, so return flat structure within namespace instead.
-      return set_pods_from_raw_data(raw_pods_data) if grouped_pod_data.keys.flatten.empty?
-
-      grouped_pod_data.each do |group_name, group_data|
-        views = {
-          identifier: group_name.first.nil? ? "ungrouped" : group_name.first,
-          subselect_parent: self
-        }
-
-        subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, pods_data: group_data, parent: self, grouped_by_label: label_name) 
-        resources << subselect
-        ::Bcome::Node::Factory.instance.bucket[subselect.keyed_namespace] = subselect
-      end
-      return
-    end
     def gke_child_node_class
       ::Bcome::Node::K8Cluster::Pod
     end
@@ -53,56 +33,39 @@ module Bcome::Node::K8Cluster
       self
     end
 
-    def set_pods_from_raw_data(raw_pods_data)
-      raw_pods_data.pmap do |pod_data|
-        pod_identifier = pod_data["metadata"]["name"]
-
-        namespace_config = {
-          identifier: pod_identifier,
-          raw_data: pod_data
-        }
-        pod = gke_child_node_class.new(views: namespace_config, parent: self)
-        resources << pod
-        pod.set_containers
-        ::Bcome::Node::Factory.instance.bucket[pod.keyed_namespace] = pod
-      end
-      return
-    end
-
-    def crds
-      @crds ||= {}
-    end
-
     def set_resources(raw_resources)
       raw_resources.each do |resource_type, raw_resource|
         resource_klass = resource_klasses[resource_type]
         resource_klass = crd_resource_klass unless resource_klass 
 
         raw_resource.each do |raw_resource|
-          resource = resource_klass.new(views: {identifier: raw_resource["metadata"]["name"], raw_data: raw_resource}, parent: self)
-
-          if resource_klass == ::Bcome::Node::K8Cluster::Pod  ## Focus on       
-            resources << resource 
-            resource.set_containers
-          else
-            crds[resource_type] = crds[resource_type] ? (crds[resource_type] << resource) : [resource]
-          end
-         
-          ::Bcome::Node::Factory.instance.bucket[resource.keyed_namespace] = resource
+          add_resource(resource_klass, resource_type, raw_resource)
         end
       end
-
       return
     end
 
-    def resource_klasses
-      {
-        "Pod" => ::Bcome::Node::K8Cluster::Pod
-      }
-    end
-  
-    def crd_resource_klass
-      ::Bcome::Node::K8Cluster::Crd
+    def set_subselects_from_raw_data(raw_resources, label_name)
+      raw_data = raw_resources.values.flatten
+      json_path = JsonPath.new("metadata.labels.#{label_name}")
+
+      grouped_data = raw_data.group_by{|data| json_path.on(data) }
+
+      # Could not group by, so return flat structure within namespace instead.
+      return set_resources(raw_resources) if grouped_data.keys.flatten.empty?
+
+      grouped_data.each do |group_name, group_data|
+        views = {
+          identifier: group_name.first.nil? ? "ungrouped" : group_name.first,
+          subselect_parent: self
+        }
+
+        subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, data: group_data, parent: self, grouped_by_label: label_name)
+        resources << subselect
+        ::Bcome::Node::Factory.instance.bucket[subselect.keyed_namespace] = subselect
+      end
+
+      return
     end
 
     def enabled_menu_items
@@ -196,6 +159,5 @@ module Bcome::Node::K8Cluster
     def k8_cluster
       parent.k8_cluster
     end
-
   end
 end

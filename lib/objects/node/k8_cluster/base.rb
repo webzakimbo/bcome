@@ -13,5 +13,9 @@ module Bcome::Node::K8Cluster
       return data["items"]
     end
 
+    def spec
+      raw_data["spec"]
+    end
+
   end
 end

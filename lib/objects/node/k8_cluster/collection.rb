@@ -21,10 +21,6 @@ module Bcome::Node::Collection
       @nodes_loaded = false
     end
 
-    def get_children_command
-      "get namespaces,pods,ingresses -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
-    end
-
     def interactive
       kubectl
     end
@@ -157,6 +153,5 @@ module Bcome::Node::Collection
         raise ::Bcome::Exception::Generic, "Missing cluster configuration attribute '#{require_attribute}'" unless send(required_attribute)
       end
     end
-
   end
 end

@@ -49,7 +49,7 @@ module Bcome::Node::Collection
     def assign_resources_to_namespaces
       wrap_indicator type: :progress, size: @items.keys.size, title: loader_title, completed_title: loader_completed_title do
         do_assign
-      end 
+      end
     end
 
     def do_assign
@@ -59,12 +59,10 @@ module Bcome::Node::Collection
         namespace = @k8.gke_child_node_class.new(views: { identifier: namespace_identifier, raw_data: namespace_data }, parent: @k8)
         @k8.resources << namespace
 
-        if resources["Pod"] && !resources["Pod"].empty?
-          if @k8.respond_to?(:subdivide_namespaces_on_label)
-            namespace.set_subselects_from_raw_data(resources["Pod"], @k8.subdivide_namespaces_on_label)
-          else 
-            namespace.set_resources(resources)
-          end
+        if @k8.respond_to?(:subdivide_namespaces_on_label)
+          namespace.set_subselects_from_raw_data(resources, @k8.subdivide_namespaces_on_label)
+        else 
+          namespace.set_resources(resources)
         end
 
         ::Bcome::Node::Factory.instance.bucket[namespace.keyed_namespace] = namespace
@@ -76,7 +74,7 @@ module Bcome::Node::Collection
  
     def get_config
       # TODO - benchmark setting this to *all*. Goal: dynamically grabbing all
-      cmd = "get namespaces,pods,ingresses -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
+      cmd = "get namespaces,pods,ingresses,services -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
       @config = @k8.run_kc(cmd)
     end
 
