@@ -50,7 +50,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
       crds[resource_type] = [resource]
     end
 
-    resource.set_child_nodes if respond_to?(:set_child_nodes)
+    resource.set_child_nodes if resource.respond_to?(:set_child_nodes)
 
     ::Bcome::Node::Factory.instance.bucket[resource.keyed_namespace] = resource
   end
