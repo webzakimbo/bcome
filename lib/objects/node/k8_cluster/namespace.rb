@@ -10,9 +10,12 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::K8Cluster::ResourceMappings
     include ::Bcome::InteractiveHelm
     
+    attr_reader :is_subdivided
+
     def initialize(params)
       super
       @nodes_loaded = false
+      @is_subdivided = false
     end
 
     def machines(skip_for_hidden = true)
@@ -53,6 +56,8 @@ module Bcome::Node::K8Cluster
 
       # Could not group by, so return flat structure within namespace instead.
       return set_resources(raw_resources) if grouped_data.keys.flatten.empty?
+
+      @is_subdivided = true
 
       grouped_data.each do |group_name, group_data|
         views = {

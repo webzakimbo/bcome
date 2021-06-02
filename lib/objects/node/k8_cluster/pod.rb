@@ -31,8 +31,8 @@ module Bcome::Node::K8Cluster
       base_items
     end
 
-    def service
-      @service ||= parent.crds["Service"].select{|s| s.pod == self }.first
+    def services
+      @services ||= parent.crds["Service"].select{|s| s.pod == self }
     end
 
     def state

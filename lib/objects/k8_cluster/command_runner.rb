@@ -76,9 +76,16 @@ module Bcome::K8Cluster
     end
   
     def result 
-      #puts "#{full_command}\n" 
+      print_command_and_obfuscate_token(full_command)
       @result ||= ::Bcome::Command::Local.run(full_command)
     end
+
+    def print_command_and_obfuscate_token(command)
+      command.gsub!(/--token=([0-9A-Za-z\-_.]+)/,"--token=*****\s")
+      puts "#{command}\n"
+    end
+   
+
 
   end
 end

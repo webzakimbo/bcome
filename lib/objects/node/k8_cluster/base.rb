@@ -17,5 +17,9 @@ module Bcome::Node::K8Cluster
       raw_data["spec"]
     end
 
+    def name
+      raw_data["metadata"]["name"]
+    end
+
   end
 end

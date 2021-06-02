@@ -1,7 +1,22 @@
 module Bcome::Node::K8Cluster::ResourceMappings
 
   def crds
-    @crds ||= {}
+    @crds ||= get_crds
+  end
+
+  def get_crds
+    collate_child_crds? ? collate_child_crds : {}
+  end
+
+  def collate_child_crds?
+    respond_to?(:is_subdivided) && is_subdivided
+  end
+
+  def collate_child_crds
+    new_collection = {}
+    child_crds = resources.collect(&:crds)
+    child_crds.each{|collection| collection.keys.each{|key| new_collection[key] ? (new_collection[key] << collection[key]) : (new_collection[key] = collection[key].dup) ; new_collection[key].flatten! } }
+    return new_collection
   end
 
   def resource_klasses
@@ -26,7 +41,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
 
   def add_resource(resource_klass, resource_type, data)
     resource = resource_klass.new(views: {identifier: data["metadata"]["name"], raw_data: data }, parent: self)
- 
+
     resources << resource if focus_on?(resource_klass)
     
     if crds[resource_type]

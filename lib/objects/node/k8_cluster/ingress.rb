@@ -2,5 +2,33 @@
 
 module Bcome::Node::K8Cluster
   class Ingress < Bcome::Node::K8Cluster::Child
+
+    def rules
+      @rules ||= get_rules
+    end
+
+    def for_service?(query_service)
+      for_service = services.collect{|service| 
+        service == query_service 
+       }.flatten.any?
+
+      return for_service
+    end
+
+    private
+
+    def services
+      rules.collect(&:services).flatten
+    end
+ 
+    def get_rules
+      # Conventionally, an ingress without rules will send all traffic to a default backend.
+      # This is not yet handled as far as mapping traffic is concerned.
+      return [] unless spec["rules"]
+
+      spec["rules"].collect{|rule_config|
+        ::Bcome::Node::K8Cluster::Utilities::IngressRule.new(self, rule_config)
+      } 
+    end  
   end
 end

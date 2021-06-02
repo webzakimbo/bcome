@@ -21,6 +21,12 @@ module Bcome::Node::K8Cluster
       "Pod"
     end
 
+    def ingresses
+      @ingress ||= parent.crds["Ingress"].select{|i| 
+        i.for_service?(self) 
+      }
+    end
+
     private
 
     def instantiate_ports
@@ -28,6 +34,5 @@ module Bcome::Node::K8Cluster
         ::Bcome::Node::K8Cluster::Utilities::Port.new(port_spec)
       }
     end
-
   end
 end

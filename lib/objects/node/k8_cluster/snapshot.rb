@@ -1,4 +1,3 @@
-# TODO - benchmark get all with goal of dynamically grabbing all
 # TODO - set one type of object as FOCUSED and allow FOCUS on any other
 #  ~ maybe we can focus on more that one at a time?  This would play havoc with log, run etc from namespace level 
 #  Perhaps on a snapshot reload, menu changes dynamically as to what is in focus?
@@ -73,8 +72,8 @@ module Bcome::Node::Collection
     private
  
     def get_config
-      # TODO - benchmark setting this to *all*. Goal: dynamically grabbing all
       cmd = "get namespaces,pods,ingresses,services -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
+      #cmd = "get all -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
       @config = @k8.run_kc(cmd)
     end
 
