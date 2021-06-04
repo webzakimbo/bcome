@@ -152,7 +152,7 @@ module Bcome::Node::K8Cluster
 
     def logs(*params)
       # Get all logs for all containers (i.e. previously failed containers too)
-      all_logs_command = "logs #{hyphenated_identifier} --all-containers -n #{k8_namespace.hyphenated_identifier}"
+      all_logs_command = "logs #{hyphenated_identifier} --follow --all-containers -n #{k8_namespace.hyphenated_identifier}"
       get_kubectl_cmd(all_logs_command)
       system(get_kubectl_cmd(all_logs_command))
     end
