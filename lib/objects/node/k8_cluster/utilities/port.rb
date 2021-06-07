@@ -20,6 +20,5 @@ module Bcome::Node::K8Cluster::Utilities
     def target_port
       @config["targetPort"]
     end
-
   end 
 end

@@ -4,7 +4,7 @@ module Bcome::Node::K8Cluster
   class Service < Bcome::Node::K8Cluster::Child
 
     include ::Bcome::Node::K8Cluster::Selector
-
+ 
     def cluster_ip
       spec["clusterIP"]
     end  
@@ -13,8 +13,8 @@ module Bcome::Node::K8Cluster
       @ports ||= instantiate_ports
     end
 
-    def pod
-      @pod ||= selected
+    def target
+      @target ||= get_target
     end
 
     def selector_kind
@@ -27,9 +27,23 @@ module Bcome::Node::K8Cluster
       }
     end
 
+    def external_service
+      @external_service ||= ::Bcome::Node::K8Cluster::Utilities::ExternalService.new(spec["externalName"])
+    end
+
     private
 
+    def get_target
+      return external_service if service_type == "ExternalName"
+      return selected
+    end
+
+    def service_type
+      spec["type"]
+    end  
+
     def instantiate_ports
+      return [] unless spec["ports"]
       spec["ports"].collect{|port_spec|
         ::Bcome::Node::K8Cluster::Utilities::Port.new(port_spec)
       }

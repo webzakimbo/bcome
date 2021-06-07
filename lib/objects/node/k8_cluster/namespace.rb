@@ -135,8 +135,13 @@ module Bcome::Node::K8Cluster
     end
 
     def ingresses
-      run_kc("get ingresses")
+      crds["Ingress"]
     end  
+
+    def path_print
+      ingresses.each(&:path_print)
+      return
+    end
 
     def delegated_kubectl_cmd(command)
       command_in_context = append_namespace_to(command)

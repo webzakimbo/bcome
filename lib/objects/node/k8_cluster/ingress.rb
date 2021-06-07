@@ -15,6 +15,13 @@ module Bcome::Node::K8Cluster
       return for_service
     end
 
+    def path_print(show_broken = false)
+      rules.each {|rule|  
+        rule.path_print(show_broken) 
+      }
+      return
+    end
+
     private
 
     def services

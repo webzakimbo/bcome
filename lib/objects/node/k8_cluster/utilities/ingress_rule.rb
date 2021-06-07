@@ -10,6 +10,13 @@ module Bcome::Node::K8Cluster::Utilities
       @ingress = ingress
     end  
 
+    def path_print(show_broken = false)
+      paths.each {|path| 
+        path.print(show_broken)
+      }
+      return
+    end
+
     # Optional host, if not provided, then the rule applies to all inbound http traffic through the IP address specified.
     def host
       @config["host"]

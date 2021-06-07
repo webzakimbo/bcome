@@ -39,6 +39,11 @@ module Bcome
           parent_namespace
         end
 
+        def path_print
+          crds["Ingress"].each(&:path_print)
+          return
+        end
+
         def hyphenated_identifier
           @original_identifier.gsub("_", "-")
         end
