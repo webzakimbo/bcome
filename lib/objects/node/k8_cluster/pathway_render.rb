@@ -6,6 +6,9 @@ module Bcome::Node::K8Cluster::PathwayRender
 
   def pathway_data
     map = {}
+
+    return map if ingresses.nil?
+
     ingresses.each{|ingress|
       map.deep_merge!(ingress.pathway_data)
     }
