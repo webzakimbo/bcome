@@ -22,13 +22,14 @@ module Bcome::Node::K8Cluster::Utilities::IngressPath
     def pathway_data
       return { "X".error => nil } if broken_path?
 
-      targets = service.targets.uniq.reject{|target| target.is_job? }
+      targets = service.targets.uniq
       
       map = {}
       targets.each do |target|
 
         if target.is_a?(::Bcome::Node::K8Cluster::Pod)
-           map.merge!(target.pathway_data(scheme, service_port))
+          next if target.is_job?
+          map.merge!(target.pathway_data(scheme, service_port))
         else
           target.merge!({"#{scheme}://#{target.identifier}:#{service_port}" => nil })
         end

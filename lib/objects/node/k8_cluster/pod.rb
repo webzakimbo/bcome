@@ -6,8 +6,8 @@ module Bcome::Node::K8Cluster
     RUNNING_STATE="running".freeze
 
     def is_job?
-      job_name = raw_data["metadata"]["job-name"]
-      !job_name.nil?
+      # TODO - there must be a better way ?
+      raw_data["metadata"]["ownerReferences"].collect{|refs| refs["kind"]}.include?("Job")
     end
 
     def list_attributes
