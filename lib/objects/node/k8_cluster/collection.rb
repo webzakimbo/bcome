@@ -14,6 +14,7 @@ module Bcome::Node::Collection
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::K8Cluster::HelmWrap
     include ::Bcome::InteractiveHelm
+    include ::Bcome::Node::K8Cluster::PathwayRender
 
     def initialize(*params)
       super
@@ -37,6 +38,10 @@ module Bcome::Node::Collection
 
     def enabled_menu_items
       (super + %i[config reload]) - non_k8_menu_items
+    end
+
+    def ingresses
+      resources.active.collect{|resource| resource.crds["Ingress"] }.flatten.compact
     end
 
     def menu_items

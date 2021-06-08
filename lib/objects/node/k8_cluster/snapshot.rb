@@ -23,7 +23,7 @@ module Bcome::Node::Collection
 
     ## Loading
     def loader_title
-      "k8/snaphotting namespaces" 
+      "Snapshotting K8 namespaces" 
     end
 
     def loader_completed_title

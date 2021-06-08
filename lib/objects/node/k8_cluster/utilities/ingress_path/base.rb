@@ -64,9 +64,14 @@ module Bcome::Node::K8Cluster::Utilities::IngressPath
     private
 
     def find_service
-      ingress.parent.crds["Service"].select{|service|
+      services.select{|service|
         (service.name == service_name) && service.ports.collect{|port| port.port == service_port }.any?
       }.first
+    end
+
+    def services
+      srvs = ingress.parent.crds["Service"]
+      return srvs.nil? ? [] : srvs
     end
   end 
 end
