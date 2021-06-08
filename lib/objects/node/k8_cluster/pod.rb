@@ -133,8 +133,10 @@ module Bcome::Node::K8Cluster
     def logs(*params)
       # Get all logs for all containers (i.e. previously failed containers too)
       all_logs_command = "logs #{hyphenated_identifier} --follow --all-containers -n #{k8_namespace.hyphenated_identifier}"
-      get_kubectl_cmd(all_logs_command)
-      system(get_kubectl_cmd(all_logs_command))
+
+      annotated_log_command = "#{all_logs_command} | while read line ; do echo \"#{namespace.terminal_prompt} $line\" ; done"
+
+      system(get_kubectl_cmd(annotated_log_command))
     end
 
     def gke_child_node_class

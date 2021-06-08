@@ -25,6 +25,12 @@ module Bcome::Node::Collection
       kubectl
     end
 
+    def logs(cmd = "")
+      resources.active.pmap do |pod|
+        pod.logs(cmd)
+      end
+    end
+
     def set_child_nodes
       Snapshot.do(self)
     end

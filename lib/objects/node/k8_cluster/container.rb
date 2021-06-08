@@ -86,11 +86,6 @@ module Bcome::Node::K8Cluster
         full_log_command = "#{full_log_command} | while read line ; do echo \"#{namespace.terminal_prompt} $line\" ; done"
       end
 
-      # If we're tailing multiple logs, then we annotate each log line with the originating container.
-      # if annotate
-      #  full_log_command = "#{full_log_command} | while read line ; do echo \"#{namespace.terminal_prompt} $line #{cmd}}\"; done"
-      # end
-
       system(full_log_command)
     end
 
