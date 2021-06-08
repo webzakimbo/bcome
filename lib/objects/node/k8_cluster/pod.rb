@@ -31,6 +31,21 @@ module Bcome::Node::K8Cluster
       base_items
     end
 
+    def pathway_data(scheme, service_port)
+      map = {}
+      if resources.any?
+        map = {}
+        resources.each do |resource|
+          map.merge!({
+            identifier => { "#{scheme}://#{resource.identifier}:#{service_port}" => nil }
+          })
+        end
+      else
+        return { "X".error.bold => nil }
+      end
+      return map
+    end
+
     def services
       @services ||= parent.crds["Service"].select{|s| s.pod == self }
     end

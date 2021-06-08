@@ -14,18 +14,22 @@ module Bcome::Node::K8Cluster::Utilities::IngressPath
       @config["backend"]
     end
 
-    def print(show_broken = false)
-      return nil if broken?
+    def print(show_broken_path = false)
+      return nil if broken_path?
       puts "#{scheme}://#{@rule.host}#{path} ~> #{path_print_service}"
     end
 
-    def path_print_service
-       return "No associated service" unless service
-       return "No associated pod" unless service.target
-       return "#{service.target.identifier}:#{service_port}"
+    def pathway_data
+      return { "X".error => nil } if broken_path?
+
+      if service.target.is_a?(::Bcome::Node::K8Cluster::Pod)
+         service.target.pathway_data(scheme, service_port)
+      else
+        return {"#{scheme}://#{service.target.identifier}:#{service_port}" => nil  }
+      end
     end
 
-    def broken?
+    def broken_path?
       service.nil? || service.target.nil? 
     end
   

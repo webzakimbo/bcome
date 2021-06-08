@@ -6,6 +6,7 @@ module Bcome
       class Subselect < ::Bcome::Node::K8Cluster::Base
 
         include ::Bcome::Node::KubeCommandHelper
+        include ::Bcome::Node::K8Cluster::PathwayRender
 
         def initialize(*params)
           super
@@ -19,6 +20,10 @@ module Bcome
 
         def nodes_loaded?
           @nodes_loaded 
+        end
+
+        def ingresses
+          crds["Ingress"]
         end
 
         def nodes_loaded=(whatever)

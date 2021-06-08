@@ -7,19 +7,37 @@ module Bcome::Node::K8Cluster
       @rules ||= get_rules
     end
 
+    def pathway_data
+      map = {}
+      hosts.each do |host|
+        map[host.bc_cyan] = host_tree_nodes(host)
+      end
+      return map
+    end
+
+    def host_tree_nodes(host)
+      # get the rules for this host
+      rules_for_host = rules.select{|rule| 
+        rule.host == host
+      }
+
+      map = {}
+      rules_for_host.each do |rule|
+        map.deep_merge!(rule.pathway_data)
+      end
+      return map
+    end
+  
+    def hosts
+      rules.collect{|rule| rule.host }
+    end  
+
     def for_service?(query_service)
       for_service = services.collect{|service| 
         service == query_service 
        }.flatten.any?
 
       return for_service
-    end
-
-    def path_print(show_broken = false)
-      rules.each {|rule|  
-        rule.path_print(show_broken) 
-      }
-      return
     end
 
     private

@@ -7,6 +7,7 @@ module Bcome
 
         include ::Bcome::Node::KubeCommandHelper
         include ::Bcome::Node::K8Cluster::ResourceMappings
+        include ::Bcome::Node::K8Cluster::PathwayRender
  
         def initialize(params)
           super
@@ -39,9 +40,8 @@ module Bcome
           parent_namespace
         end
 
-        def path_print
-          crds["Ingress"].each(&:path_print)
-          return
+        def ingresses
+          crds["Ingress"]
         end
 
         def hyphenated_identifier

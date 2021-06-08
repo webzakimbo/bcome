@@ -9,7 +9,8 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::K8Cluster::HelmWrap
     include ::Bcome::Node::K8Cluster::ResourceMappings
     include ::Bcome::InteractiveHelm
-    
+    include ::Bcome::Node::K8Cluster::PathwayRender
+       
     attr_reader :is_subdivided
 
     def initialize(params)
@@ -135,13 +136,12 @@ module Bcome::Node::K8Cluster
     end
 
     def ingresses
-      crds["Ingress"]
+      if parent.respond_to?(:subdivide_namespaces_on_label)
+        resources.active.collect{|resource| resource.crds["Ingress"] }.flatten.compact
+      else
+        crds["Ingress"]
+      end
     end  
-
-    def path_print
-      ingresses.each(&:path_print)
-      return
-    end
 
     def delegated_kubectl_cmd(command)
       command_in_context = append_namespace_to(command)

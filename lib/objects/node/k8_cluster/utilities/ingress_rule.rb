@@ -10,11 +10,16 @@ module Bcome::Node::K8Cluster::Utilities
       @ingress = ingress
     end  
 
-    def path_print(show_broken = false)
-      paths.each {|path| 
-        path.print(show_broken)
-      }
-      return
+    def pathway_data
+      map = {}
+      paths.each do |path|
+        map[path.path.bc_yellow] = path.pathway_data
+      end
+      return map
+    end
+
+    def to_s
+      host
     end
 
     # Optional host, if not provided, then the rule applies to all inbound http traffic through the IP address specified.

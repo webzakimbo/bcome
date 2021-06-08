@@ -2,7 +2,11 @@
 
 module Bcome
   module Tree
+
     include Bcome::Draw
+
+    # Move tree & routes specific code out, and retain just the abstractions
+    # GOAL: provide data in required format and it will render a tree.
 
     def tree
       title_prefix = 'Namespace tree'
@@ -113,7 +117,6 @@ module Bcome
 
     def recurse_tree_lines(data, padding = '')
       # @lines << padding + BRANCH
-
       data.each_with_index do |config, index|
         key = config[0]
         values = config[1]
