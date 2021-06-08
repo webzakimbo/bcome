@@ -13,7 +13,7 @@ module Bcome::Node::K8Cluster::Utilities
     def pathway_data
       map = {}
       paths.each do |path|
-        map[path.path.bc_yellow] = path.pathway_data
+        map["path ~> #{path.path.bc_yellow}"] = path.pathway_data
       end
       return map
     end
