@@ -5,6 +5,11 @@ module Bcome::Node::K8Cluster
 
     RUNNING_STATE="running".freeze
 
+    def is_job?
+      job_name = raw_data["metadata"]["job-name"]
+      !job_name.nil?
+    end
+
     def list_attributes
       attribs = {
       "k8/#{type}": :identifier,

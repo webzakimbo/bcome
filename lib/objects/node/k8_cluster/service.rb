@@ -13,8 +13,8 @@ module Bcome::Node::K8Cluster
       @ports ||= instantiate_ports
     end
 
-    def target
-      @target ||= get_target
+    def targets
+      @targets ||= get_targets
     end
 
     def selector_kind
@@ -33,7 +33,7 @@ module Bcome::Node::K8Cluster
 
     private
 
-    def get_target
+    def get_targets
       return external_service if service_type == "ExternalName"
       return selected
     end

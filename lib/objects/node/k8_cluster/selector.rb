@@ -21,7 +21,7 @@ module Bcome::Node::K8Cluster::Selector
       }
 
      !matches.include?(false)
-    }.first
+    }
   end
 
   def candidates
