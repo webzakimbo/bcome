@@ -1,21 +1,9 @@
 # frozen_string_literal: true
 
 module Bcome::Node::K8Cluster
-  class Pod < Bcome::Node::K8Cluster::Base
-
-    include ::Bcome::Node::KubeHelper
-    include ::Bcome::Node::KubeCommandHelper
-    include ::Bcome::Node::KubeGenericMenuItems
+  class Pod < Bcome::Node::K8Cluster::Child
 
     RUNNING_STATE="running".freeze
-
-    def nodes_loaded?
-      true
-    end
-
-    def description
-      identifier
-    end
 
     def list_attributes
       attribs = {
@@ -26,7 +14,7 @@ module Bcome::Node::K8Cluster
     end
 
     def enabled_menu_items
-      (super + %i[logs tunnel]) - non_k8_menu_items
+      (super + %i[logs tunnel]) 
     end
 
     def menu_items
@@ -43,8 +31,23 @@ module Bcome::Node::K8Cluster
       base_items
     end
 
-    def kubectl
-      puts "Kubectl is not available from pod level".warning
+    def pathway_data(scheme, service_port)
+      map = {}
+      if resources.any?
+        map = {}
+        resources.each do |resource|
+          map.merge!({
+            identifier => { "#{scheme}://#{resource.identifier}:#{service_port}" => nil }
+          })
+        end
+      else
+        return { "X".error.bold => nil }
+      end
+      return map
+    end
+
+    def services
+      @services ||= parent.crds["Service"].select{|s| s.pod == self }
     end
 
     def state
@@ -82,10 +85,9 @@ module Bcome::Node::K8Cluster
       states
     end
 
-    def reset_resources!
-      @resources = ::Bcome::Node::Resources::Base.new
+    def set_child_nodes
       set_containers
-    end
+    end  
 
     def set_containers
       raw_container_data = views[:raw_data]["spec"]["containers"]
@@ -104,28 +106,6 @@ module Bcome::Node::K8Cluster
     def machines(skip_for_hidden = true)
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
       return resources.collect(&:machines).flatten
-    end
-
-    def update_identifier(new_identifier)
-      @identifier = new_identifier
-    end
-
-    def dup_with_new_parent(new_parent)
-      new_node = clone
-      new_node.update_parent(new_parent)
-      new_node
-    end
-
-    def update_parent(new_parent)
-      @parent = new_parent
-    end
-
-    def requires_description?
-      false
-    end
-
-    def type
-      "pod"
     end
 
     def get_children_command
@@ -157,32 +137,8 @@ module Bcome::Node::K8Cluster
       system(get_kubectl_cmd(all_logs_command))
     end
 
-    def get_kubectl_cmd(command)
-      return k8_cluster.get_kubectl_cmd(command)
-    end
- 
     def gke_child_node_class
       ::Bcome::Node::K8Cluster::Container
-    end
-
-    def delegated_kubectl_cmd(command)
-      parent.delegated_kubectl_cmd(command)
-    end
-
-    def run_kubectl_cmd(command)
-      parent.run_kubectl_cmd(command)
-    end
- 
-    def run_kc(command)
-      parent.run_kc(command_in_context)
-    end
-
-    def k8_namespace
-      parent.k8_namespace
-    end
-
-    def k8_cluster
-      parent.k8_cluster
     end
 
   end

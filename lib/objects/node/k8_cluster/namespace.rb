@@ -7,11 +7,16 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::KubeListHelper
     include ::Bcome::Node::KubeCommandHelper
     include ::Bcome::Node::K8Cluster::HelmWrap
+    include ::Bcome::Node::K8Cluster::ResourceMappings
     include ::Bcome::InteractiveHelm
-    
+    include ::Bcome::Node::K8Cluster::PathwayRender
+       
+    attr_reader :is_subdivided
+
     def initialize(params)
       super
       @nodes_loaded = false
+      @is_subdivided = false
     end
 
     def machines(skip_for_hidden = true)
@@ -24,45 +29,48 @@ module Bcome::Node::K8Cluster
       return set.flatten!
     end
 
-    def set_subselects_from_raw_data(raw_pods_data, label_name)  
-      @raw_pods_data = raw_pods_data
-      json_path = JsonPath.new("metadata.labels.#{label_name}")
-
-      grouped_pod_data = raw_pods_data.group_by{|data| json_path.on(data) }
-    
-      # Could not group by, so return flat structure within namespace instead.
-      return set_pods_from_raw_data(raw_pods_data) if grouped_pod_data.keys.flatten.empty?
-
-      grouped_pod_data.each do |group_name, group_data|
-        views = {
-          identifier: group_name.first.nil? ? "ungrouped" : group_name.first,
-          subselect_parent: self
-        }
-
-        subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, pods_data: group_data, parent: self, grouped_by_label: label_name) 
-        resources << subselect
-        ::Bcome::Node::Factory.instance.bucket[subselect.keyed_namespace] = subselect
-      end
-      return
+    def gke_child_node_class
+      ::Bcome::Node::K8Cluster::Pod
     end
 
     def k8_namespace
       self
     end
 
-    def set_pods_from_raw_data(raw_pods_data)
-      raw_pods_data.pmap do |pod_data|
-        pod_identifier = pod_data["metadata"]["name"]
+    def set_resources(raw_resources)
+      raw_resources.each do |resource_type, raw_resource|
+        resource_klass = resource_klasses[resource_type]
+        resource_klass = crd_resource_klass unless resource_klass 
 
-        namespace_config = {
-          identifier: pod_identifier,
-          raw_data: pod_data
-        }
-        pod = gke_child_node_class.new(views: namespace_config, parent: self)
-        resources << pod
-        pod.set_containers
-        ::Bcome::Node::Factory.instance.bucket[pod.keyed_namespace] = pod
+        raw_resource.each do |raw_resource|
+          add_resource(resource_klass, resource_type, raw_resource)
+        end
       end
+      return
+    end
+
+    def set_subselects_from_raw_data(raw_resources, label_name)
+      raw_data = raw_resources.values.flatten
+      json_path = JsonPath.new("metadata.labels.#{label_name}")
+
+      grouped_data = raw_data.group_by{|data| json_path.on(data) }
+
+      # Could not group by, so return flat structure within namespace instead.
+      return set_resources(raw_resources) if grouped_data.keys.flatten.empty?
+
+      @is_subdivided = true
+
+      grouped_data.each do |group_name, group_data|
+        views = {
+          identifier: group_name.first.nil? ? "ungrouped" : group_name.first,
+          subselect_parent: self
+        }
+
+        subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, data: group_data, parent: self, grouped_by_label: label_name)
+        resources << subselect
+        ::Bcome::Node::Factory.instance.bucket[subselect.keyed_namespace] = subselect
+      end
+
       return
     end
 
@@ -128,7 +136,11 @@ module Bcome::Node::K8Cluster
     end
 
     def ingresses
-      run_kc("get ingresses")
+      if parent.respond_to?(:subdivide_namespaces_on_label)
+        resources.active.collect{|resource| resource.crds["Ingress"] }.flatten.compact
+      else
+        crds["Ingress"]
+      end
     end  
 
     def delegated_kubectl_cmd(command)
@@ -154,13 +166,8 @@ module Bcome::Node::K8Cluster
       "get pods"
     end
 
-    def gke_child_node_class
-      ::Bcome::Node::K8Cluster::Pod
-    end
-
     def k8_cluster
       parent.k8_cluster
     end
-
   end
 end
