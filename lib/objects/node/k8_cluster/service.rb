@@ -34,7 +34,7 @@ module Bcome::Node::K8Cluster
     private
 
     def get_targets
-      return external_service if service_type == "ExternalName"
+      return [external_service] if service_type == "ExternalName"
       return selected
     end
 

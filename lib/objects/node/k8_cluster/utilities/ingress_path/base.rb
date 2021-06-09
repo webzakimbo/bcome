@@ -30,8 +30,8 @@ module Bcome::Node::K8Cluster::Utilities::IngressPath
         if target.is_a?(::Bcome::Node::K8Cluster::Pod)
           next if target.is_job?
           map.merge!(target.pathway_data(scheme, service_port))
-        else
-          target.merge!({"#{scheme}://#{target.identifier}:#{service_port}" => nil })
+        else # Is ExternalService
+          map.merge!({"#{scheme}://#{target.identifier}:#{service_port}" => nil })
         end
       end
 
