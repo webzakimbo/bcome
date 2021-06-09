@@ -8,7 +8,7 @@ module Bcome::Interactive::SessionItem
 
     def do
       puts ''
-      puts "\nINTERACTIVE KUBECTL SESSION".underline
+      puts "\nContextual Kubectl".bc_yellow.bold
       show_menu
       puts ''
       action
