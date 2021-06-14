@@ -18,6 +18,7 @@ module Bcome::Node::Collection
     def initialize(k8)
       @k8 = k8
       @config = get_config
+      @namespaces = []
       @items = sort_resources
     end
 
@@ -35,14 +36,17 @@ module Bcome::Node::Collection
 
       raw_items.each do |item|
         kind = item["kind"]
-        next if kind == "Namespace"
-    
+        if kind == "Namespace"
+          @namespaces << item
+          next
+        end
+
         designated_namespace = item["metadata"]["namespace"]
         items[designated_namespace] = {} unless items[designated_namespace] 
         items[designated_namespace][kind] = items[designated_namespace][kind] ? items[designated_namespace][kind] << item : [item]
       end
 
-      items
+      return items
     end
 
     def assign_resources_to_namespaces
@@ -52,11 +56,14 @@ module Bcome::Node::Collection
     end
 
     def do_assign
-      @items.each do |namespace_identifier, resources|
-        namespace_data = raw_items.select{|item| item["kind"] == "Namespace" }
-
-        namespace = @k8.gke_child_node_class.new(views: { identifier: namespace_identifier, raw_data: namespace_data }, parent: @k8)
+      @namespaces.each do |data|
+        # Create namespaces
+        name = data["metadata"]["name"]
+        namespace = @k8.gke_child_node_class.new(views: { identifier: name, raw_data: data }, parent: @k8)
         @k8.resources << namespace
+ 
+        # Assign crds
+        resources = @items[name] ? @items[name] : {}
 
         if @k8.respond_to?(:subdivide_namespaces_on_label)
           namespace.set_subselects_from_raw_data(resources, @k8.subdivide_namespaces_on_label)
@@ -66,7 +73,7 @@ module Bcome::Node::Collection
 
         ::Bcome::Node::Factory.instance.bucket[namespace.keyed_namespace] = namespace
         signal_success
-      end 
+      end
     end
 
     private
@@ -75,6 +82,7 @@ module Bcome::Node::Collection
       cmd = "get namespaces,pods,ingresses,services -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
       #cmd = "get all -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
       @config = @k8.run_kc(cmd)
+      return @config
     end
 
     def raw_items
