@@ -8,9 +8,13 @@ module Bcome
     # Move tree & routes specific code out, and retain just the abstractions
     # GOAL: provide data in required format and it will render a tree.
 
-    def tree
-      title_prefix = 'Namespace tree'
-      build_tree(:network_namespace_tree_data, title_prefix)
+    def tree(node = self)
+      if (node != self) && (resource = resources.for_identifier(node))
+        resource.send(:tree)
+      else
+        title_prefix = 'Namespace tree'
+        build_tree(:network_namespace_tree_data, title_prefix)
+      end
     end
 
     def routes

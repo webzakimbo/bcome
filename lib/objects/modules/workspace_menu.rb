@@ -4,7 +4,7 @@ module Bcome
   module WorkspaceMenu
     def menu
       print "\n\n"
-      puts 'COMMAND MENU'.bc_cyan + "\sfor #{self.class} #{namespace}".resource_value
+      puts "Command Menu".bc_yellow.bold + "\s\s#{description}"
   
       grouped_menu_items = menu_items.group_by { |m| m[1][:group] }
 
