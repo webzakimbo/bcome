@@ -9,7 +9,7 @@ module Bcome::Node::K8Cluster::Selector
   def get_selected
     raise ::Bcome::Exception::Generic, "Misconfiguration: a class including Selector must have defined a selector_kind" unless respond_to?(:selector_kind)
 
-    return nil if candidates.nil?
+    return [] if candidates.nil?
 
     candidates.select{|candidate|
       candidate_data = candidate.raw_data 
