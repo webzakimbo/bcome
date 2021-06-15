@@ -51,6 +51,10 @@ module Bcome::Node::K8Cluster
       return map
     end
 
+    def resources
+      @resources ||= ::Bcome::Node::Resources::PodK8.new
+    end
+
     def services
       @services ||= parent.crds["Service"].select{|s| s.pod == self }
     end
@@ -101,6 +105,7 @@ module Bcome::Node::K8Cluster
           identifier: container_data["name"],
           raw_data: container_data
         }
+
         container = gke_child_node_class.new(views: container_config, parent: self)
         resources << container
         ::Bcome::Node::Factory.instance.bucket[container.keyed_namespace] = container

@@ -50,15 +50,16 @@ module Bcome::Node::Collection
     end
 
     def assign_resources_to_namespaces
-      wrap_indicator type: :progress, size: @namespaces.size, title: loader_title, completed_title: loader_completed_title do
+       wrap_indicator type: :progress, size: @namespaces.size, title: loader_title, completed_title: loader_completed_title do
         do_assign
-      end
+       end
     end
 
     def do_assign
       @namespaces.each do |data|
         # Create namespaces
         name = data["metadata"]["name"]
+
         namespace = @k8.gke_child_node_class.new(views: { identifier: name, raw_data: data }, parent: @k8)
         @k8.resources << namespace
  
