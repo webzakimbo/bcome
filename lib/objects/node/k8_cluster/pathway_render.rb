@@ -1,6 +1,6 @@
 module Bcome::Node::K8Cluster::PathwayRender
 
-  def tree(node = self)
+  def pathways(node = self)
     if (node != self) && (resource = resources.for_identifier(node))
       resource.send(:pathways)
     else
