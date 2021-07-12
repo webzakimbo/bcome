@@ -18,6 +18,8 @@ module Bcome::Helm
     def run(command, skip_output = false)
       cmd = contextualized_command(command)
 
+      puts "\nRUN\s".bc_green + cmd
+  
       runner = ::Bcome::Command::Local.run(cmd)
       parse_runner(runner)
       return runner
