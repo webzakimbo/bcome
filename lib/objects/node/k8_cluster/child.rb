@@ -68,10 +68,6 @@ module Bcome::Node::K8Cluster
     def run_kubectl_cmd(command)
       parent.run_kubectl_cmd(command)
     end
- 
-    def run_kc(command)
-      parent.run_kc(command_in_context)
-    end
 
     def k8_namespace
       parent.k8_namespace

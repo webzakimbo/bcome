@@ -69,7 +69,7 @@ module Bcome::Node::Collection
         if @k8.respond_to?(:subdivide_namespaces_on_label)
           namespace.set_subselects_from_raw_data(resources, @k8.subdivide_namespaces_on_label)
         else 
-          namespace.set_resources(resources)
+          namespace.do_set_resources(resources)
         end
 
         ::Bcome::Node::Factory.instance.bucket[namespace.keyed_namespace] = namespace

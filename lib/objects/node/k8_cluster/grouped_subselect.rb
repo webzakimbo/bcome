@@ -40,6 +40,16 @@ module Bcome
           parent_namespace
         end
 
+        def do_set_resources(items = @data)
+          items.each do |item|
+            resource_type = item["kind"]
+            resource_klass = resource_klasses[resource_type]
+            resource_klass = crd_resource_klass unless resource_klass
+            add_resource(resource_klass, resource_type, item)
+          end
+          return
+        end
+
         def ingresses
           crds["Ingress"]
         end
@@ -55,16 +65,6 @@ module Bcome
           end
 
           parent_namespace.delegated_kubectl_cmd(command)
-        end
-
-        def do_set_resources
-          @data.each do |data|
-            resource_type = data["kind"] 
-            resource_klass = resource_klasses[resource_type]
-            resource_klass = crd_resource_klass unless resource_klass
-            add_resource(resource_klass, resource_type, data)
-          end
-          return
         end
 
         def resources

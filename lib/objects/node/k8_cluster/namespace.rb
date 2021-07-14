@@ -37,7 +37,7 @@ module Bcome::Node::K8Cluster
       self
     end
 
-    def set_resources(raw_resources)
+    def do_set_resources(raw_resources)
       raw_resources.each do |resource_type, raw_resource|
         resource_klass = resource_klasses[resource_type]
         resource_klass = crd_resource_klass unless resource_klass 
@@ -56,7 +56,7 @@ module Bcome::Node::K8Cluster
       grouped_data = raw_data.group_by{|data| json_path.on(data) }
 
       # Could not group by, so return flat structure within namespace instead.
-      return set_resources(raw_resources) if grouped_data.keys.flatten.empty?
+      return do_set_resources(raw_resources) if grouped_data.keys.flatten.empty?
 
       @is_subdivided = true
 

@@ -11,6 +11,11 @@ module Bcome::Node::Resources
       @disabled_resources = []
     end
 
+    def wipe!
+      @nodes = []
+      @disables_resources = []
+    end
+
     def each
       @nodes.each { |node| yield(node) }
     end

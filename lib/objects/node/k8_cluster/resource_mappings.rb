@@ -23,7 +23,8 @@ module Bcome::Node::K8Cluster::ResourceMappings
     {
       "Pod" => ::Bcome::Node::K8Cluster::Pod,
       "Ingress" => ::Bcome::Node::K8Cluster::Ingress,
-      "Service" =>  ::Bcome::Node::K8Cluster::Service
+      "Service" =>  ::Bcome::Node::K8Cluster::Service,
+      "CronJob" => ::Bcome::Node::K8Cluster::CronJob
     }
   end
   
@@ -35,13 +36,16 @@ module Bcome::Node::K8Cluster::ResourceMappings
     ::Bcome::Node::K8Cluster::Pod  # Flex point for CRD namespace focus
   end 
 
+  def focus_on?(klass)
+    focus_on == klass
+  end  
+
   def focus_on?(resource_klass)
     resource_klass == focus_on
   end
 
   def add_resource(resource_klass, resource_type, data)
     resource = resource_klass.new(views: {identifier: data["metadata"]["name"], raw_data: data }, parent: self)
-
     resources << resource if focus_on?(resource_klass)
     
     if crds[resource_type]

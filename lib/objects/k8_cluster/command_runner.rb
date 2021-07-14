@@ -66,7 +66,7 @@ module Bcome::K8Cluster
         begin
           return JSON.parse(result.stdout)
         rescue TypeError, JSON::ParserError
-          puts result.stdout
+          puts.result.inspect
           raise ::Bcome::Exception::Generic, "Kubectl parse failed"
         end
       else
@@ -79,13 +79,14 @@ module Bcome::K8Cluster
       print_command_and_obfuscate_token(full_command)
       @result ||= ::Bcome::Command::Local.run(full_command)
     end
+ 
+    def debug_on?
+      ENV['DEBUG'] || false
+    end
 
     def print_command_and_obfuscate_token(command)
       command.gsub!(/--token=([0-9A-Za-z\-_.]+)/,"--token=*****\s")
-      puts "#{command}\n"
+      puts "#{command}\n" if ENV['DEBUG']
     end
-   
-
-
   end
 end

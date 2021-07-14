@@ -100,7 +100,7 @@ module Bcome
           resources.update_nodes(self)
         end
 
-        def do_set_resources
+        def do_set_resources(*params)
           ::Bcome::Node::Resources::SubselectK8.new(origin_namespace: self, parent_namespace: parent_namespace, filters: filters)
         end
 
