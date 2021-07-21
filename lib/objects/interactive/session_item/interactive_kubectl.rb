@@ -20,31 +20,17 @@ module Bcome::Interactive::SessionItem
       return if exit?(input)
       action if comment?(input)
 
-      # IF command = "get"
-        # Snapshot on the fly in a separate process
-          # and refresh node.crds[RESOURCE_TYPE] on the fly
-
       if commands = passthru_bcome?(input)
         method = commands.first
         node.send(method)
         action
       end
 
-        #if method == "bcome"
-        #  ## VVVVVV rough & ready POC to see if this makes sense
-        #  args = commands[1..commands.size]
-        #  crd_type = args[0].camelcase            
-        #  identifier = args[1]
+      if @to_snapshot
+        node.get @to_snapshot
+        @to_snapshot = nil
+      end
 
-         # crd = node.crds["Pod"].select{|crd| crd.identifier == identifier }.first 
-         # if crd
-         #   ::Bcome::Workspace.instance.set(context: crd)
-         # else
-         #    puts "Cannot find #{crd_type} #{identifier}".error
-         # end
-         # action
-        #else
-        #end
       if show_menu?(input)
         show_menu
       else
@@ -58,7 +44,6 @@ module Bcome::Interactive::SessionItem
       begin
         runner = node.delegated_kubectl_cmd(command)
         puts runner
-        #puts runner.data.stdout
       rescue JSON::ParserError
         puts "Invalid command '#{command}'".error
       end
@@ -86,7 +71,7 @@ module Bcome::Interactive::SessionItem
       method = tokens.first
  
       if method == "get"
-        # snapshot on the fly ???  Additive? Or replace?
+      #  @to_snapshot = tokens[1..tokens.size].join("\s")
       end
 
       if passthru_commands.include?(tokens.first) 
@@ -97,7 +82,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def passthru_commands
-     ["tree", "pathways", "reload"] #, "bcome"]
+     ["tree", "pathways", "reload", "bcome"]
     end
 
     def show_menu?(input)

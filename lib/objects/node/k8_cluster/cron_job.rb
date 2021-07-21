@@ -13,6 +13,9 @@ module Bcome::Node::K8Cluster
     def create_job_command(job_name)
       "create job --from=cronjob/#{identifier} #{job_name}"
     end
- 
+
+    def labels
+      raw_config_data["metadata"]["labels"]
+    end
   end
 end

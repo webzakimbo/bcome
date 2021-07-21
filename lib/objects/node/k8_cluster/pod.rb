@@ -75,12 +75,19 @@ module Bcome::Node::K8Cluster
       "[#{number_running}/#{resources.size}]"
     end
 
+    def container_ids
+      container_status_data.collect{|status_data| status_data["containerID"] }
+    end
+
+    def container_status_data
+      views[:raw_data]["status"]["containerStatuses"]
+    end
+
     def get_container_states
       # containers are either running, waiting, or terminated
-      raw_cs = views[:raw_data]["status"]["containerStatuses"]
-      return [] unless raw_cs
+      return [] unless container_status_data
 
-      raw_states = raw_cs.collect{|cs| cs["state"] }
+      raw_states = container_status_data.collect{|cs| cs["state"] }
 
       states = []
       raw_states.each_with_index do |cs, index|
@@ -99,11 +106,13 @@ module Bcome::Node::K8Cluster
     end  
 
     def set_containers
+      states = get_container_states
+
       raw_container_data = views[:raw_data]["spec"]["containers"]
-      raw_container_data.each do |container_data|
+      raw_container_data.each_with_index do |container_data, index|
         container_config = {
           identifier: container_data["name"],
-          raw_data: container_data
+          raw_data: container_data.merge({ state: states[index] })
         }
 
         container = gke_child_node_class.new(views: container_config, parent: self)

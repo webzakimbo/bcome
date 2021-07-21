@@ -51,15 +51,11 @@ module Bcome::Node::K8Cluster::Utilities::IngressPath
     end
 
     def service_port
-      backend["servicePort"]
+      backend["servicePort"] || backend["service"]["port"]["number"]
     end
 
     def service_name
-      backend["serviceName"]
-    end
-
-    def service_port
-      backend["servicePort"]
+      backend["serviceName"] || backend["service"]["name"]
     end
 
     def path_type

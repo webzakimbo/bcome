@@ -38,19 +38,24 @@ module Bcome::Node::K8Cluster
     end
 
     def do_set_resources(raw_resources)
+      if raw_resources.is_a?(Array)
+        set_subselects_from_raw_data(raw_resources, parent.subdivide_namespaces_on_label)
+        return
+      end
+
       raw_resources.each do |resource_type, raw_resource|
         resource_klass = resource_klasses[resource_type]
-        resource_klass = crd_resource_klass unless resource_klass 
+        resource_klass = crd_resource_klass unless resource_klass
 
-        raw_resource.each do |raw_resource|
-          add_resource(resource_klass, resource_type, raw_resource)
+        raw_resource.each do |resource|
+          add_resource(resource_klass, resource_type, resource)
         end
       end
       return
     end
 
     def set_subselects_from_raw_data(raw_resources, label_name)
-      raw_data = raw_resources.values.flatten
+      raw_data = raw_resources.is_a?(Array) ? raw_resources : raw_resources.values.flatten
       json_path = JsonPath.new("metadata.labels.#{label_name}")
 
       grouped_data = raw_data.group_by{|data| json_path.on(data) }

@@ -51,7 +51,7 @@ module Bcome::Node::Collection
 
     def assign_resources_to_namespaces
        wrap_indicator type: :progress, size: @namespaces.size, title: loader_title, completed_title: loader_completed_title do
-        do_assign
+         do_assign
        end
     end
 
@@ -69,7 +69,7 @@ module Bcome::Node::Collection
         if @k8.respond_to?(:subdivide_namespaces_on_label)
           namespace.set_subselects_from_raw_data(resources, @k8.subdivide_namespaces_on_label)
         else 
-          namespace.do_set_resources(resources)
+          namespace.set_resources(resources)
         end
 
         ::Bcome::Node::Factory.instance.bucket[namespace.keyed_namespace] = namespace

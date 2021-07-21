@@ -10,8 +10,18 @@ module Bcome::Node::K8Cluster
     DEFAULT_SHELL = "/bin/bash"
 
     def machines(*params)
-      [self]
+      puts "#{identifier}: #{is_running?} #{namespace}"
+   
+      is_running? ? [self] : []
     end
+
+    def state
+      raw_data[:state]
+    end
+ 
+    def is_running?
+      state == "RUNNING"
+    end   
 
     def container?
       true
