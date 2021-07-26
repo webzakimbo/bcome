@@ -36,6 +36,11 @@ module Bcome::Node::K8Cluster::ResourceMappings
     ::Bcome::Node::K8Cluster::Pod  # Flex point for CRD namespace focus
   end 
 
+  def focus_breadcrumb
+    resource_key = resource_klasses.select{|key,value| value == focus_on }.first[0]
+    resource_key.downcase.pluralize
+  end
+
   def focus_on?(klass)
     focus_on == klass
   end  

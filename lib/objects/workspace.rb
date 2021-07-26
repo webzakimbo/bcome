@@ -57,7 +57,12 @@ class ::Bcome::Workspace
   end
 
   def irb_prompt
-    @context ? @context.prompt_breadcrumb : default_prompt
+    prompt = @context ? @context.prompt_breadcrumb : default_prompt
+
+    if @context && @context.respond_to?(:focus_breadcrumb)
+      return "#{prompt} (#{@context.focus_breadcrumb.bc_orange})"
+    end
+    return prompt
   end
 
   def default_prompt

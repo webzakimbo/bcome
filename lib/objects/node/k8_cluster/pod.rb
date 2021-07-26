@@ -51,6 +51,10 @@ module Bcome::Node::K8Cluster
       return map
     end
 
+    def focus_breadcrumb
+      "containers"
+    end
+
     def resources
       @resources ||= ::Bcome::Node::Resources::PodK8.new
     end

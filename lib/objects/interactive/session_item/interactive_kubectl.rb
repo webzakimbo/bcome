@@ -71,7 +71,7 @@ module Bcome::Interactive::SessionItem
       method = tokens.first
  
       if method == "get"
-      #  @to_snapshot = tokens[1..tokens.size].join("\s")
+        @to_snapshot = tokens[1..tokens.size].join("\s")
       end
 
       if passthru_commands.include?(tokens.first) 
