@@ -4,6 +4,16 @@ module Bcome::Node::K8Cluster::ResourceMappings
     @crds ||= get_crds
   end
 
+  def switch(crd_key)
+    raise "You may only utilize switch with singular resources" if "#{crd_key}".split.size > 1 || crd_key =~ /,/
+
+    switch_focus = true
+    items = get_kubectl_resource(crd_key, switch_focus)
+    other = ::Bcome::Orchestrator.instance.get(keyed_namespace)
+    ::Bcome::Workspace.instance.set(current_context: other, context: other)
+  end
+  alias :focus :switch
+ 
   def get_crds
     collate_child_crds? ? collate_child_crds : {}
   end
@@ -24,7 +34,8 @@ module Bcome::Node::K8Cluster::ResourceMappings
       "Pod" => ::Bcome::Node::K8Cluster::Pod,
       "Ingress" => ::Bcome::Node::K8Cluster::Ingress,
       "Service" =>  ::Bcome::Node::K8Cluster::Service,
-      "CronJob" => ::Bcome::Node::K8Cluster::CronJob
+      "CronJob" => ::Bcome::Node::K8Cluster::CronJob,
+      "Crd" => ::Bcome::Node::K8Cluster::Crd
     }
   end
   
@@ -32,26 +43,18 @@ module Bcome::Node::K8Cluster::ResourceMappings
     ::Bcome::Node::K8Cluster::Crd
   end
 
-  def focus_on
-    ::Bcome::Node::K8Cluster::Pod  # Flex point for CRD namespace focus
-  end 
-
   def focus_breadcrumb
-    resource_key = resource_klasses.select{|key,value| value == focus_on }.first[0]
+    resource_key = resource_klasses.select{|key,value| value == ::Bcome::Workspace.instance.kubernetes_focus_on }.first[0]
     resource_key.downcase.pluralize
   end
 
-  def focus_on?(klass)
-    focus_on == klass
-  end  
-
   def focus_on?(resource_klass)
-    resource_klass == focus_on
+    resource_klass == ::Bcome::Workspace.instance.kubernetes_focus_on
   end
 
   def add_resource(resource_klass, resource_type, data)
     resource = resource_klass.new(views: {identifier: data["metadata"]["name"], raw_data: data }, parent: self)
-    resources << resource if focus_on?(resource_klass)
+    resources << resource if focus_on?(resource_klass) ## TODO set focus_on before we start adding resources
     
     if crds[resource_type]
       crds[resource_type] << resource

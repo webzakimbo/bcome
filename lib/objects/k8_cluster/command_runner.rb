@@ -66,7 +66,7 @@ module Bcome::K8Cluster
         begin
           return JSON.parse(result.stdout)
         rescue TypeError, JSON::ParserError
-          puts.result.inspect
+          raise ::Bcome::Exception::Generic, result.stderr if result.stderr
           raise ::Bcome::Exception::Generic, "Kubectl parse failed"
         end
       else

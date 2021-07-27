@@ -20,16 +20,19 @@ module Bcome::Interactive::SessionItem
       return if exit?(input)
       action if comment?(input)
 
-      if commands = passthru_bcome?(input)
-        method = commands.first
-        node.send(method)
-        action
-      end
+      # TODO
+      # bcome :pod, :name OR bcome :cronjob, :name etc
 
-      if @to_snapshot
-        node.get @to_snapshot
-        @to_snapshot = nil
-      end
+      #if commands = passthru_bcome?(input)
+      #  method = commands.first
+      #  node.send(method)
+      #  action
+      #end
+
+      #if @to_snapshot
+      #  node.set_context(@to_snapshot)
+      #  @to_snapshot = nil
+      #end
 
       if show_menu?(input)
         show_menu
@@ -70,9 +73,9 @@ module Bcome::Interactive::SessionItem
       tokens = input.split(/\s+/)
       method = tokens.first
  
-      if method == "get"
-        @to_snapshot = tokens[1..tokens.size].join("\s")
-      end
+      #if method == "get"
+      #  @to_snapshot = tokens[1..tokens.size].join("\s")
+      #end
 
       if passthru_commands.include?(tokens.first) 
         return tokens
@@ -81,9 +84,9 @@ module Bcome::Interactive::SessionItem
       end
     end
 
-    def passthru_commands
-     ["tree", "pathways", "reload", "bcome"]
-    end
+    #def passthru_commands
+    # ["tree", "pathways", "reload", "bcome"]
+    #end
 
     def show_menu?(input)
       input == HELP_KEY

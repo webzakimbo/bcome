@@ -56,12 +56,20 @@ class ::Bcome::Workspace
     !context.nil?
   end
 
+  def kubernetes_focus_on
+    @focus_on ||= default_kubernetes_focus_on
+  end
+
+  def default_kubernetes_focus_on
+    ::Bcome::Node::K8Cluster::Pod
+  end
+
+  def set_kubernetes_focus(klass)
+    @focus_on = klass
+  end
+
   def irb_prompt
     prompt = @context ? @context.prompt_breadcrumb : default_prompt
-
-    if @context && @context.respond_to?(:focus_breadcrumb)
-      return "#{prompt} (#{@context.focus_breadcrumb.bc_orange})"
-    end
     return prompt
   end
 

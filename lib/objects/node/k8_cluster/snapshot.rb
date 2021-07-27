@@ -81,7 +81,6 @@ module Bcome::Node::Collection
  
     def get_config
       cmd = "get namespaces,pods,ingresses,services -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
-      #cmd = "get all -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
       @config = @k8.run_kc(cmd)
       return @config
     end

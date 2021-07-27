@@ -19,6 +19,10 @@ module Bcome::Node::K8Cluster
       @is_subdivided = false
     end
 
+    def prompt_breadcrumb
+      "#{super}" + "\s(#{focus_breadcrumb.bc_orange})" 
+    end
+
     def machines(skip_for_hidden = true)
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
       set = []
@@ -72,6 +76,7 @@ module Bcome::Node::K8Cluster
         }
 
         subselect = ::Bcome::Node::K8Cluster::GroupedSubselectK8.new(views: views, data: group_data, parent: self, grouped_by_label: label_name)
+
         resources << subselect
         ::Bcome::Node::Factory.instance.bucket[subselect.keyed_namespace] = subselect
       end
