@@ -58,6 +58,11 @@ module Bcome
           @original_identifier.gsub("_", "-")
         end
 
+        def run_kc(command)
+          command_in_context = "#{command} -l '#{@grouped_by_label}=#{hyphenated_identifier}'" if command  =~ /^get.+/
+          parent.run_kc(command_in_context)
+        end
+
         def delegated_kubectl_cmd(command)
           command.lstrip!
           if hyphenated_identifier != "ungrouped"

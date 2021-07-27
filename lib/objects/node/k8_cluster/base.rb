@@ -9,7 +9,7 @@ module Bcome::Node::K8Cluster
 
     def get_kubectl_resource(crd_key, switch_focus = false)
 
-      ## TODO - run the contextualised version of this
+      ## TODO - run the contextualised version of this for subselects (involves a re-filter)
       data = run_kc("get #{crd_key}") 
 
       raise ::Bcome::Exception::Generic, "No items returned from call to 'get #{crd_key}'" if !data.is_a?(Hash) && data.has_key?(:items)
@@ -22,7 +22,6 @@ module Bcome::Node::K8Cluster
       end
 
       refresh_cache!(items)
-
       do_set_resources(items)
       return items
     end

@@ -9,6 +9,11 @@ module Bcome::Node::K8Cluster::PathwayRender
   end
 
   def pathway_data
+
+    ["services", "pods", "ingresses"].pmap do |resource_key|
+      get_kubectl_resource(resource_key)
+    end
+
     map = {}
 
     return map if ingresses.nil?
