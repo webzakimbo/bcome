@@ -21,7 +21,14 @@ module Bcome::K8Cluster
     end
 
     def full_command
-      "#{KUBECTL_BINARY}#{add_access_token_if_necessary}--kubeconfig=#{BCOME_K8_CONFIG_FILE_PATH}#{target_cluster_if_necessary}#{@command_suffix}#{ as_json? ? " -o json" : ""}"
+      cmd = "#{KUBECTL_BINARY}#{add_access_token_if_necessary}--kubeconfig=#{BCOME_K8_CONFIG_FILE_PATH}#{target_cluster_if_necessary}#{@command_suffix}#{ as_json? ? " -o json" : ""}"
+
+      if ::Bcome::PipedInput.instance.pipe?
+        cmd = "#{cmd}#{::Bcome::PipedInput.instance.command_suffix}" 
+        ::Bcome::PipedInput.instance.unset!
+      end
+
+      return cmd
     end
 
     def add_access_token_if_necessary
@@ -41,8 +48,10 @@ module Bcome::K8Cluster
     end
 
     def run_hand_off
-      puts "(local) > #{full_command}" unless ::Bcome::Orchestrator.instance.command_output_silenced?
-      system(full_command)
+      to_run = full_command
+
+      puts "\n(#{"local".bc_yellow}) > #{to_run}\n\n" unless ::Bcome::Orchestrator.instance.command_output_silenced?
+      system(to_run)
       puts ''
     end
 

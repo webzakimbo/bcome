@@ -43,8 +43,15 @@ module Bcome::Interactive::SessionItem
       action
     end
 
-    def run_kc(command)
+    def run_kc(raw_command)
       begin
+        # Capture any piped input. This will need to be re-applied to the resulting command after the system has added the contextual components
+        captures = raw_command.split(/(?<!\\)\|/)
+        command = captures[0]
+        pipes = captures[1..captures.length].join("") if captures.length > 1
+        
+        ::Bcome::PipedInput.instance.pipe = pipes if pipes
+
         runner = node.delegated_kubectl_cmd(command)
         puts runner
       rescue JSON::ParserError
