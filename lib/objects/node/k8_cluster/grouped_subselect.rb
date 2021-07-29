@@ -59,14 +59,19 @@ module Bcome
         end
 
         def run_kc(command)
-          command_in_context = "#{command} -l '#{@grouped_by_label}=#{hyphenated_identifier}'" if command  =~ /^get.+/
+          command_in_context = "#{command} -l '#{@grouped_by_label}=#{hyphenated_identifier}'" if should_add_selector?(command)
           parent.run_kc(command_in_context)
+        end
+
+        def should_add_selector?(command)
+          # command is a 'get', but name has not been provided
+          command =~ /^get.+/ && command !~ /(get)\s+([a-zA-Z]+)\s+([a-z0-9]([-a-z0-9]*[a-z0-9]))?/
         end
 
         def delegated_kubectl_cmd(command)
           command.lstrip!
           if hyphenated_identifier != "ungrouped"
-            command += " -l '#{@grouped_by_label}=#{hyphenated_identifier}'" if command  =~ /^get.+/
+            command += " -l '#{@grouped_by_label}=#{hyphenated_identifier}'" if should_add_selector?(command)
           end
 
           parent_namespace.delegated_kubectl_cmd(command)
