@@ -6,6 +6,7 @@ module Bcome::Node::K8Cluster::PathwayRender
     else
       build_tree(:pathway_data, "pathways")
     end
+    return
   end
 
   def pathway_data
