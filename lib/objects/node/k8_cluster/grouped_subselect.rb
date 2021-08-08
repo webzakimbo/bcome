@@ -69,7 +69,6 @@ module Bcome
         end
 
         def delegated_kubectl_cmd(command)
-          command.lstrip!
           if hyphenated_identifier != "ungrouped"
             command += " -l '#{@grouped_by_label}=#{hyphenated_identifier}'" if should_add_selector?(command)
           end
