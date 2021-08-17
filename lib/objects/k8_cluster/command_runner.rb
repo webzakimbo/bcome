@@ -89,13 +89,10 @@ module Bcome::K8Cluster
       @result ||= ::Bcome::Command::Local.run(full_command)
     end
  
-    def debug_on?
-      ENV['DEBUG'] || false
-    end
-
     def print_command_and_obfuscate_token(command)
       command.gsub!(/--token=([0-9A-Za-z\-_.]+)/,"--token=*****\s")
-      puts "#{command}\n" if ENV['DEBUG']
+      command.gsub!(/certificate-authority-data\s([0-9A-Za-z])+/, "certificate-authority-data\s*****")
+      puts "#{command}".bc_grey 
     end
   end
 end

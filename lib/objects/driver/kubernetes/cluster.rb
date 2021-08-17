@@ -1,28 +1,35 @@
-module ::Bcome::Driver::Gcp::Gke
+module ::Bcome::Driver::Kubernetes
   class Cluster
 
-    include ::Bcome::Driver::Gcp::Gke::ClusterInit
-    include ::Bcome::Driver::Gcp::Gke::ClusterAttributes  
+    NAME_PREFIX="bcome".freeze
 
     attr_reader :config 
 
     def initialize(node)
-      raise "Invalid collection class for #{self.class}" unless node.is_a?(::Bcome::Node::K8Cluster::Collection::Gcp)
+      raise "Invalid collection class #{node.class} for #{self.class}" unless node.is_a?(expected_collection_class)
       @node = node
       register_cluster
     end  
 
-    def register_cluster
-      register_cluster_in_config
-      register_cluster_certificate_in_config
-      register_user_in_config
-      register_cluster_context
+    def expected_collection_class
+      raise "Should be overriden"
     end
- 
-    ## The config for this particular cluster --
-    def config 
-      @config ||= get_config
+
+    def server
+      "https://#{endpoint}"
     end
+
+    def remote_name
+      @node.cluster_name
+    end
+
+    def running?
+      status == "RUNNING"
+    end
+
+    ##############
+    ## COMMANDS ##
+    ##############
 
     def delegated_kubectl_cmd(command)
       command_runner = runner(command, :no_json, :command_call)
@@ -57,15 +64,5 @@ module ::Bcome::Driver::Gcp::Gke
     def network_driver
       @node.network_driver
     end
-
-    private
-
-    def get_config
-      ::Bcome::Driver::Gcp::ApiClient::Request.do(URI(get_config_url), @node)
-    end
-
-    def get_config_url
-      "https://container.googleapis.com/v1/projects/#{@node.project}/locations/#{@node.region}/clusters/#{@node.cluster_name}?alt=json"
-    end  
   end
 end

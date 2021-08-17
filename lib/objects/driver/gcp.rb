@@ -163,9 +163,10 @@ module Bcome::Driver
     end
 
     def access_token
-      gcp_service.authorization.access_token
+      @access_token = gcp_service.authorization.access_token
+      @access_token
     end
-
+ 
     def authorization
       gcp_service.authorization
     end

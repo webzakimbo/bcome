@@ -95,7 +95,7 @@ module Bcome::Node
     def klass_for_view_type
       {
         GCP_KUBE_COLLECTION_KEY => ::Bcome::Node::K8Cluster::Collection::Gcp,
-        AWS_KUBE_COLLECTION_KEY => ::Bcome::Node::K8Cluster::Collection::Aws,
+        AWS_KUBE_COLLECTION_KEY => ::Bcome::Node::K8Cluster::Collection::Eks,
         COLLECTION_KEY => ::Bcome::Node::Collection::Base,
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
         SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,

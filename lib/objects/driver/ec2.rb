@@ -27,7 +27,7 @@ module Bcome::Driver
     end
 
     def fetch_server_list(legacy_ec2_filters)
-      # Filters should be defined within a namespace's :network element. Pre 2.0 the expection for AWS was
+      # Filters should be defined within a namespace's :network element. Pre 2.0 the expectation was
       # to define filters at the root level of the namespace. Here we move :filters into :network, yet retain
       # ec2_filters at the root level for backwards compaibility with pre 2.0 versions.
       filters = config.key?(:filters) ? config[:filters] : legacy_ec2_filters
@@ -58,10 +58,18 @@ module Bcome::Driver
     end
 
     def network_credentials
-      {
+      @network_credentials ||= set_network_credentials
+    end
+
+    def set_network_credentials
+      creds = {
         access_key: raw_fog_credentials['aws_access_key_id'],
         secret_key: raw_fog_credentials['aws_secret_access_key']
       }
+
+      creds[:session_token] = raw_fog_credentials['aws_session_token'] if raw_fog_credentials['aws_session_token']
+
+      return creds
     end
 
     def raw_fog_credentials

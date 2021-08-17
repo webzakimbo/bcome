@@ -20,7 +20,7 @@ module Bcome::Node::K8Cluster::Collection
     def do_get_credentials
       wrap_indicator type: :basic, title: "Authorising\s" + "GCP\s".bc_blue.bold + cluster_id.underline, completed_title: 'done' do
         begin
-          @k8_cluster = ::Bcome::Driver::Gcp::Gke::Cluster.new(self)
+          @k8_cluster = ::Bcome::Driver::Kubernetes::Gke.new(self)
         rescue ::Bcome::Exception::ReauthGcp
           network_driver.reauthorize
         rescue ::Bcome::Exception::GcpResourceNotFound
