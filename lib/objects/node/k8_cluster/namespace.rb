@@ -41,7 +41,7 @@ module Bcome::Node::K8Cluster
       self
     end
 
-    def do_set_resources(raw_resources, wipe = false)
+    def do_set_resources(raw_resources)
       if raw_resources.is_a?(Array)
         set_subselects_from_raw_data(raw_resources, parent.subdivide_namespaces_on_label)
         return

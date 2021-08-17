@@ -7,7 +7,7 @@ module ::Bcome::Driver::Gcp::Gke
     attr_reader :config 
 
     def initialize(node)
-      raise "Invalid collection class for #{self.class}" unless node.is_a?(::Bcome::Node::Collection::Kube)
+      raise "Invalid collection class for #{self.class}" unless node.is_a?(::Bcome::Node::K8Cluster::Collection::Gcp)
       @node = node
       register_cluster
     end  

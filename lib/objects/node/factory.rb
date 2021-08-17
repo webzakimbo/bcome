@@ -12,7 +12,8 @@ module Bcome::Node
     LOCAL_OVERRIDE_CONFIG_NAME = 'me.yml'
 
     INVENTORY_KEY = 'inventory'
-    KUBE_COLLECTION_KEY = 'k8s-cluster'
+    GCP_KUBE_COLLECTION_KEY = 'gcp-k8s-cluster'
+    AWS_KUBE_COLLECTION_KEY = 'aws-k8s-cluster'
     COLLECTION_KEY = 'collection'
     SUBSELECT_KEY = 'inventory-subselect'
     MERGE_KEY = 'inventory-merge'
@@ -93,7 +94,8 @@ module Bcome::Node
 
     def klass_for_view_type
       {
-        KUBE_COLLECTION_KEY => ::Bcome::Node::Collection::Kube,
+        GCP_KUBE_COLLECTION_KEY => ::Bcome::Node::K8Cluster::Collection::Gcp,
+        AWS_KUBE_COLLECTION_KEY => ::Bcome::Node::K8Cluster::Collection::Aws,
         COLLECTION_KEY => ::Bcome::Node::Collection::Base,
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
         SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,

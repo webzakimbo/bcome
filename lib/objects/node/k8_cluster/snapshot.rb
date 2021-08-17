@@ -1,8 +1,3 @@
-# TODO - set one type of object as FOCUSED and allow FOCUS on any other
-#  ~ maybe we can focus on more that one at a time?  This would play havoc with log, run etc from namespace level 
-#  Perhaps on a snapshot reload, menu changes dynamically as to what is in focus?
-# TODO - deployment accessor on POD ?!
-
 module Bcome::Node::Collection
   class Snapshot < ::Bcome::Node::Collection::Base
 
@@ -24,7 +19,7 @@ module Bcome::Node::Collection
 
     ## Loading
     def loader_title
-      "Snapshotting K8 namespaces" 
+      "snapshotting cluster namespaces"
     end
 
     def loader_completed_title
@@ -78,10 +73,14 @@ module Bcome::Node::Collection
     end
 
     private
+   
+    def get_command
+      resource_names =["namespaces", "pods", "ingresses", "services"]
+      "get #{resource_names.join(",")} -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
+    end
  
     def get_config
-      cmd = "get namespaces,pods,ingresses,services -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
-      @config = @k8.run_kc(cmd)
+      @config = @k8.run_kc(get_command)
       return @config
     end
 

@@ -9,7 +9,7 @@ module Bcome::Helm::Validate
   end
 
   def is_collection?
-    @node.is_a?(::Bcome::Node::Collection::Kube)
+    @node.is_a?(::Bcome::Node::K8Cluster::Collection::Base)
   end
 
   def is_namespace?

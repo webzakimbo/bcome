@@ -6,8 +6,8 @@
 # todo: clean up error message when auth fails (bearer auth)
 # Enshrine is_dynamic in code, and guard against putting anything below this namespace as we already have for standard inventories
 
-module Bcome::Node::Collection
-  class Kube < ::Bcome::Node::Collection::Base
+module Bcome::Node::K8Cluster::Collection
+  class Base < ::Bcome::Node::Collection::Base
 
     include ::Bcome::InteractiveKubectl
     include ::Bcome::LoadingBar::Handler
@@ -33,7 +33,7 @@ module Bcome::Node::Collection
     end
 
     def set_child_nodes
-      Snapshot.do(self)
+      ::Bcome::Node::Collection::Snapshot.do(self)
     end
 
     def enabled_menu_items
@@ -61,7 +61,7 @@ module Bcome::Node::Collection
     end
 
     def cluster_id
-      "#{cluster_name}/#{project}:#{region}"
+      raise "Should be overidden"
     end
 
     def container_cluster_initialized?
@@ -70,14 +70,6 @@ module Bcome::Node::Collection
 
     def cluster_name
       cluster[:name]
-    end
-
-    def region
-      cluster[:region]
-    end
-
-    def project
-      network[:project]
     end
 
     def container_cluster?
@@ -142,26 +134,24 @@ module Bcome::Node::Collection
       # We'll do this early enough
       ::Bcome::EnsureBinary.do(::Bcome::K8Cluster::CommandRunner::KUBECTL_BINARY)
 
-      wrap_indicator type: :basic, title: "Authorising\s" + "GCP\s".bc_blue.bold + cluster_id.underline, completed_title: 'done' do
-        begin
-          @k8_cluster = ::Bcome::Driver::Gcp::Gke::Cluster.new(self)
-        rescue ::Bcome::Exception::ReauthGcp
-          network_driver.reauthorize        
-        rescue ::Bcome::Exception::GcpResourceNotFound
-          raise ::Bcome::Exception::Generic, "Cluster #{cluster_id} not found - is your network configuration correct?"
-        rescue StandardError => e
-          raise ::Bcome::Exception::Generic, "Could not retrieve credentials for #{cluster_id}. Failed with: #{e.class} #{e.message}"
-        end  
-      end
+      do_get_credentials
     end  
+
+    def do_get_credentials
+      raise "Should be overriden"
+    end 
 
     def resources
       @resources ||= ::Bcome::Node::Resources::Base.new(self)
     end
 
+    def required_attributes
+      raise "Should be overidden"
+    end
+
     def validate!
-      [:cluster_name, :region, :project].each do |required_attribute|
-        raise ::Bcome::Exception::Generic, "Missing cluster configuration attribute '#{require_attribute}'" unless send(required_attribute)
+      required_attributes.each do |required_attribute|
+        raise ::Bcome::Exception::Generic, "Missing cluster configuration attribute '#{required_attribute}'" unless send(required_attribute)
       end
     end
   end
