@@ -38,10 +38,10 @@ module Bcome::Helm::Validate
     raw_version.stdout =~ /Version:"(v[0-9]+.[0-9]+.[0-9]+)"/
     version = $1
 
-    raise ::Bcome::Exception::Generic, "Could not find compatible Helm version. 3.x.x is required" unless version
+#    raise ::Bcome::Exception::Generic, "Could not find compatible Helm version. 3.x.x is required" unless version
  
-    unless version =~ /v#{REQUIRED_HELM_MAJOR_VERSION}.[0-9]+.[0-9]+/
-      raise ::Bcome::Exception::Generic, "Error: Helm integration requires Helm version v3.x.x, found '#{version}'"
-    end
+#    unless version =~ /v#{REQUIRED_HELM_MAJOR_VERSION}.[0-9]+.[0-9]+/
+#      raise ::Bcome::Exception::Generic, "Error: Helm integration requires Helm version v3.x.x, found '#{version}'"
+#    end
   end
 end
