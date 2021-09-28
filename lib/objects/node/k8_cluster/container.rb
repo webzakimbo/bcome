@@ -5,7 +5,6 @@ module Bcome::Node::K8Cluster
 
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
-    include ::Bcome::KubeWorkspaceCommands
 
     DEFAULT_SHELL = "/bin/bash"
 
