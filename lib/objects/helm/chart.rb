@@ -5,7 +5,10 @@ module Bcome::Helm
 
     def initialize(config)
       @config = config
+
       @name = @config["name"]
+      @release_name = @config["release_name"] ? @config["release_name"] : @config["name"]
+
       @repository_name = @config["repository"]
       @version = @config["version"] ? @config["version"] : :latest
       @namespace = @config["namespace"]
@@ -15,7 +18,7 @@ module Bcome::Helm
     end
 
     def apply(node)
-      command = "upgrade --install #{@name} #{@repository_name}/#{@name}"
+      command = "upgrade --install #{@release_name} #{@repository_name}/#{@name}"
       command += "\s--version #{@version}" unless @version == :latest
       command += "\s--namespace #{@namespace}" if @namespace
       command += "\s#{@flags.join("\s")}" if @flags.any?
