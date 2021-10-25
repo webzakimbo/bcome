@@ -3,7 +3,7 @@
 module Bcome::Interactive::SessionItem
   class InteractiveKubectl < ::Bcome::Interactive::SessionItem::Base
 
-    END_SESSION_KEY = '\\q'
+    END_SESSION_KEYS = ['\\q', 'exit']
     HELP_KEY = '\\?'
 
     def do
@@ -60,7 +60,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def show_menu
-      info = "\\q to quit\n\\? this message".informational
+      info = "\\q or exit to quit\n\\? this message".informational
       puts "\n#{info}\n\n"
     end
 
@@ -69,7 +69,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def exit?(input)
-      input == END_SESSION_KEY
+      END_SESSION_KEYS.include?(input)
     end
 
     def comment?(input)
