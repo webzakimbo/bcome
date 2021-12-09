@@ -8,7 +8,6 @@ module Bcome::Node::K8Cluster
     end
 
     def get_kubectl_resource(crd_keys, switch_focus = false)
-
       resource_names = crd_keys.is_a?(Array) ? crd_keys.join(",") : crd_keys
 
       ## TODO - run the contextualised version of this for subselects (involves a re-filter)
@@ -27,7 +26,19 @@ module Bcome::Node::K8Cluster
       do_set_resources(items)
       return items
     end
-    alias :get :get_kubectl_resource
+
+    def get(crd_keys)
+      fetched_resources = []
+
+      raw_resources = get_kubectl_resource(crd_keys)
+      items = {}
+      raw_resources.each do |raw_resource|
+        resource_type = raw_resource["kind"]
+        resource_klass = resource_klasses[resource_type]
+        fetched_resources << add_resource(resource_klass, resource_type, raw_resource) 
+      end
+      return fetched_resources
+    end
 
     def refresh_cache!(items)
       kinds = items.collect{|item| item["kind"]}.uniq

@@ -31,7 +31,7 @@ module Bcome::K8Cluster
     def execute!
       @commands.each do |command|
         # Get the fully formed command that we're going to pass to kubectl
-        kube_command = @container.form_command_for_container(command)
+        kube_command = @container.form_run_command_for_container(command)
 
         output_append("\n(#{@container.namespace})$".terminal_prompt + ">\s#{command}\n\n")
         result = @container.run_kubectl_cmd(kube_command)

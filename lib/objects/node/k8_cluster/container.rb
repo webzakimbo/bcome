@@ -6,7 +6,7 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
 
-    DEFAULT_SHELL = "/bin/bash"
+    DEFAULT_SHELL = "/bin/sh"
 
     def machines(*params)
       puts "#{identifier}: #{is_running?} #{namespace}"
@@ -108,11 +108,12 @@ module Bcome::Node::K8Cluster
         raise ::Bcome::Exception::Generic, "Could not determine shell for key '#{cmd}'. Please specify one of: '#{shells.keys.join(', ')}'"
       end
 
-      get_shell_command = form_command_for_container(shell_cmd)
+      get_shell_command = "#{exec_preamble} #{shell_cmd}" 
 
       command = get_kubectl_cmd(get_shell_command)
       system(command)
     end
+    alias :sh :shell
 
     ## todo: May be overriden to set alternative shells, but should be a configuration option.
     def shells 
@@ -124,8 +125,13 @@ module Bcome::Node::K8Cluster
     end
 
     def form_command_for_container(raw_command)
-      "#{exec_preamble} sh -c '#{raw_command}'"
+      "#{exec_preamble} sh '#{raw_command}'"
     end
+
+     def form_run_command_for_container(raw_command)
+       "#{exec_preamble} /bin/bash -c '#{raw_command}'"
+     end
+
 
     def do_run(commands)
       if commands.is_a?(Array)
@@ -158,7 +164,7 @@ module Bcome::Node::K8Cluster
     end
 
     def exec_preamble
-      "exec -it -n #{k8_namespace.hyphenated_identifier} #{parent.hyphenated_identifier} - container #{hyphenated_identifier} --"
+      "exec -it -n #{k8_namespace.hyphenated_identifier} #{parent.hyphenated_identifier} -c #{hyphenated_identifier} --"
     end
 
     def run_kubectl_cmd(command)

@@ -35,7 +35,8 @@ module Bcome::Node::K8Cluster::ResourceMappings
       "Ingress" => ::Bcome::Node::K8Cluster::Ingress,
       "Service" =>  ::Bcome::Node::K8Cluster::Service,
       "CronJob" => ::Bcome::Node::K8Cluster::CronJob,
-      "Crd" => ::Bcome::Node::K8Cluster::Crd
+      "Crd" => ::Bcome::Node::K8Cluster::Crd,
+      "Deployment" => ::Bcome::Node::K8Cluster::Deployment
     }
   end
   
@@ -63,7 +64,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
     end
 
     resource.set_child_nodes if resource.respond_to?(:set_child_nodes)
-
     ::Bcome::Node::Factory.instance.bucket[resource.keyed_namespace] = resource
+    return resource
   end
 end
