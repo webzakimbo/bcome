@@ -62,7 +62,9 @@ module Bcome::Registry
       {
         server: ::Bcome::Node::Server::Base,
         inventory: ::Bcome::Node::Inventory,
-        collection: ::Bcome::Node::Collection
+        collection: ::Bcome::Node::Collection,
+        k8_pod: ::Bcome::Node::K8Cluster::Pod,
+        k8_container: ::Bcome::Node::K8Cluster::Container,
       }
     end
 

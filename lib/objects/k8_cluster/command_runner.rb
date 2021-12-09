@@ -85,7 +85,7 @@ module Bcome::K8Cluster
     end
   
     def result 
-      print_command_and_obfuscate_token(full_command)
+      #print_command_and_obfuscate_token(full_command)
       @result ||= ::Bcome::Command::Local.run(full_command)
     end
  

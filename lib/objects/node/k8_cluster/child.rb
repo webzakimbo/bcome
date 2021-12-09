@@ -6,6 +6,7 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeCommandHelper
     include ::Bcome::Node::KubeGenericMenuItems
+    include ::Bcome::Node::KubeResourceCommonAccessors
 
     def nodes_loaded?
       true

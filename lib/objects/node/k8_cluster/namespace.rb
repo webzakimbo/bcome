@@ -42,6 +42,8 @@ module Bcome::Node::K8Cluster
     end
 
     def do_set_resources(raw_resources)
+      return [] if raw_resources.empty?
+
       if raw_resources.is_a?(Array)
         set_subselects_from_raw_data(raw_resources, parent.subdivide_namespaces_on_label)
         return
@@ -66,7 +68,6 @@ module Bcome::Node::K8Cluster
 
       # Could not group by, so return flat structure within namespace instead.
       return do_set_resources(raw_resources) if grouped_data.keys.flatten.empty?
-
       @is_subdivided = true
 
       grouped_data.each do |group_name, group_data|
