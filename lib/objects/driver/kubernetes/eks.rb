@@ -13,7 +13,7 @@ module ::Bcome::Driver::Kubernetes
     end
    
     def get_token
-      cmd = "eks get-token --cluster-name newron-prod"     
+      cmd = "eks get-token --cluster-name #{cluster_name}"     
       runner = aws_run(cmd)
 
       begin
