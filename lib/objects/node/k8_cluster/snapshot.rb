@@ -75,7 +75,7 @@ module Bcome::Node::Collection
     private
    
     def get_command
-      resource_names =["namespaces", "pods", "ingresses", "services"]
+      resource_names =["namespaces", "pods", "deployments"]
       "get #{resource_names.join(",")} -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
     end
  

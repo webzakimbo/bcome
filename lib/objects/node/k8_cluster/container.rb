@@ -8,6 +8,10 @@ module Bcome::Node::K8Cluster
 
     DEFAULT_SHELL = "/bin/sh"
 
+    def is_describable?
+      return false
+    end
+
     def machines(*params)
       puts "#{identifier}: #{is_running?} #{namespace}"
    

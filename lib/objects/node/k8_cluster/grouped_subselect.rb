@@ -36,6 +36,10 @@ module Bcome
           true
         end
 
+        def run_kubectl_cmd(command)
+           k8_namespace.run_kubectl_cmd(command)
+        end
+
         def k8_namespace
           parent_namespace
         end

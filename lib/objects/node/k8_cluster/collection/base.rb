@@ -26,6 +26,10 @@ module Bcome::Node::K8Cluster::Collection
       kubectl
     end
 
+    def is_describable?
+      false
+    end
+
     def logs(cmd = "")
       resources.active.pmap do |pod|
         pod.logs(cmd)
@@ -37,7 +41,7 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def enabled_menu_items
-      (super + %i[config reload]) - non_k8_menu_items
+      (super + %i[config lsr reload]) - non_k8_menu_items
     end
 
     def ingresses
@@ -46,6 +50,11 @@ module Bcome::Node::K8Cluster::Collection
 
     def menu_items
       base_items = super.dup
+
+      base_items[:lsr] = {
+        description: 'Reload from remote & list',
+        group: :informational
+      }
 
       base_items[:config] = {
         description: 'Display the k8 configuration for this node',

@@ -11,6 +11,7 @@ module Bcome::Terraform
     end
 
     def output
+      return {} unless File.directory?(terraform_installation_path)
       @output ||= get_output
     end
 

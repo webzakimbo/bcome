@@ -3,6 +3,10 @@ module Bcome::Node::K8Cluster
 
     include ::Bcome::InteractiveKubectl
 
+    def is_describable?
+      true
+    end
+
     def kubectl_context
       "#{parent.kubectl_context}.#{hyphenated_identifier}"
     end

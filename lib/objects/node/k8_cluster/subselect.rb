@@ -54,7 +54,7 @@ module Bcome
           }
 
           base_items[:logs] = {
-            description: 'Live tail stdout (all selected pods)',
+            description: 'Live tail stdout (all in selection)',
             group: :informational
           }
 

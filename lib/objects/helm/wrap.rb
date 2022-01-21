@@ -28,7 +28,7 @@ module Bcome::Helm
     def contextualized_command(command)
       cmd = "#{helm_bin} #{command} #{context_string}"
       verb = command.split("\s").first                                                            
-      cmd += "\s" + namespace_flag if namespace_commands.include?(verb)
+      cmd += "\s" + namespace_flag(command) if namespace_commands.include?(verb)
       cmd
     end 
 
@@ -36,10 +36,17 @@ module Bcome::Helm
       %w(ls install uninstall get)
     end  
 
-    def namespace_flag
-      is_collection? ? "--all-namespaces" : "--namespace #{@node.identifier}"
+    def namespace_flag(command)
+      return "--namespace #{@node.identifier}" unless is_collection?
+      return "--all-namespaces" if add_all_namespaces_flag?(command)
+      return ""
     end
- 
+
+    def add_all_namespaces_flag?(command)
+      is_collection? && (command =~ /^get.+/).nil?
+    end
+
+
     def context_string
       "--kubeconfig=#{config_path} --kube-context=#{context}"
     end

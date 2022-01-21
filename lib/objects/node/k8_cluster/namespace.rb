@@ -86,11 +86,21 @@ module Bcome::Node::K8Cluster
     end
 
     def enabled_menu_items
-      (super + %i[logs config reload]) - non_k8_menu_items
+      (super + %i[lsr describe logs config reload kubectl helm]) - non_k8_menu_items
     end
 
     def menu_items
       base_items = super.dup
+
+      base_items[:lsr] = {
+        description: 'Reload from remote & list',
+        group: :informational
+      }
+
+      base_items[:describe] = {
+        description: 'Describe this k8 node',
+        group: :informational
+      }
 
       base_items[:config] = {
         description: 'Display the k8 configuration for this node',
@@ -103,8 +113,18 @@ module Bcome::Node::K8Cluster
       }
 
       base_items[:logs] = {
-        description: 'Live tail stdout (all selected pods)',
+        description: 'Live tail stdout (all in selection)',
         group: :informational
+      }
+
+      base_items[:kubectl] = {
+        description: 'Contextual kubectl shell',
+        group: :kubernetes
+      }
+
+      base_items[:helm] = {
+        description: 'Contextual helm shell',
+        group: :kubernetes
       }
 
       base_items
