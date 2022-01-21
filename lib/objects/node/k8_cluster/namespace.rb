@@ -44,15 +44,30 @@ module Bcome::Node::K8Cluster
     def do_set_resources(raw_resources)
       return [] if raw_resources.empty?
 
+      ## 1. UNSORTED --
       if raw_resources.is_a?(Array)
-        set_subselects_from_raw_data(raw_resources, parent.subdivide_namespaces_on_label)
-        return
+        ## GROUP BY -
+        if parent.respond_to?(:subdivide_namespaces_on_label)
+          set_subselects_from_raw_data(raw_resources, parent.subdivide_namespaces_on_label)
+          return
+        else
+          ## UNGROUPED --
+          raw_resources.each do |resource|
+            resource_type = resource["kind"]
+            resource_klass = resource_klasses[resource_type]
+            resource_klass = crd_resource_klass unless resource_klass
+            add_resource(resource_klass, resource_type, resource)
+          end
+          return
+        end
       end
 
+      ## 2. SORTED --
       raw_resources.each do |resource_type, raw_resource|
         resource_klass = resource_klasses[resource_type]
         resource_klass = crd_resource_klass unless resource_klass
 
+        next if raw_resource.nil?
         raw_resource.each do |resource|
           add_resource(resource_klass, resource_type, resource)
         end
@@ -65,9 +80,8 @@ module Bcome::Node::K8Cluster
       json_path = JsonPath.new("metadata.labels.#{label_name}")
 
       grouped_data = raw_data.group_by{|data| json_path.on(data) }
+      grouped_data = { [] => raw_data } if grouped_data.keys.flatten.empty? # hack: if cannot group by, pretend...
 
-      # Could not group by, so return flat structure within namespace instead.
-      return do_set_resources(raw_resources) if grouped_data.keys.flatten.empty?
       @is_subdivided = true
 
       grouped_data.each do |group_name, group_data|

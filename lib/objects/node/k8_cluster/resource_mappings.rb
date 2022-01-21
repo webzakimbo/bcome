@@ -7,13 +7,33 @@ module Bcome::Node::K8Cluster::ResourceMappings
   def switch(crd_key)
     raise "You may only utilize switch with singular resources" if "#{crd_key}".split.size > 1 || crd_key =~ /,/
 
-    switch_focus = true
-    items = get_kubectl_resource(crd_key, switch_focus)
-    other = ::Bcome::Orchestrator.instance.get(keyed_namespace)
-    ::Bcome::Workspace.instance.set(current_context: other, context: other)
+    # Get the resource
+    items = get_kubectl_resource(crd_key)
+
+    if items.any?
+      key = items.first["kind"]
+      switch_should_focus_on = resource_klasses[key] ? resource_klasses[key] : crd_resource_klass
+
+      # Create new workspace
+      other = self.dup 
+      other.focus_on = switch_should_focus_on 
+      other.set_switched_resources(items)
+
+      ::Bcome::Workspace.instance.set(current_context: other, context: other)
+    else
+      puts "No resources of type '#{crd_key}' found".informational
+    end
   end
   alias :focus :switch
  
+  def set_switched_resources(items)
+    # Used when we switch focus - we instantiate a new instance of our current workspace, but
+    # we the newly retrieved items as its resources.
+    @resources = ::Bcome::Node::Resources::Base.new
+    refresh_cache!(items)
+    do_set_resources(items)
+  end
+
   def get_crds
     collate_child_crds? ? collate_child_crds : {}
   end
@@ -45,12 +65,19 @@ module Bcome::Node::K8Cluster::ResourceMappings
   end
 
   def focus_breadcrumb
-    resource_key = resource_klasses.select{|key,value| value == ::Bcome::Workspace.instance.kubernetes_focus_on }.first[0]
-    resource_key.downcase.pluralize
+    resources.first.type.pluralize
   end
 
   def focus_on?(resource_klass)
-    resource_klass == ::Bcome::Workspace.instance.kubernetes_focus_on
+    resource_klass == focus_on
+  end
+
+  def focus_on
+    @focus_on ||= ::Bcome::Workspace.instance.kubernetes_focus_on
+  end
+
+  def focus_on=(to_focus_on)
+    @focus_on = to_focus_on
   end
 
   def add_resource(resource_klass, resource_type, data)
