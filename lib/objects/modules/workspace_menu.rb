@@ -65,13 +65,14 @@ module Bcome
 
     def menu_group_names
       {
-        ssh: 'Ssh',
+        ssh: 'Command Exec',
         informational: 'Informational',
         selection: 'Selections',
         file: 'File & Script',
         navigation: 'Navigational',
         miscellany: 'Miscellaneous',
-        command_list: 'Command lists'
+        command_list: 'Command lists',
+        kubernetes: 'Kubernetes'
       }
     end
 

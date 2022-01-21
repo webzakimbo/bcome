@@ -89,6 +89,9 @@ module Bcome
 
     def pretty_description(is_active = true)
       desc = ''
+
+      @key_spacing_limit = 13
+
       list_attributes.each do |key, value|
         next unless respond_to?(value) || instance_variable_defined?("@#{value}")
 
@@ -97,7 +100,13 @@ module Bcome
 
         desc += "\t"
         desc += is_active ? key.to_s.resource_key : key.to_s.resource_key_inactive
-        desc += "\s" * (13 - key.length)
+
+        if key.length >= @key_spacing_limit 
+          desc += "\s"
+        else    
+          desc += "\s" * (@key_spacing_limit - key.length)
+        end
+
         desc += is_active ? attribute_value.resource_value : attribute_value.resource_value_inactive
         desc += "\n"
         desc = desc unless is_active

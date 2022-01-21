@@ -15,7 +15,13 @@ module Bcome::Node::KubeHelper
 
   ## Shared utility methods
   def config
-    ap(raw_config_data)
+    ap(raw_config_data.to_yaml)
+  end
+
+  def describe
+    return unless is_describable?
+    describe_cmd = "describe #{self.type} #{self.identifier}"
+    print parent.run_kubectl_cmd(describe_cmd).data.stdout
   end
 
   def k8_metadata
@@ -38,7 +44,7 @@ module Bcome::Node::KubeHelper
 
   ## Overrides
   def non_k8_menu_items
-    %i[get put put_str rsync execute_script ping routes workon enable disable enable! disable!]
+    %i[ssh get put put_str rsync execute_script ping routes workon enable disable enable! disable!]
   end
 
 end
