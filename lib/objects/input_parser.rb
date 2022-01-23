@@ -21,13 +21,13 @@ class InputParser
 
   def node_methods
     # All methods expect (or may optionally have) one or more namespaces as arguments
-    %w(cd helm ls workon disable ssh tree)  
+    %w(cd helm ls workon disable ssh tree switch focus)  
   end
 
   def wrapped_methods
     # Methods where the whole string needs to be wrapped, rather than the individual namespaces
     # e.g cd "foo" or cd "foo:bar"
-    %w(cd helm)
+    %w(cd helm switch focus)
   end
 
   def do_parse(method, arguments)
@@ -38,5 +38,4 @@ class InputParser
       return "#{method} #{arguments}"
     end
   end
-
 end

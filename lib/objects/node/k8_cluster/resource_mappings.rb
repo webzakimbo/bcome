@@ -57,7 +57,8 @@ module Bcome::Node::K8Cluster::ResourceMappings
       "CronJob" => ::Bcome::Node::K8Cluster::CronJob,
       "Crd" => ::Bcome::Node::K8Cluster::Crd,
       "Deployment" => ::Bcome::Node::K8Cluster::Deployment,
-      "VirtualService" => ::Bcome::Node::K8Cluster::VirtualService
+      "VirtualService" => ::Bcome::Node::K8Cluster::VirtualService,
+      "Secret" => ::Bcome::Node::K8Cluster::Secret
     }
   end
   

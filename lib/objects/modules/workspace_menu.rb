@@ -72,7 +72,8 @@ module Bcome
         navigation: 'Navigational',
         miscellany: 'Miscellaneous',
         command_list: 'Command lists',
-        kubernetes: 'Kubernetes'
+        kubernetes: 'Kubernetes',
+        contextual: 'Contextual'
       }
     end
 
