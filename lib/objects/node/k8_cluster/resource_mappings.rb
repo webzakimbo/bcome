@@ -28,7 +28,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
  
   def set_switched_resources(items)
     # Used when we switch focus - we instantiate a new instance of our current workspace, but
-    # we the newly retrieved items as its resources.
+    # we set the newly retrieved items as its resources.
     @resources = ::Bcome::Node::Resources::Base.new
     refresh_cache!(items)
     do_set_resources(items)
