@@ -8,11 +8,22 @@ class InputParser
   end
 
   def parse
-    # Todo
-    # if token without quotation marks matches a resource in scope, then return that object so can execute command on it?
-    # OR it token:foo where token = object & foo method then, token_object.send(foo) ??? 
+    @input.strip!
 
-    if node_methods.any? && @input =~ /^(#{node_methods.join("|")}) (.+)$/i
+    ## Better UI UX - drill down by id name and method foo.bar.method 
+    if resource = @node.resources.for_identifier(@input)
+      # While input matches a resource; return it
+      return "resources.for_identifier(\"#{@input}\")"   
+    else
+      @tokens = @input.split(".")
+      if @tokens && @node.resources.for_identifier(@tokens.first)
+        suffixes = @tokens[1..@tokens.size]
+        to_eval_suffixes = suffixes.collect{|token| "send('#{token}'.to_sym)" }.join(".")
+        return "resources.for_identifier('#{@tokens.first}').#{to_eval_suffixes}" 
+      end
+    end   
+
+    if @input =~ /^(#{node_methods.join("|")}) (.+)$/i
       method = $1
       arguments = $2
       return do_parse(method, arguments)

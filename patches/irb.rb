@@ -72,7 +72,7 @@ module IRB
   class Context
     def overriden_evaluate(*_params)
 
-       _params[0] = ::InputParser.new(_params[0], bcome_node).parse
+      _params[0] = ::InputParser.new(_params[0], bcome_node).parse
 
       if _params.last.is_a?(Hash)
         # Ruby 2.7.0 compatibility: "Using the last argument as keyword parameters is deprecated" ; hence splat the last argument

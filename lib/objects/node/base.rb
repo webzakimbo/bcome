@@ -57,6 +57,11 @@ module Bcome::Node
     attr_reader :views
 
     def method_missing(method_sym, *arguments)
+
+      if resource = resources.for_identifier(method_sym.to_s)
+        return resource
+      end
+
       raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
 
       if resource_identifiers.include?(method_sym.to_s)
