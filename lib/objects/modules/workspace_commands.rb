@@ -31,7 +31,7 @@ module Bcome
             puts "\n"
           end
         else
-          puts "\tNo resources found".informational
+          puts "\tNo child resources".informational
         end
 
         new_line
