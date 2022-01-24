@@ -20,19 +20,11 @@ module Bcome::Interactive::SessionItem
       return if exit?(input)
       action if comment?(input)
 
-      # TODO
-      # bcome :pod, :name OR bcome :cronjob, :name etc
-
       if commands = passthru_bcome?(input)
         method = commands.first
         node.send(method)
         action
       end
-
-      #if @to_snapshot
-      #  node.set_context(@to_snapshot)
-      #  @to_snapshot = nil
-      #end
 
       if show_menu?(input)
         show_menu
@@ -52,13 +44,17 @@ module Bcome::Interactive::SessionItem
         
         ::Bcome::PipedInput.instance.pipe = pipes if pipes
 
-        runner = node.delegated_kubectl_cmd(command)
-        puts runner
+        delegate_kubectl_command(command)
       rescue JSON::ParserError
         puts "Invalid command '#{command}'".error
       end
     end
 
+    def delegate_kubectl_command(command)
+      runner = node.delegated_kubectl_cmd(command)
+      puts runner
+    end
+ 
     def show_menu
       info = "\\q or exit to quit\n\\? this message".informational
       puts "\n#{info}\n\n"
