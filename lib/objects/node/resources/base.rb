@@ -93,7 +93,7 @@ module Bcome::Node::Resources
     end
 
     def for_identifier(identifier)
-      resource = active.select { |node| node.identifier == identifier }.last
+      resource = @nodes.select { |node| node.identifier == identifier }.last
       resource
     end
 
