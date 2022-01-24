@@ -5,8 +5,10 @@ module Bcome::Node::K8Cluster
 
     def read
       as_human = {}
+      print "\n"
       data.each do |key, encoded_value|
         puts "#{key.informational}: #{::Base64.decode64(encoded_value)}"
+        puts ""
       end
       return 
     end
