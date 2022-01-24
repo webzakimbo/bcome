@@ -38,7 +38,7 @@ class InputParser
     if wrapped_methods.include?(method)
       return "#{method} \"#{arguments}\""
     else
-      arguments.gsub!(/([a-zA-Z\-0-9]+(?:[a-zA-Z\-0-9].+)*)/,"'\\1'")
+      arguments.gsub!(/([a-zA-Z\-0-9\.]+(?:[a-zA-Z\-0-9\.].+)*)/,"'\\1'")
       return "#{method} #{arguments}"
     end
   end
