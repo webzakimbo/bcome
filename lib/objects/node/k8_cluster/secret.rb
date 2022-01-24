@@ -3,22 +3,22 @@
 module Bcome::Node::K8Cluster
   class Secret < Bcome::Node::K8Cluster::Child
 
-    def readable
+    def read
       as_human = {}
       data.each do |key, encoded_value|
-        as_human[key] = ::Base64.decode64(encoded_value)
+        puts "#{key.informational}: #{::Base64.decode64(encoded_value)}"
       end
-      ap as_human, {indent: -2}
+      return 
     end
 
     def enabled_menu_items
-      (super + %i[readable]) 
+      (super + %i[read]) 
     end
 
     def menu_items
       base_items = super.dup
  
-      base_items[:readable] = {
+      base_items[:read] = {
         description: "Human readable secret outputs - base64 decoded",
         group: :contextual
       }
