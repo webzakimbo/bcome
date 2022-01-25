@@ -49,8 +49,8 @@ module Bcome::Interactive::SessionItem
     end
 
     def delegate_kubectl_command(command)
-      runner = node.delegated_kubectl_cmd(command)
-      puts runner
+      print "\n"
+      node.delegated_kubectl_cmd(command)
     end
  
     def show_menu
@@ -59,7 +59,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      "#{node.kubectl_context}>\s#{"kubectl\s".bc_cyan}"
+      "#{node.kubectl_context}\s#{"kubectl\s".bc_cyan}"
     end
 
     def exit?(input)
@@ -74,10 +74,6 @@ module Bcome::Interactive::SessionItem
       tokens = input.split(/\s+/)
       method = tokens.first
  
-      #if method == "get"
-      #  @to_snapshot = tokens[1..tokens.size].join("\s")
-      #end
-
       if passthru_commands.include?(tokens.first) 
         return tokens
       else
