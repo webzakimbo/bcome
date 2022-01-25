@@ -7,6 +7,7 @@ module Bcome::Interactive::SessionItem
     HELP_KEY = '\\?'
 
     def do
+      ::Bcome::Orchestrator.instance.silence_command_output!
       show_menu
       action
     end
@@ -40,7 +41,7 @@ module Bcome::Interactive::SessionItem
         pipes = captures[1..captures.length].join("") if captures.length > 1
         
         ::Bcome::PipedInput.instance.pipe = pipes if pipes
-
+ 
         delegate_kubectl_command(command)
       rescue JSON::ParserError
         puts "Invalid command '#{command}'".error
@@ -58,7 +59,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      "#{node.kubectl_context}>\s#{"kubectl\s".bc_yellow.bold}"
+      "#{node.kubectl_context}>\s#{"kubectl\s".bc_cyan}"
     end
 
     def exit?(input)
