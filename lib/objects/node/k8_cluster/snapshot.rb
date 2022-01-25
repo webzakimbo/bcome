@@ -17,9 +17,8 @@ module Bcome::Node::Collection
       @items = sort_resources
     end
 
-    ## Loading
     def loader_title
-      "snapshotting cluster namespaces"
+      "loading snapshot"
     end
 
     def loader_completed_title
@@ -76,7 +75,15 @@ module Bcome::Node::Collection
    
     def get_command
       resource_names = ["namespaces", "pods", "deployments"]
-      "get #{resource_names.join(",")} -o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
+      parameters = "-o=custom-columns=NAME:.metadata.name,CONTAINERS:.spec.containers[*].name --all-namespaces"
+
+      resource_names = [] + default_resources
+    
+      return "get #{resource_names.join(",")} #{parameters}"
+    end
+
+    def default_resources
+      ["namespaces"]
     end
  
     def get_config

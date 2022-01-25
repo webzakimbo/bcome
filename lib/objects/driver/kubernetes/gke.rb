@@ -13,6 +13,11 @@ module ::Bcome::Driver::Kubernetes
       config["endpoint"]
     end
 
+    def registered?
+      check_context = run_kubectl_config("config get-contexts #{name}")
+      return check_context.is_success?
+    end
+
     def cluster_certificate
       config["masterAuth"]["clusterCaCertificate"]
     end

@@ -36,6 +36,5 @@ module Bcome::Driver::Gcp::ApiClient
     def in_error?
       json_body && json_body["error"]
     end
-
   end
 end

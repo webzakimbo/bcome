@@ -20,7 +20,8 @@ module Bcome::Node::K8Cluster
     end
 
     def prompt_breadcrumb
-      "#{super}" + "\s(#{focus_breadcrumb.bc_orange})" 
+      return super unless focus_breadcrumb
+      return "#{super}" + "\s(#{focus_breadcrumb.bc_orange})" 
     end
 
     def machines(skip_for_hidden = true)

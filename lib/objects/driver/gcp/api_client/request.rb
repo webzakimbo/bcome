@@ -64,6 +64,5 @@ module Bcome::Driver::Gcp::ApiClient
     def authorize
       @network_driver.authorize
     end
-
   end
 end

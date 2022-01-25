@@ -66,6 +66,7 @@ module Bcome::Driver::Gcp::Authentication::Oauth
     def do!(reauth = false)
       authorize!(reauth)
       if @storage.authorization.nil?
+
         # Total bloat from google here. Thanks google... requiring at last possible moment.
         require 'google/api_client/auth/installed_app'
 

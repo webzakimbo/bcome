@@ -67,7 +67,8 @@ module Bcome::Node::K8Cluster::ResourceMappings
   end
 
   def focus_breadcrumb
-    resources.first.type.pluralize
+    return nil unless resources.any?
+    return resources.first.type.pluralize
   end
 
   def focus_on?(resource_klass)
@@ -80,6 +81,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
 
   def focus_on=(to_focus_on)
     @focus_on = to_focus_on
+    ::Bcome::Workspace.instance.set_kubernetes_focus(to_focus_on)
   end
 
   def add_resource(resource_klass, resource_type, data)

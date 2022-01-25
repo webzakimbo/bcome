@@ -8,8 +8,16 @@ module ::Bcome::Driver::Kubernetes
     def initialize(node)
       raise "Invalid collection class #{node.class} for #{self.class}" unless node.is_a?(expected_collection_class)
       @node = node
-      register_cluster
+      register_cluster unless registered?
     end  
+
+    def registered?
+      return false # flex point for EKS. Overriden in GKE.
+    end
+
+    def register_cluster
+      raise "Should be overidden"
+    end
 
     def expected_collection_class
       raise "Should be overriden"
