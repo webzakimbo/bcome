@@ -13,6 +13,20 @@ module Bcome::Driver
       validate_service_scopes unless auth_scheme_key == :basic_oauth
     end
 
+    def matches_auth_config?(other_config)
+      # Used to deterime whether a particular network config matches one for an existing driver as far as is
+      # required for authorization. 
+      config.select{|k, v|
+        auth_attributes.include?(k)
+       } == other_config.select{|k, v|
+        auth_attributes.include?(k)
+      }
+    end
+
+    def auth_attributes
+      [:type, :project, :authentication_scheme, :secrets_filename, :service_scopes, :service_account_credentials]
+    end
+
     def pretty_provider_name
       'GCP'
     end

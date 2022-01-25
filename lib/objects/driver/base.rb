@@ -30,6 +30,14 @@ module Bcome::Driver
       @node = node
     end
 
+    def matches_auth_config?(other_config)
+      # Used to determine whether a particular network configuration merits a new driver, or whether we already
+      # have one in memory - along with an authorization - in order to reduce the number of authentication requests
+
+      # For GCP this is overriden, and for AWS todo we'll need to revisit to tweak the default config below.
+      config == other_config
+    end
+
     def has_network_credentials?
       false
     end
