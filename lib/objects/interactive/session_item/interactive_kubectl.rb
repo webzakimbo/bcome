@@ -7,10 +7,7 @@ module Bcome::Interactive::SessionItem
     HELP_KEY = '\\?'
 
     def do
-      puts ''
-      puts "\nContextual Kubectl".bc_yellow.bold
       show_menu
-      puts ''
       action
     end
 
@@ -61,7 +58,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      "#{node.kubectl_context}>\s"
+      "#{node.kubectl_context}>\s#{"kubectl\s".bc_yellow.bold}"
     end
 
     def exit?(input)
