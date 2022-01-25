@@ -86,7 +86,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def passthru_commands
-      ["pathways"]
+      ["pathways", "tree"]
       #["tree", "pathways", "reload", "bcome"]
     end
 
@@ -95,6 +95,5 @@ module Bcome::Interactive::SessionItem
     end
 
     def start_message; end
-
   end
 end
