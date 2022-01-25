@@ -27,7 +27,7 @@ module Bcome::Driver::Gcp::Authentication::Oauth
     end
 
     def authorized?
-      storage && !@storage.authorization.nil?
+      storage && !storage.authorization.nil?
     end
 
     def credential_file_suffix
