@@ -49,8 +49,20 @@ module Bcome::Interactive::SessionItem
     end
 
     def delegate_kubectl_command(command)
-      print "\n"
-      node.delegated_kubectl_cmd(command)
+      runner = node.run_kubectl_cmd(command)
+      local = runner.data
+ 
+      if local.is_success?
+        print local.stdout + "\n"
+      elsif local.stderr && local.stderr =~ /unauthorized/i
+        # We need to re-authorize (acquire a new token)
+        reauthenaticate = true
+        puts "Logged out of GCP... re-authenticating".informational
+        node.network_driver.authorize(reauthenticate)
+        puts "Done".success             
+      else
+        puts "Error: #{local.stderr}"
+      end
     end
  
     def show_menu
