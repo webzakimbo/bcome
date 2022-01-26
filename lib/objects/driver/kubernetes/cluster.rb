@@ -58,7 +58,7 @@ module ::Bcome::Driver::Kubernetes
 
     def delegated_kubectl_cmd(command)
       command_runner = runner(command, :no_json, :command_call)
-      command_runner.run_hand_off
+      return command_runner.run_hand_off
     end
 
     def get_kubectl_cmd(command)

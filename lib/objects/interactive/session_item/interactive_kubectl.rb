@@ -5,6 +5,7 @@ module Bcome::Interactive::SessionItem
 
     END_SESSION_KEYS = ['\\q', 'exit']
     HELP_KEY = '\\?'
+    REAUTH_KEY = '\\r'
 
     def do
       ::Bcome::Orchestrator.instance.silence_command_output!
@@ -26,6 +27,8 @@ module Bcome::Interactive::SessionItem
 
       if show_menu?(input)
         show_menu
+      elsif reauth?(input)
+        reauth
       else
         run_kc(input)
       end
@@ -49,25 +52,23 @@ module Bcome::Interactive::SessionItem
     end
 
     def delegate_kubectl_command(command)
-      runner = node.run_kubectl_cmd(command)
-      local = runner.data
- 
-      if local.is_success?
-        print local.stdout + "\n"
-      elsif local.stderr && local.stderr =~ /unauthorized/i
-        # We need to re-authorize (acquire a new token)
-        reauthenaticate = true
-        puts "Logged out of GCP... re-authenticating".informational
-        node.k8_cluster.reauthorize! 
-        puts "Done".success             
-      else
-        puts "Error: #{local.stderr}"
-      end
+      # We must run 'delegated_kubectl_cmd' as this hands off to the underlying
+      # operating system, allowing features like 'kubectl edit' which must open an editor
+      # and allow for saving.
+
+      # It does mean that for now we don't have an elegant way of automatically reconnecting 
+      # to the cluster when the access token expires, hence the manual /r 'reauth' method.
+      exit_code = node.delegated_kubectl_cmd(command)
+      puts exit_code.to_s 
     end
  
     def show_menu
-      info = "\\q or exit to quit\n\\? this message".informational
+      info = "\\q or exit to quit\n\\r to reauthenticate to your cluster\n\\? this message".informational
       puts "\n#{info}\n\n"
+    end
+
+    def reauth
+      node.k8_cluster.reauthorize!
     end
 
     def terminal_prompt
@@ -100,6 +101,10 @@ module Bcome::Interactive::SessionItem
 
     def show_menu?(input)
       input == HELP_KEY
+    end
+
+    def reauth?(input)
+      input == REAUTH_KEY
     end
 
     def start_message; end
