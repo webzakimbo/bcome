@@ -37,7 +37,7 @@ module ::Bcome::Driver::Kubernetes
     def register_cluster
       register_cluster_in_config
       register_cluster_certificate_in_config
-      register_user_in_config
+      set_cluster_access_token
       register_cluster_context
     end
 
@@ -49,12 +49,8 @@ module ::Bcome::Driver::Kubernetes
       run_kubectl_config("config set clusters.#{name}.certificate-authority-data #{cluster_certificate}")
     end
 
-    def register_user_in_config
+    def set_cluster_access_token
       run_kubectl_config("config set-credentials #{username} --token=#{access_token}")
-    end
-
-    def register_cluster_context
-      run_kubectl_config("config set-context #{name} --cluster=#{name} --user=#{username}")
     end
 
     def access_token

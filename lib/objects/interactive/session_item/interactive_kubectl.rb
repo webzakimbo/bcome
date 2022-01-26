@@ -58,7 +58,7 @@ module Bcome::Interactive::SessionItem
         # We need to re-authorize (acquire a new token)
         reauthenaticate = true
         puts "Logged out of GCP... re-authenticating".informational
-        node.network_driver.authorize(reauthenticate)
+        node.k8_cluster.reauthorize! 
         puts "Done".success             
       else
         puts "Error: #{local.stderr}"

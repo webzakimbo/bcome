@@ -54,10 +54,12 @@ module Bcome::Helm
     def parse_runner(runner)
       if runner.is_success?
         puts runner.stdout
+      elsif runner.stderr =~ /kubernetes cluster unreachable/i
+        @node.k8_cluster.reauthorize!
       else
         puts "error processing Helm command".error
         puts "\n#{runner.stderr}\n"
-      end 
+      end
     end
   end
 end

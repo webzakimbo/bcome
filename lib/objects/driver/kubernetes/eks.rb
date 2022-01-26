@@ -3,8 +3,8 @@ module ::Bcome::Driver::Kubernetes
 
     def register_cluster
       get_configuration
-      get_token
-      register_context
+      register_cluster_context
+      set_cluster_access_token
     end
 
     def get_configuration
@@ -28,8 +28,25 @@ module ::Bcome::Driver::Kubernetes
       network_credentials[:access_token] = token
     end  
 
-    def register_context
-      run_kubectl_config("config set-context #{cluster_name} --cluster=#{cluster_name}")
+    def set_cluster_access_token
+      get_token
+      run_kubectl_config("config set-credentials #{username} --token=#{access_token}")
+    end
+
+    def username
+      "#{NAME_PREFIX}_#{@node.account_id}_#{@node.cluster_name}"
+    end
+
+    def name
+      "#{@node.account_id}_#{@node.cluster_id}"
+    end
+
+    def access_token
+      network_credentials[:access_token]
+    end
+
+    def set_cluster_access_token
+      run_kubectl_config("config set-credentials #{username} --token=#{access_token}")
     end
 
     def aws_run(cmd)

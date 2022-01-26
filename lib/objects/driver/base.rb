@@ -30,6 +30,10 @@ module Bcome::Driver
       @node = node
     end
 
+    def authorize
+      return # override as required
+    end
+
     def matches_auth_config?(other_config)
       # Used to determine whether a particular network configuration merits a new driver, or whether we already
       # have one in memory - along with an authorization - in order to reduce the number of authentication requests

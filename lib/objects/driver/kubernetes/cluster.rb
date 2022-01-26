@@ -15,6 +15,23 @@ module ::Bcome::Driver::Kubernetes
       return false # flex point for EKS. Overriden in GKE.
     end
 
+    def reauthorize!
+      puts "Re-authenticating with cluster".informational
+      # trigger a re-auth
+      network_driver.authorize(true)
+
+      # update our kubectl conf with the newly acquired access token
+      set_cluster_access_token
+    end
+
+    def register_cluster_context
+      run_kubectl_config("config set-context #{name} --cluster=#{cluster_name} --user=#{username}")
+    end
+
+    def username
+      raise "Should be overidden"
+    end
+
     def register_cluster
       raise "Should be overidden"
     end
