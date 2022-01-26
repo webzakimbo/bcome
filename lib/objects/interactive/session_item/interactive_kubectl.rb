@@ -72,7 +72,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      "#{node.kubectl_context}\s#{"kubectl\s".bc_cyan}"
+      "#{node.kubectl_context}>\s#{"kubectl\s".bc_cyan}"
     end
 
     def exit?(input)

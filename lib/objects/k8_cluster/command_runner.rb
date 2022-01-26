@@ -51,7 +51,7 @@ module Bcome::K8Cluster
       # For when we absolutely need to hand-off to the underlying operating system, such as when executing kubectl edit
       to_run = full_command
 
-      puts "\n(#{"local".bc_yellow}) > #{to_run}\n\n" # unless ::Bcome::Orchestrator.instance.command_output_silenced?
+      puts "\n(#{"local".bc_yellow}) > #{to_run}\n\n" unless ::Bcome::Orchestrator.instance.command_output_silenced?
       system(to_run)
       return $?.exitstatus
     end
