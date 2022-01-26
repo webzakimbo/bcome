@@ -10,6 +10,19 @@ class InputParser
   def parse
     @input.strip!
 
+    ## Better UI UX - drill down by id name and method foo.bar.method
+    if resource = @node.resources.for_identifier(@input)
+      # While input matches a resource; return it
+      return "resources.for_identifier(\"#{@input}\")"
+    else
+      @tokens = @input.split(".")
+      if @tokens && @node.resources.for_identifier(@tokens.first)
+        suffixes = @tokens[1..@tokens.size]
+        to_eval_suffixes = suffixes.collect{|token| "send('#{token}'.to_sym)" }.join(".")
+        return "resources.for_identifier('#{@tokens.first}').#{to_eval_suffixes}"
+      end
+    end
+
     if @input =~ /^(#{node_methods.join("|")}) (.+)$/i
       method = $1
       arguments = $2
