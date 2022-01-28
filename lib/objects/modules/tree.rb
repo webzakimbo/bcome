@@ -8,13 +8,13 @@ module Bcome
     # Move tree & routes specific code out, and retain just the abstractions
     # GOAL: provide data in required format and it will render a tree.
 
-    def tree(node = self)
-      if (node != self) && (resource = resources.for_identifier(node))
-        resource.send(:tree)
-      else
+    def tree(limit = nil)
+      #if (node != self) && (resource = resources.for_identifier(node))
+      #  resource.send(:tree)
+      #else
         title_prefix = 'Namespace tree'
-        build_tree(:network_namespace_tree_data, title_prefix)
-      end
+        build_tree(:network_namespace_tree_data, title_prefix, limit)
+      #end
     end
 
     def routes
@@ -95,7 +95,7 @@ module Bcome
       ]
     end
 
-    def build_tree(data_build_method, title_prefix)
+    def build_tree(data_build_method, title_prefix, limit = nil)
       data = send(data_build_method)
 
       @lines = []
@@ -108,8 +108,10 @@ module Bcome
         parent.build_tree(data_build_method)
         return
       end
+   
+      padding = ""
 
-      recurse_tree_lines(data)
+      recurse_tree_lines(data, padding, limit)
 
       @lines.each do |line|
         print "#{LEFT_PADDING}#{line}\n"
@@ -119,8 +121,9 @@ module Bcome
       p
     end
 
-    def recurse_tree_lines(data, padding = '')
-      # @lines << padding + BRANCH
+    def recurse_tree_lines(data, padding, limit)
+      limit -= 1 if limit && limit > 0
+
       data.each_with_index do |config, index|
         key = config[0]
         values = config[1]
@@ -145,8 +148,11 @@ module Bcome
         next unless values&.is_a?(Hash)
 
         tab_padding = padding + branch + ("\s" * (anchor.length + 4))
-        recurse_tree_lines(values, tab_padding)
-        @lines << padding + branch
+
+        if limit.nil? || (limit && limit > 0)
+          recurse_tree_lines(values, tab_padding, limit)
+          @lines << padding + branch
+        end
       end
       nil
     end
