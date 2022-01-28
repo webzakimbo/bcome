@@ -52,12 +52,14 @@ module Bcome::Node
       ::Bcome::Interactive::Session.run(self, :interactive_ssh)
     end
 
-    # Given a string, scan ahead to determine if it contains a resource name
+    # Given a string, scan ahead to determine if it contains a resource name,
+    # auto-loading its nodes if so
     def scan(string)
       tokens = string.split(".")
       (0..tokens.size-1).each do |i|
         candidate_id = tokens[0..i].join(".")
         if resource = resources.for_identifier(candidate_id)
+          resource.load_nodes if resource.respond_to?(:load_nodes) && !resource.nodes_loaded?
           remaining_tokens = tokens[i+1..tokens.size]
           return [resource, remaining_tokens]
         end
@@ -112,10 +114,6 @@ module Bcome::Node
 
     def container_cluster?
       false
-    end
-
-    def should_load_nodes_when_traversing?
-      false 
     end
 
     def enabled_menu_items
@@ -223,7 +221,7 @@ module Bcome::Node
 
     def nodes_loaded?
       # resources.any? # This was buggy:  an inventory may validly contain no resources. This does not mean that we haven't attempted to load them
-      # we no explicitly set a flag for when we've loaded nodes. This will prevents uneccessary lookups over the wire
+      # we now explicitly set a flag for when we've loaded nodes. This will prevents uneccessary lookups over the wire
       @nodes_loaded
     end
 

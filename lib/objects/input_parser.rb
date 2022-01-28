@@ -17,7 +17,7 @@ class InputParser
         eval_lookup = "resources.for_identifier('#{resource.identifier}')"
         return "#{eval_lookup}.send('#{suffixes.join(".")}'.to_sym)"
       else
-        @input = "cd #{resource.identifier}"
+        "cd #{resource.identifier}"
       end
     end
 

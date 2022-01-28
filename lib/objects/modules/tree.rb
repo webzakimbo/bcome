@@ -8,13 +8,15 @@ module Bcome
     # Move tree & routes specific code out, and retain just the abstractions
     # GOAL: provide data in required format and it will render a tree.
 
-    def tree(limit = nil)
-      #if (node != self) && (resource = resources.for_identifier(node))
-      #  resource.send(:tree)
-      #else
-        title_prefix = 'Namespace tree'
-        build_tree(:network_namespace_tree_data, title_prefix, limit)
-      #end
+    def tree(config = {})
+      config = {} unless config.is_a?(Hash)
+      title_prefix = 'Namespace tree'
+      if parent && parent.respond_to?(:tree)
+        config[:callers] = config[:callers] ? (config[:callers] << self) : [self]
+        parent.tree(config)
+      else
+        return build_tree(:network_namespace_tree_data, title_prefix, config)
+      end
     end
 
     def routes
@@ -26,7 +28,7 @@ module Bcome
       end
     end
 
-    def routing_tree_data
+    def routing_tree_data(caller_stack)
       @tree = {}
 
       # For each namespace, we have many proxy chains
@@ -59,10 +61,18 @@ module Bcome
       nested.is_a?(String) ? { "#{nested}": nil } : nested
     end
 
-    def network_namespace_tree_data
+    def network_namespace_tree_data(caller_stack = nil)
       @tree = {}
 
-      resources.sort_by(&:identifier).each do |resource|
+      if (caller_stack && (element = caller_stack.shift))
+        iterate_over = [element]
+        geneaology = caller_stack.empty? ? :descendent : :ancestor
+      else
+        iterate_over = resources
+        geneaology = :descendent
+      end 
+
+      iterate_over.sort_by(&:identifier).each do |resource|
         next if resource.hide?
 
         resource.load_nodes if resource.respond_to?(:load_nodes) && !resource.nodes_loaded?
@@ -70,14 +80,16 @@ module Bcome
         unless resource.is_a?(Bcome::Node::Inventory::Merge)
           next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
         end
-        @tree[resource.namespace_tree_line] = resource.resources.any? ? resource.network_namespace_tree_data : nil
+
+        @tree[resource.namespace_tree_line(geneaology)] = resource.resources.any? ? resource.network_namespace_tree_data(caller_stack) : nil
       end
 
       @tree
     end
 
-    def namespace_tree_line
-      "#{type.bc_green} #{identifier}"
+    def namespace_tree_line(geneaology)
+      colour = geneaology == :ancestor ? :bc_grey : :bc_green
+      "#{type.send(colour)} #{identifier}"
     end
 
     def routing_tree_line(is_direct = true)
@@ -95,8 +107,12 @@ module Bcome
       ]
     end
 
-    def build_tree(data_build_method, title_prefix, limit = nil)
-      data = send(data_build_method)
+    def build_tree(data_build_method, title_prefix, config)
+      caller_stack = config[:callers] ? config[:callers].reverse : []
+      limit = config[:limit]
+      
+      data = send(data_build_method, caller_stack)
+
 
       @lines = []
       title = "#{title_prefix.informational}\s#{namespace}"
@@ -129,7 +145,6 @@ module Bcome
         values = config[1]
 
         anchor, branch = deduce_tree_structure(index, data.size)
-
         labels = key.is_a?(Array) ? key : [key]
 
         labels.each_with_index do |label, index|
@@ -144,7 +159,6 @@ module Bcome
         end # End labels group
 
         @lines << "#{padding}#{branch}" if labels.size > 1
-
         next unless values&.is_a?(Hash)
 
         tab_padding = padding + branch + ("\s" * (anchor.length + 4))
