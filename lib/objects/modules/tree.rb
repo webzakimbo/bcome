@@ -110,7 +110,11 @@ module Bcome
     def build_tree(data_build_method, title_prefix, config)
       caller_stack = config[:callers] ? config[:callers].reverse : []
       limit = config[:limit]
-      
+     
+      if limit
+        limit += caller_stack.size
+      end
+ 
       data = send(data_build_method, caller_stack)
 
 
