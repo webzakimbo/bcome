@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'irb'
+
 module IRB
   class << self
-    # with thanks: http://stackoverflow.com/questions/4749476/how-can-i-pass-arguments-to-irb-if-i-dont-specify-programfile
     def parse_opts_with_ignoring_script(*_params)
       arg = ARGV.first
       script = $PROGRAM_NAME
@@ -64,14 +64,17 @@ module IRB
     end
 
     def back
-      # Allow navigation back up a namespace tree, or 'exit' if at the highest level, or at the point of entry
-      irb_exit(0)
+      # Allow navigation back up a namespace tree, or 'exit' if at the highest level or at the point of entry
+      if context.has_parent?
+        ::Bcome::Workspace.instance.set(current_context: context.bcome_node, context: context.parent)
+      else
+        quit
+      end
     end
   end
 
   class Context
     def overriden_evaluate(*_params)
-
       _params[0] = ::InputParser.new(_params[0], bcome_node).parse
 
       if _params.last.is_a?(Hash)
@@ -94,5 +97,12 @@ module IRB
       IRB.conf[:MAIN_CONTEXT].workspace.main
     end 
 
+    def parent
+      bcome_node.parent
+    end
+
+    def has_parent?
+      !parent.nil?
+    end 
   end # end class Context
 end # end module IRB --

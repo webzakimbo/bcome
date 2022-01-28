@@ -12,10 +12,6 @@ module Bcome::Node
 
     attr_reader :origin_object_id
 
-    def inspect
-      "<##{self.class}: #{namespace} @network_driver=#{network_driver}>"
-    end
-
     def self.const_missing(constant)
       ## Hook for direct access to node level resources by constant name where
       ## cd ServerName should yield the same outcome as cd "ServerName"
@@ -48,8 +44,25 @@ module Bcome::Node
       return
     end
 
+    def inspect
+      "<##{self.class}: #{namespace} @network_driver=#{network_driver}>"
+    end
+
     def interactive 
       ::Bcome::Interactive::Session.run(self, :interactive_ssh)
+    end
+
+    # Given a string, scan ahead to determine if it contains a resource name
+    def scan(string)
+      tokens = string.split(".")
+      (0..tokens.size-1).each do |i|
+        candidate_id = tokens[0..i].join(".")
+        if resource = resources.for_identifier(candidate_id)
+          remaining_tokens = tokens[i+1..tokens.size]
+          return [resource, remaining_tokens]
+        end
+      end
+      return nil
     end
 
     attr_reader :parent
@@ -57,9 +70,13 @@ module Bcome::Node
     attr_reader :views
 
     def method_missing(method_sym, *arguments)
-
-      if resource = resources.for_identifier(method_sym.to_s)
-        return resource
+      resource, suffixes = scan(method_sym.to_s)
+      if resource
+        if suffixes.any?
+          return resource.send("#{suffixes.join('.')}".to_sym)
+        else
+          return resource
+        end
       end
 
       raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
@@ -102,7 +119,7 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      %i[ls lsa workon enable disable enable! disable! run tree ping put put_str rsync cd meta registry interactive execute_script]
+      %i[ls lsa workon enable disable enable! disable! run tree ping put put_str rsync cd meta registry quit back interactive execute_script]
     end
 
     def has_proxy?

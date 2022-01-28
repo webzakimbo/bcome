@@ -4,7 +4,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
     @crds ||= get_crds
   end
 
-  def switch(crd_key)
+  def focus(crd_key)
     raise "You may only utilize switch with singular resources" if "#{crd_key}".split.size > 1 || crd_key =~ /,/
 
     # Get the resource
@@ -24,7 +24,6 @@ module Bcome::Node::K8Cluster::ResourceMappings
       puts "No resources of type '#{crd_key}' found".informational
     end
   end
-  alias :focus :switch
  
   def set_switched_resources(items)
     # Used when we switch focus - we instantiate a new instance of our current workspace, but

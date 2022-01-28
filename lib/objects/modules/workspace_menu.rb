@@ -178,7 +178,7 @@ module Bcome
           group: :navigation
         },
         back: {
-          description: 'Go back up a namespace, or quit',
+          description: 'Go back up a namespace',
           usage: 'back',
           console_only: true,
           group: :navigation

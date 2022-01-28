@@ -28,6 +28,10 @@ module ::Bcome::Driver::Kubernetes
       run_kubectl_config("config set-context #{name} --cluster=#{cluster_name} --user=#{username}")
     end
 
+    def cluster_name
+      @node.cluster_name
+    end
+
     def username
       raise "Should be overidden"
     end

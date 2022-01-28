@@ -65,10 +65,6 @@ module ::Bcome::Driver::Kubernetes
       return "eks update-kubeconfig --name #{cluster_name} --kubeconfig #{path_to_global_kubectl_config} --region #{cluster_region}"
     end
     
-    def cluster_name
-      @node.cluster_name
-    end
-
     def account_id
       @node.account_id
     end  
