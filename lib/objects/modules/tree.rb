@@ -5,7 +5,6 @@ module Bcome
 
     include Bcome::Draw
 
-    # Move tree & routes specific code out, and retain just the abstractions
     # GOAL: provide data in required format and it will render a tree.
 
     def tree(config = {})
@@ -116,7 +115,6 @@ module Bcome
       end
  
       data = send(data_build_method, caller_stack)
-
 
       @lines = []
       title = "#{title_prefix.informational}\s#{namespace}"

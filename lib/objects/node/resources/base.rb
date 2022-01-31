@@ -89,7 +89,10 @@ module Bcome::Node::Resources
     end
 
     def is_active_resource?(resource)
-      active.include?(resource)
+      # node identifiers are unique within a namespace. This must be used rather than the old
+      # active.include?(resource) due to kubernetes use cases where we may have focused on an alternative
+      # resource, thus swapping out the initial tree view in the UI.
+      active.collect(&:identifier).include?(resource.identifier)
     end
 
     def for_identifier(identifier)
