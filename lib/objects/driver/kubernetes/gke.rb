@@ -53,6 +53,10 @@ module ::Bcome::Driver::Kubernetes
       run_kubectl_config("config set-credentials #{username} --token=#{access_token}")
     end
 
+    def register_cluster_context
+      run_kubectl_config("config set-context #{name} --cluster=#{name} --user=#{username}")
+    end
+
     def access_token
       @node.network_driver.network_credentials[:access_token]
     end
