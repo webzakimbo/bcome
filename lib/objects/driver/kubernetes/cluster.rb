@@ -44,6 +44,10 @@ module ::Bcome::Driver::Kubernetes
       raise "Should be overriden"
     end
 
+    def set_as_external_context
+      run_kubectl_config("config use-context #{name}")
+    end
+
     def server
       "https://#{endpoint}"
     end

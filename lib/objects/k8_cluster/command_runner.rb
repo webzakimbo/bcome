@@ -2,7 +2,7 @@ module Bcome::K8Cluster
   class CommandRunner
 
     KUBECTL_BINARY = "kubectl".freeze
-    BCOME_K8_CONFIG_FILE_PATH = ".kubectl/conf".freeze
+    BCOME_K8_CONFIG_FILE_PATH = "#{ENV["HOME"]}/.kube/conf".freeze
 
     attr_reader :local_command
  

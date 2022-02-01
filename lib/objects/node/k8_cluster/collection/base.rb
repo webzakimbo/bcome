@@ -48,6 +48,12 @@ module Bcome::Node::K8Cluster::Collection
       resources.active.collect{|resource| resource.crds["Ingress"] }.flatten.compact
     end
 
+    def set_context
+      puts "Setting external kubectl context to #{namespace}".warning
+      k8_cluster.set_as_external_context
+      puts "\nMake sure that your $KUBECONFIG is set to #{::Bcome::K8Cluster::CommandRunner::BCOME_K8_CONFIG_FILE_PATH}\n".informational
+    end
+
     def menu_items
       base_items = super.dup
 
