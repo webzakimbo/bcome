@@ -85,6 +85,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
 
   def add_resource(resource_klass, resource_type, data)
     resource = resource_klass.new(views: {identifier: data["metadata"]["name"], raw_data: data }, parent: self)
+
     resources << resource if focus_on?(resource_klass) ## TODO set focus_on before we start adding resources
     
     if crds[resource_type]

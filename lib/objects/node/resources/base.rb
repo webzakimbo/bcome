@@ -24,8 +24,13 @@ module Bcome::Node::Resources
       existing_node = for_identifier(node.identifier)
 
       if existing_node
-        exception_message = "#{node.identifier} is not unique within namespace #{node.parent.namespace}"
-        raise Bcome::Exception::NodeIdentifiersMustBeUnique, exception_message
+        if existing_node.is_a?(::Bcome::Node::K8Cluster::Base)
+          # If a node is a kubernetes resource, we'll swap out for the latest one, otherwise, we cannot assume it's the same object and must raise.
+          @nodes -= [existing_node]
+        else
+          exception_message = "#{node.identifier} #{node.is_a?(::Bcome::Node::K8Cluster::Base)} is not unique within namespace #{node.parent.namespace}"
+          raise Bcome::Exception::NodeIdentifiersMustBeUnique, exception_message
+        end
       end
       @nodes << node
     end
