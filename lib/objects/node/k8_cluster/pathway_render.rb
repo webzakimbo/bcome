@@ -1,14 +1,14 @@
 module Bcome::Node::K8Cluster::PathwayRender
 
-  def pathways(node = self)
+  def routes(node = self)
     if node.is_a?(Bcome::Node::K8Cluster::Collection::Gcp)
       return # not currently supported at cluster level, namespace only
     else
       if (node != self) && (resource = resources.for_identifier(node))
-        resource.send(:pathways)
+        resource.send(:routes)
       else
         caller_stack = {}
-        build_tree(:pathway_data, "pathways", caller_stack)
+        build_tree(:pathway_data, "routes", caller_stack)
       end
     end
     return
