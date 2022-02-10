@@ -15,7 +15,7 @@ module Bcome::Node::K8Cluster::PathwayRender
   end
 
   def pathway_data(*params)
-    get(["services", "pods", "ingresses"])
+    retrieve(["services", "pods", "ingresses"])
     map = {}
 
     return map if ingresses.nil?

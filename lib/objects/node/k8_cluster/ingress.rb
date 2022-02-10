@@ -9,7 +9,7 @@ module Bcome::Node::K8Cluster
 
     def pathway_data(*params)
       map = {}
-      hosts.each do |host|
+      hosts.compact.each do |host|
         map[host.bc_cyan] = host_tree_nodes(host)
       end
       return map

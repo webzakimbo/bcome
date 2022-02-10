@@ -23,7 +23,7 @@ module Bcome::Node::K8Cluster
       return items
     end
 
-    def get(crd_keys)
+    def retrieve(crd_keys)
       fetched_resources = []
 
       raw_resources = get_kubectl_resource(crd_keys)
