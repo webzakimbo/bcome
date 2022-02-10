@@ -15,19 +15,16 @@ module Bcome
       if node != self && (resource = resources.for_identifier(node))
         resource.send(:ls, active_only)
       else
-        puts "\n\n" + visual_hierarchy.hierarchy + "\n"
-        puts "\t" + "Available #{list_key}s:" + "\n\n"
+        puts "\n" + visual_hierarchy.hierarchy + "\n"
+        #puts "\t" + "Available #{list_key}s:" + "\n\n"
 
         iterate_over = active_only ? resources.active : resources
 
         if iterate_over.any?
-
           iterate_over.sort_by(&:identifier).each do |resource|
             next if resource.hide?
-
             is_active = resources.is_active_resource?(resource)
             puts resource.pretty_description(is_active) 
-
             puts "\n"
           end
         else

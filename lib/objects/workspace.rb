@@ -29,11 +29,24 @@ class ::Bcome::Workspace
     nil
   end
 
+  def screen_width
+    return nil unless ::Bcome::EnsureBinary.do("tput")
+    return ::Bcome::Command::Local.run("tput cols").stdout.chomp.to_i
+  end
+
+  def print_divider(width)
+    print (".." * width).bc_green + "\n" 
+  end
+
   def show_welcome
-    print "\n"
     puts "\nWelcome to bcome v#{::Bcome::Version.release}".bc_yellow
     puts "\nType\s" + 'menu'.underline + "\sfor a command list, or\s" + 'registry'.underline + "\sfor your custom tasks."
-    puts "\n\n"
+    puts "\n"
+
+    width = screen_width 
+    print_divider(width) if width
+
+    puts "\n"
   end
 
   def console_set!

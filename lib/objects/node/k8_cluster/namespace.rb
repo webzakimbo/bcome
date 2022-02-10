@@ -27,7 +27,7 @@ module Bcome::Node::K8Cluster
     def machines(skip_for_hidden = true)
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
       set = []
-      resources.each do |resource|
+      resources.pmap do |resource|
         set << resource.machines(skip_for_hidden)
       end
 
@@ -53,7 +53,7 @@ module Bcome::Node::K8Cluster
           return
         else
           ## UNGROUPED --
-          raw_resources.each do |resource|
+          raw_resources.pmap do |resource|
             resource_type = resource["kind"]
             resource_klass = resource_klasses[resource_type]
             resource_klass = crd_resource_klass unless resource_klass
@@ -64,12 +64,12 @@ module Bcome::Node::K8Cluster
       end
 
       ## 2. SORTED --
-      raw_resources.each do |resource_type, raw_resource|
+      raw_resources.pmap do |resource_type, raw_resource|
         resource_klass = resource_klasses[resource_type]
         resource_klass = crd_resource_klass unless resource_klass
 
         next if raw_resource.nil?
-        raw_resource.each do |resource|
+        raw_resource.pmap do |resource|
           add_resource(resource_klass, resource_type, resource)
         end
       end
@@ -85,7 +85,7 @@ module Bcome::Node::K8Cluster
 
       @is_subdivided = true
 
-      grouped_data.each do |group_name, group_data|
+      grouped_data.pmap do |group_name, group_data|
         views = {
           identifier: group_name.first.nil? ? "ungrouped" : group_name.first,
           subselect_parent: self
@@ -167,7 +167,7 @@ module Bcome::Node::K8Cluster
     end  
 
     def log
-      resources.active.each do |resource|
+      resources.active.pmap do |resource|
         puts "#{resource.keyed_namespace}".bc_cyan + " / log" 
         resource.log
       end  

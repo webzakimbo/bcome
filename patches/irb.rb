@@ -23,8 +23,8 @@ module IRB
 
       IRB.conf[:PROMPT][:CUSTOM] = {
         PROMPT_N: "\e[1m:\e[m ",
-        PROMPT_I: "#{bc_workspace.irb_prompt} ~>\s",
-        PROMPT_C: "#{bc_workspace.irb_prompt} ~>\s",
+        PROMPT_I: "#{bc_workspace.irb_prompt}\s",
+        PROMPT_C: "#{bc_workspace.irb_prompt}\s",
         RETURN: "%s \n"
       }
       IRB.conf[:PROMPT_MODE] = :CUSTOM

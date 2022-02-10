@@ -271,7 +271,7 @@ module Bcome::Node
     end
 
     def prompt_breadcrumb
-      "#{has_parent? ? "#{parent.prompt_breadcrumb}>\s" : ''}#{if current_context?
+      "#{has_parent? ? "#{parent.prompt_breadcrumb}." : ''}#{if current_context?
                                                                 has_parent? ? identifier.terminal_prompt : identifier
                                                               else
                                                                 identifier

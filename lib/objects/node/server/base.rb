@@ -191,7 +191,7 @@ module Bcome::Node::Server
     end
 
     def ls
-      puts "\n" + visual_hierarchy.hierarchy + "\n"
+      puts visual_hierarchy.hierarchy + "\n"
       puts pretty_description
     end
     alias lsa ls

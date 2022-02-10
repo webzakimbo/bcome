@@ -52,7 +52,7 @@ module Bcome::Registry::Command
     end
 
     def pretty_print
-      puts "\nRegistry commands".title + "\sfor #{@node.class} #{@node.keyed_namespace}".resource_value + "\n\n"
+      puts "\nRegistry commands" + "\sfor #{@node.class} #{@node.keyed_namespace}".resource_value + "\n\n"
       all_commands.sort.each do |group_name, commands|
         puts tab_spacing + group_name.title + "\n\n"
         commands.each do |command|
