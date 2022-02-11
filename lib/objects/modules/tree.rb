@@ -14,6 +14,13 @@ module Bcome
         config[:callers] = config[:callers] ? (config[:callers] << self) : [self]
         parent.tree(config)
       else
+        # Preempt loading nodes
+        iterate_over = config[:callers] ? config[:callers] : resources.active
+        iterate_over.pmap do |resource|
+          if resource.respond_to?(:load_nodes) && !resource.nodes_loaded?
+            resource.load_nodes
+          end  
+        end
         return build_tree(:network_namespace_tree_data, title_prefix, config)
       end
     end
@@ -67,7 +74,7 @@ module Bcome
         iterate_over = [element]
         geneaology = caller_stack.empty? ? :descendent : :ancestor
       else
-        iterate_over = resources
+        iterate_over = resources.active
         geneaology = :descendent
       end 
 

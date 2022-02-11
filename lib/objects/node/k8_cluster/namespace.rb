@@ -19,8 +19,8 @@ module Bcome::Node::K8Cluster
       @is_subdivided = false
     end
 
-    def prompt_breadcrumb(focus: true)
-      return super unless focus && focus_breadcrumb
+    def prompt_breadcrumb(config = {})
+      return super unless config[:focus] && focus_breadcrumb
       return "#{super}" + "\s(#{focus_breadcrumb.pluralize})" 
     end
 
