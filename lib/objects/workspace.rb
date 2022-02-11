@@ -35,7 +35,7 @@ class ::Bcome::Workspace
   end
 
   def print_divider(width)
-    print (".." * width).bc_green + "\n" 
+    print ("─" * width).bc_grey + "\n" 
   end
 
   def show_welcome

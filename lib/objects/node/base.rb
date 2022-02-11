@@ -270,8 +270,8 @@ module Bcome::Node
       resource || (has_parent? ? parent.recurse_resource_for_identifier(identifier) : nil)
     end
 
-    def prompt_breadcrumb
-      "#{has_parent? ? "#{parent.prompt_breadcrumb}." : ''}#{if current_context?
+    def prompt_breadcrumb(*params)
+      "#{has_parent? ? "#{parent.prompt_breadcrumb(params)}." : ''}#{if current_context?
                                                                 has_parent? ? identifier.terminal_prompt : identifier
                                                               else
                                                                 identifier

@@ -7,6 +7,10 @@ module Bcome::Interactive::SessionItem
     HELP_KEY = '\\?'
     REAUTH_KEY = '\\r'
 
+    def start_message
+      puts "\nAny commands you enter here will be passed directly to your bcome node's kubectl context.\n"
+    end
+
     def do
       ::Bcome::Orchestrator.instance.silence_command_output!
       show_menu
@@ -28,9 +32,13 @@ module Bcome::Interactive::SessionItem
       if show_menu?(input)
         show_menu
       elsif reauth?(input)
+        puts "\n"
         reauth
+        puts "\n"
       else
-        run_kc(input)
+        puts "\n"
+        runner = run_kc(input) && action
+        puts "\n"
       end
 
       action
@@ -59,7 +67,7 @@ module Bcome::Interactive::SessionItem
       # It does mean that for now we don't have an elegant way of automatically reconnecting 
       # to the cluster when the access token expires, hence the manual /r 'reauth' method.
       exit_code = node.delegated_kubectl_cmd(command)
-      puts exit_code.to_s 
+      return 
     end
  
     def show_menu
@@ -68,11 +76,15 @@ module Bcome::Interactive::SessionItem
     end
 
     def reauth
-      node.k8_cluster.reauthorize!
+      k8_cluster.reauthorize!
     end
 
+    def k8_cluster
+      node.k8_cluster
+    end 
+
     def terminal_prompt
-      "#{node.prompt_breadcrumb}\s".bc_grey + "kubectl\s"
+      return "#{node.prompt_breadcrumb(focus: false)}" + "\skubectl\s"
     end
 
     def exit?(input)
@@ -95,8 +107,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def passthru_commands
-      ["pathways", "tree"]
-      #["tree", "pathways", "reload", "bcome"]
+      ["routes", "tree"]
     end
 
     def show_menu?(input)
@@ -106,7 +117,5 @@ module Bcome::Interactive::SessionItem
     def reauth?(input)
       input == REAUTH_KEY
     end
-
-    def start_message; end
   end
 end

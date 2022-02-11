@@ -19,9 +19,9 @@ module Bcome::Node::K8Cluster
       @is_subdivided = false
     end
 
-    def prompt_breadcrumb
-      return super unless focus_breadcrumb
-      return "#{super}" + "\s(#{focus_breadcrumb.bc_orange})" 
+    def prompt_breadcrumb(focus: true)
+      return super unless focus && focus_breadcrumb
+      return "#{super}" + "\s(#{focus_breadcrumb.pluralize})" 
     end
 
     def machines(skip_for_hidden = true)
