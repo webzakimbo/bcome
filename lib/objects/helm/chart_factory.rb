@@ -2,8 +2,7 @@ module Bcome::Helm
   class ChartFactory
 
     class << self
-      def apply_from_config_by_key(config_key, node)
-        charts_config = node.metadata.fetch(config_key)
+      def apply_from_config(charts_config, node)
         charts = charts_config.collect{|config|
           ::Bcome::Helm::Chart.new(config)
         }
