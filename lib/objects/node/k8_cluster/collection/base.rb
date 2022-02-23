@@ -30,6 +30,18 @@ module Bcome::Node::K8Cluster::Collection
       false
     end
 
+    def info
+      raw = run_kubectl_config("cluster-info").stdout
+      puts "Cluster Info\n".informational
+      puts "\n#{raw}\n"
+    end
+
+    def info_dump
+      raw = run_kubectl_config("cluster-info dump").stdout
+      puts "Cluster Info Dump\n".informational
+      puts "\n#{raw}\n"
+    end
+
     def logs(cmd = "")
       resources.active.pmap do |pod|
         pod.logs(cmd)
@@ -41,7 +53,7 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def enabled_menu_items
-      (super + %i[config lsr reload]) - non_k8_menu_items
+      (super + %i[info info_dump config lsr reload]) - non_k8_menu_items
     end
 
     def ingresses
@@ -69,6 +81,16 @@ module Bcome::Node::K8Cluster::Collection
 
       base_items[:reload] = {
         description: 'Reload all resources',
+        group: :informational
+      }
+
+      base_items[:info] = {
+        description: 'Cluster Info',
+        group: :informational
+      }
+
+      base_items[:info_dump] = {
+        description: 'Cluster Info dump',
         group: :informational
       }
 
@@ -125,6 +147,10 @@ module Bcome::Node::K8Cluster::Collection
       @k8_cluster.run_kubectl_cmd(command)
     end
 
+    def run_kubectl_config(command)
+      @k8_cluster.run_kubectl_config(command)
+    end
+  
     def run_kc(command)
       @k8_cluster.run_kubectl(command)
     end 
