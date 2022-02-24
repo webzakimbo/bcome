@@ -30,7 +30,7 @@ class ::Bcome::Workspace
   end
 
   def screen_width
-    return nil unless ::Bcome::EnsureBinary.do("tput")
+    return 0 unless ::Bcome::EnsureBinary.do("tput")
     return ::Bcome::Command::Local.run("tput cols").stdout.chomp.to_i
   end
 
