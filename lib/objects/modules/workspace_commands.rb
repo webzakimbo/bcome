@@ -52,22 +52,29 @@ module Bcome
     end
 
     def cd(breadcrumb)
+
       crumbs = breadcrumb.split(":")
-      step = self
 
-      crumbs.each do |crumb|
-        step.load_nodes if step.respond_to?(:load_nodes) && !step.nodes_loaded?
+      if breadcrumb =~ /#(.+)/ # cd from root of namespace where '#' denotes 'root'
+        root.send(:cd, $1)
+      else # cd into a child namespace
+        crumbs = breadcrumb.split(":")   
+        step = self
 
-        if step = step.resources.for_identifier(crumb)
-          unless step.parent.resources.is_active_resource?(step)
-            puts "\nCannot enter context - #{breadcrumb} is disabled\n".error
-            return
+        crumbs.each do |crumb|
+          step.load_nodes if step.respond_to?(:load_nodes) && !step.nodes_loaded?
+
+          if step = step.resources.for_identifier(crumb)
+            unless step.parent.resources.is_active_resource?(step)
+              puts "\nCannot enter context - #{breadcrumb} is disabled\n".error
+              return
+            end
+          else
+            raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node at '#{crumb}'"
           end
-        else
-          raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node at '#{crumb}'"
-        end
+       end
+        ::Bcome::Workspace.instance.set(current_context: self, context: step)
       end
-      ::Bcome::Workspace.instance.set(current_context: self, context: step)
     end
 
     def run(*raw_commands) 

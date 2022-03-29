@@ -68,8 +68,11 @@ module Bcome::Node
     end
 
     attr_reader :parent
-
     attr_reader :views
+
+    def root
+      return parent.nil? ? self : parent.root
+    end
 
     def method_missing(method_sym, *arguments)
       resource, suffixes = scan(method_sym.to_s)
