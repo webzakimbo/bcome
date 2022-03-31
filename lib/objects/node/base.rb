@@ -76,9 +76,18 @@ module Bcome::Node
 
     def method_missing(method_sym, *arguments)
       resource, suffixes = scan(method_sym.to_s)
+
       if resource
         if suffixes.any?
-          return resource.send("#{suffixes.join('.')}".to_sym)
+          as_string = suffixes.join('.')
+          as_string =~ /(\S+)\s+(.+)/  
+          if args = $2
+            command = $1 
+            args = $1 if args =~ /["'](.+)['"]/
+            return resource.send(command, args)
+          else
+            return resource.send("#{suffixes.join('.')}".to_sym)
+          end
         else
           return resource
         end
