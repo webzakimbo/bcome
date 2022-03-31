@@ -84,7 +84,9 @@ module Bcome::Node::K8Cluster
     end
 
     def container_status_data
-      views[:raw_data]["status"]["containerStatuses"]
+      c = views[:raw_data]["status"]["containerStatuses"].nil? ? [] : views[:raw_data]["status"]["containerStatuses"]
+      i = views[:raw_data]["status"]["initContainerStatuses"].nil? ? [] : views[:raw_data]["status"]["initContainerStatuses"] 
+      return c + i
     end
 
     def get_container_states
@@ -109,11 +111,20 @@ module Bcome::Node::K8Cluster
       set_containers
     end  
 
+    def all_container_data
+      c = spec["containers"].nil? ? [] : spec["containers"]
+      i = spec["initContainers"].nil? ? [] : spec["initContainers"]
+      return c + i
+    end
+
+    def spec
+      views[:raw_data]["spec"]
+    end
+
     def set_containers
       states = get_container_states
 
-      raw_container_data = views[:raw_data]["spec"]["containers"]
-      raw_container_data.each_with_index do |container_data, index|
+      all_container_data.each_with_index do |container_data, index|
         container_config = {
           identifier: container_data["name"],
           raw_data: container_data.merge({ state: states[index] })

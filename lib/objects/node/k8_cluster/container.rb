@@ -105,7 +105,7 @@ module Bcome::Node::K8Cluster
     ## Get a shell onto the container--
 
     ## todo: Default shell may be overriden, but should be a configuration option. 
-    def shell(cmd = "bash")
+    def shell(cmd = default_shell)
       shell_cmd = shells[cmd]
 
       unless shell_cmd
@@ -118,6 +118,10 @@ module Bcome::Node::K8Cluster
       system(command)
     end
     alias :sh :shell
+
+    def default_shell
+      return "sh"
+    end
 
     ## todo: May be overriden to set alternative shells, but should be a configuration option.
     def shells 

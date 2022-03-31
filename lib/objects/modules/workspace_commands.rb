@@ -52,7 +52,6 @@ module Bcome
     end
 
     def cd(breadcrumb)
-
       crumbs = breadcrumb.split(":")
 
       if breadcrumb =~ /#(.+)/ # cd from root of namespace where '#' denotes 'root'
