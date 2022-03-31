@@ -10,10 +10,10 @@ module Bcome
     def tree(config = {})
       config = {} unless config.is_a?(Hash)
       title_prefix = 'Namespace tree'
-      if parent && parent.respond_to?(:tree)
-        config[:callers] = config[:callers] ? (config[:callers] << self) : [self]
-        parent.tree(config)
-      else
+      #if parent && parent.respond_to?(:tree)
+      #  config[:callers] = config[:callers] ? (config[:callers] << self) : [self]
+      #  parent.tree(config)
+      #else
         # Preempt loading nodes
         iterate_over = config[:callers] ? config[:callers] : resources.active
         iterate_over.pmap do |resource|
@@ -22,7 +22,7 @@ module Bcome
           end  
         end
         return build_tree(:network_namespace_tree_data, title_prefix, config)
-      end
+      #end
     end
 
     def routes
