@@ -13,8 +13,6 @@ module Bcome::Node::K8Cluster
     end
 
     def machines(*params)
-      puts "#{identifier}: #{is_running?} #{namespace}"
-   
       is_running? ? [self] : []
     end
 
