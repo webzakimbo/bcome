@@ -6,6 +6,7 @@ module Bcome::Interactive::SessionItem
     HELP_KEY = '\\?'
     LIST_KEY = '\\l'
     CHANGE_WD = '\\cwd'
+    UNSET_WD  = '\\uwd'
     DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm"
 
     def initialize(*params)
@@ -43,7 +44,9 @@ module Bcome::Interactive::SessionItem
         handle_the_unwise(input)
       elsif change_wd?(input)
         change_wd
-      else
+      elsif unset_wd?(input)
+        unset_wd
+      else 
         execute_on_machines(input)
       end
       action
@@ -51,7 +54,7 @@ module Bcome::Interactive::SessionItem
 
     def show_menu
       warning = "\nCommands entered here will be executed on" + "\severy\s".warning + "machine in your selection. \n\nUse with caution or hit \\q if you're unsure what this does."
-      info = "\n\n\\l list machines\n\\cwd change working directory\n\\? this message\n\\q to quit".informational
+      info = "\n\n\\l list machines\n\\cwd change working directory\n\\uwd unset working directory\n\\? this message\n\\q to quit".informational
       puts warning + "#{info}\n"
     end
 
@@ -73,7 +76,7 @@ module Bcome::Interactive::SessionItem
 
     def terminal_prompt
       preamble = "enter a command"
-      return @working_dir ? "enter a command (working dir #{@working_dir})\s>\s" : "#{preamble}>\s"
+      return @working_dir ? "enter a command (working dir:\s#{@working_dir})>\s" : "#{preamble}>\s"
     end
 
     def exit?(input)
@@ -90,6 +93,10 @@ module Bcome::Interactive::SessionItem
 
     def change_wd?(input)
       input == CHANGE_WD
+    end
+
+    def unset_wd?(input)
+      input == UNSET_WD
     end
 
     def open_ssh_connections
@@ -128,6 +135,10 @@ module Bcome::Interactive::SessionItem
       else
         puts "\nInvalid file path format '#{path}'\n".error
       end
+    end
+
+    def unset_wd
+      @working_dir = nil
     end
 
     def execute_on_machines(user_input)
