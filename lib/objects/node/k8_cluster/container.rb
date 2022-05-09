@@ -126,7 +126,8 @@ module Bcome::Node::K8Cluster
       {
         "bash" => "/bin/bash",
         "ash" => "/bin/ash",
-        "sh" => "/bin/sh"
+        "sh" => "/bin/sh",
+        "dash" => "/bin/dash"
       }
     end
 
