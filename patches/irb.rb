@@ -5,6 +5,7 @@ module IRB
   class << self
     # with thanks: http://stackoverflow.com/questions/4749476/how-can-i-pass-arguments-to-irb-if-i-dont-specify-programfile
     def parse_opts_with_ignoring_script(*_params)
+
       arg = ARGV.first
       script = $PROGRAM_NAME
       parse_opts_without_ignoring_script
@@ -49,7 +50,7 @@ module IRB
       def overriden_extend_object(*params)
         # Remove 'quit', as we want to write our own
         @ALIASES.delete([:quit, :irb_exit, 1])
-
+        @ALIASES.delete([:ls, :irb_ls, 0])
         original_extend_object(*params)
       end
       alias original_extend_object extend_object
