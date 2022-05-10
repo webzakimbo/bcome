@@ -10,6 +10,11 @@ module Bcome::Helm
         apply(charts, node) 
       end
 
+      def apply_single_chart_by_config(config, node)
+        chart = ::Bcome::Helm::Chart.new(config)
+        apply([chart], node)
+      end
+
       def apply(charts, node)
         factory = new(charts, node)
         factory.apply
