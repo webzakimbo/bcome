@@ -15,7 +15,7 @@ module Bcome::Node::KubeHelper
 
   ## Shared utility methods
   def config
-    ap raw_config_data.to_yaml, {indent: -2}
+    ap raw_config_data, {indent: -2}
   end
 
   def describe
@@ -46,5 +46,4 @@ module Bcome::Node::KubeHelper
   def non_k8_menu_items
     %i[ssh get put put_str rsync execute_script ping routes workon enable disable enable! disable!]
   end
-
 end
