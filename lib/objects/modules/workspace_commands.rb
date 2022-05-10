@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Bcome
   module WorkspaceCommands
     def ssh_connect(params = {})

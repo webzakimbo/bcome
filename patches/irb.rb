@@ -5,6 +5,7 @@ require 'irb'
 module IRB
   class << self
     def parse_opts_with_ignoring_script(*_params)
+
       arg = ARGV.first
       script = $PROGRAM_NAME
       parse_opts_without_ignoring_script
@@ -29,6 +30,8 @@ module IRB
       }
       IRB.conf[:PROMPT_MODE] = :CUSTOM
 
+      IRB.conf[:USE_AUTOCOMPLETE] = false # To be re-introduced when we can inject just what we want
+
       irb = Irb.new(workspace)
 
       @CONF[:IRB_RC]&.call(irb.context)
@@ -49,7 +52,7 @@ module IRB
       def overriden_extend_object(*params)
         # Remove 'quit', as we want to write our own
         @ALIASES.delete([:quit, :irb_exit, 1])
-
+        @ALIASES.delete([:ls, :irb_ls, 0])
         original_extend_object(*params)
       end
       alias original_extend_object extend_object
