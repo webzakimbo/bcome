@@ -11,6 +11,7 @@ require 'strings-ansi'
 require 'pry'
 require 'jsonpath'
 require 'reline'
+require 'readline'
 require 'awesome_print'
 
 require_all "#{File.dirname(__FILE__)}/../patches"

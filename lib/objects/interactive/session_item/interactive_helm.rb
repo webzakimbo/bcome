@@ -34,7 +34,7 @@ module Bcome::Interactive::SessionItem
     end 
 
     def wait_for_input
-      raw_command = ::Reline.readline("#{command_prompt}", true).squeeze('').to_s
+      raw_command = ::Readline.readline("#{command_prompt}", true).squeeze('').to_s
 
       if raw_command == QUIT_HELM
         return

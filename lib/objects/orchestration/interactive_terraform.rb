@@ -50,7 +50,7 @@ module Bcome::Orchestration
     end
 
     def wait_for_input(message = COMMAND_PROMPT)
-      ::Reline.readline("#{message}", true).squeeze('').to_s
+      ::Readline.readline("#{message}", true).squeeze('').to_s
     end
 
     def terraform_metadata

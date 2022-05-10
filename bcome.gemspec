@@ -24,10 +24,10 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.5.0'
   spec.executables = %w[bcome]
   spec.require_paths = ['lib']
+  spec.add_dependency 'reline', '0.3.0'
   spec.add_dependency 'psych', '3.2.0' # Last stable version before safe_load was broken
   spec.add_dependency 'activesupport', '5.2.4.3'
   spec.add_dependency 'diffy', '3.1.0'
-  spec.add_dependency 'readline', '0.0.2'
   spec.add_dependency 'fog-aws', '~> 0.12.0'
   spec.add_dependency 'google-api-client', '0.53.0'
   spec.add_dependency 'google-cloud-container', '1.1.2'
@@ -41,19 +41,18 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'strings-ansi', '0.2.0'
   spec.add_dependency 'tty-cursor', '0.2.0'
   spec.add_dependency 'jsonpath', '1.0.5'
-  spec.add_dependency 'reline', '0.3.0'
   spec.add_dependency 'awesome_print', '1.9.2'
   spec.post_install_message = <<-END
 
   Welcome to Bcome, the DevOps Control Panel Framework
 
-  2.0.0 introduces a wealth of new features (including GCP integration), and some breaking changes.
+  Versions 3.0.0 introduces Kubernetes drivers for GCP & Azure. 
 
-  Visit our new documentation site here: https://docs.bcome.com/en/2.0.0
+  Visit our new documentation site here: https://docs.bcome.com/en/3.0.0
 
-  See implementation demos at our guides site: https://guides.bcome.com/en/2.0.0
+  See implementation demos at our guides site: https://guides.bcome.com/en/3.0.0
 
-  For full release notes see: https://github.com/webzakimbo/bcome/releases/tag/2.0.0
+  For full release notes see: https://github.com/webzakimbo/bcome/releases/tag/3.0.0
 
 END
 end
