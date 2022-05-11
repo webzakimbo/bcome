@@ -30,12 +30,12 @@ class ::Bcome::Workspace
   end
 
   def screen_width
-    return 0 unless ::Bcome::EnsureBinary.do("tput")
-    return ::Bcome::Command::Local.run("tput cols").stdout.chomp.to_i
+    height, width = Reline.get_screen_size
+    return width
   end
 
   def print_divider(width)
-    print ("─" * width).bc_grey + "\n" 
+    print (::Bcome::Draw::BOX_HORIZONTAL_LINE * width).bc_grey + "\n" 
   end
 
   def show_welcome
