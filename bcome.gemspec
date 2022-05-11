@@ -24,7 +24,6 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.5.0'
   spec.executables = %w[bcome]
   spec.require_paths = ['lib']
-  spec.add_dependency 'reline', '0.3.0'
   spec.add_dependency 'psych', '3.2.0' # Last stable version before safe_load was broken
   spec.add_dependency 'activesupport', '5.2.4.3'
   spec.add_dependency 'diffy', '3.1.0'
