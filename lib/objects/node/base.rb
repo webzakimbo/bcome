@@ -283,11 +283,9 @@ module Bcome::Node
     end
 
     def prompt_breadcrumb(params = {})
-      "#{has_parent? ? "#{parent.prompt_breadcrumb(params)}." : ''}#{if current_context?
-                                                                has_parent? ? identifier.terminal_prompt : identifier
-                                                              else
-                                                                identifier
-                                                              end}"
+      prefix = has_parent? ? "#{parent.prompt_breadcrumb(params)}:" : ""
+      suffix = current_context? ? (has_parent? ? "#{identifier.terminal_prompt} >" : identifier) : identifier
+      return "#{prefix}#{suffix}"
     end
 
     def namespace
