@@ -7,14 +7,10 @@ breadcrumbs = ARGV[0]
 arguments = ARGV - [ARGV[0]]
 handler = ::Bcome::Startup.new(breadcrumbs, arguments)
 
-trap('SIGINT') do
-  handler.stop_loading_bars
-end
-
-trap('INT') do
-  handler.stop_loading_bars
-end
-
 Thread.report_on_exception = true
 
-handler.do
+begin
+  handler.do
+rescue SystemExit, Interrupt
+  handler.clean_up
+end
