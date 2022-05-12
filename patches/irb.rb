@@ -5,12 +5,12 @@ require 'irb'
 module IRB
   class << self
     def parse_opts_with_ignoring_script(*_params)
-
       arg = ARGV.first
       script = $PROGRAM_NAME
-      parse_opts_without_ignoring_script
-      @CONF[:SCRIPT] = nil
 
+      parse_opts_without_ignoring_script
+
+      @CONF[:SCRIPT] = nil
       @CONF[:IGNORE_SIGINT] = true
 
       $0 = script
@@ -48,7 +48,7 @@ module IRB
 
   module ExtendCommandBundle
     class << self
-      # Allow us to redefine 'quit' by preventing it getting aliased in the first place.
+      # Allow us to redefine 'quit' and 'ls'  by preventing them getting aliased in the first place.
       def overriden_extend_object(*params)
         # Remove 'quit', as we want to write our own
         @ALIASES.delete([:quit, :irb_exit, 1])
@@ -60,9 +60,7 @@ module IRB
     end
 
     def quit(*_params)
-      ::Bcome::Bootup.instance.close_ssh_connections
-      ::Bcome::Ssh::TunnelKeeper.instance.close_tunnels
-      ::Bcome::LoadingBar::PidBucket.instance.stop_all
+      ::Bcome::Bootup.instance.starter.clean_up
       exit!
     end
 

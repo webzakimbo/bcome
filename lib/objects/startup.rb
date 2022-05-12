@@ -6,6 +6,7 @@ module Bcome
     def initialize(breadcrumbs, arguments)
       @breadcrumbs = breadcrumbs
       @arguments = arguments
+      ::Bcome::Bootup.instance.starter = self
     end
 
     def do
