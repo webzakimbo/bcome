@@ -3,7 +3,8 @@
 module Bcome
   module K8Cluster
     class ProcessKeeper
-      include Singleton
+
+      include ThreadSafeSingleton
 
       def initialize
         @pids = []

@@ -3,6 +3,8 @@
 module Bcome
   class Bootup
 
+    include ThreadSafeSingleton
+
     class << self
       def set_and_do(params, spawn_into_console = true)
         instance.set(params, spawn_into_console)
@@ -18,8 +20,6 @@ module Bcome
         instance.spider({ breadcrumbs: breadcrumbs})
       end
     end
-
-    include Singleton
 
     attr_reader :breadcrumbs, :arguments
 

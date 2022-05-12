@@ -2,7 +2,8 @@
 
 module Bcome::Driver
   class Bucket
-    include Singleton
+  
+    include ThreadSafeSingleton
 
     def initialize
       @drivers = []

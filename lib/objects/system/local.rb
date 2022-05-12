@@ -2,7 +2,9 @@
 
 module Bcome::System
   class Local
-    include Singleton
+
+    include ThreadSafeSingleton
+
 
     def execute_command(raw_command, print_out_command = false)
       puts "\n> #{raw_command}".bc_blue + "\n" if print_out_command

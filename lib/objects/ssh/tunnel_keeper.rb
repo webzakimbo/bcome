@@ -3,7 +3,8 @@
 module Bcome
   module Ssh
     class TunnelKeeper
-      include Singleton
+
+      include ThreadSafeSingleton
 
       def initialize
         @tunnels = []

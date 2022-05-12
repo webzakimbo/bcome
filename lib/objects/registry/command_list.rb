@@ -2,7 +2,8 @@
 
 module Bcome::Registry
   class CommandList
-    include Singleton
+
+    include ThreadSafeSingleton
 
     attr_reader :list
 

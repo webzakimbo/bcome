@@ -3,7 +3,7 @@
 module Bcome
   class PipedInput
 
-    include Singleton
+    include ThreadSafeSingleton
 
     attr_reader :command_suffix
 

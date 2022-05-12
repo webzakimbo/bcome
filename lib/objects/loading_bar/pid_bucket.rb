@@ -3,7 +3,8 @@
 module Bcome
   module LoadingBar
     class PidBucket
-      include Singleton
+
+      include ThreadSafeSingleton
 
       def initialize
         @pids = []

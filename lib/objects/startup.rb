@@ -2,6 +2,7 @@
 
 module Bcome
   class Startup
+
     def initialize(breadcrumbs, arguments)
       @breadcrumbs = breadcrumbs
       @arguments = arguments

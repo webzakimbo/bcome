@@ -2,7 +2,8 @@
 
 module Bcome::Node
   class Factory
-    include Singleton
+
+    include ThreadSafeSingleton
 
     attr_reader :estate
 
