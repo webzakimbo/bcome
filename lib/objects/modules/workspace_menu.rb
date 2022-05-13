@@ -123,7 +123,7 @@ module Bcome
           group: :selection
         },
         run: {
-          description: 'execute a command to be run over ssh against all active namespaces',
+          description: "execute a command to be run against every server/container in all active namepaces",
           usage: "run 'command1', 'command2', ...",
           console_only: false,
           terminal_usage: "run 'command1' 'command2' ...",
@@ -167,8 +167,8 @@ module Bcome
           group: :file
         },
         cd: {
-          description: 'enter a console session for a child namespace from this selection',
-          usage: 'cd identifier',
+          description: 'navigate to any other namespace',
+          usage: 'For child namespaces: cd identifier OR cd foo:bar, For any namespace: cd #root:foo:bar',
           console_only: true,
           group: :navigation
         },

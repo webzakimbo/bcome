@@ -1,5 +1,4 @@
 module Bcome::Node::KubeHelper
-
   def matches_filter?(filter)
     k8_path_filter = ::Bcome::Node::Resources::K8PathFilter.new(self, filter)
     return k8_path_filter.match?
