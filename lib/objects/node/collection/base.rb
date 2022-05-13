@@ -43,8 +43,7 @@ module Bcome::Node::Collection
         end
       end
 
-      set.flatten!
-      filtered_machines = filter_duplicates(set)
+      filtered_machines = filter_duplicates(set.flatten)
       filtered_machines
     end
 

@@ -8,6 +8,15 @@ module Bcome::Node::K8Cluster
 
     DEFAULT_SHELL = "/bin/sh"
 
+    def initialize(*params)
+      super
+      @origin_object_id = object_id
+    end
+
+    def is_same_machine?(other)
+      origin_object_id == other.origin_object_id
+    end
+
     def is_describable?
       return false
     end
@@ -135,10 +144,13 @@ module Bcome::Node::K8Cluster
       "#{exec_preamble} sh '#{raw_command}'"
     end
 
-     def form_run_command_for_container(raw_command)
-       "#{exec_preamble} /bin/bash -c '#{raw_command}'"
-     end
+    def form_run_command_for_container(raw_command)
+      "#{exec_preamble} #{shells[shell_selection]} -c '#{raw_command}'"
+    end
 
+    def shell_selection
+      return default_shell # Placeholder
+    end
 
     def do_run(commands)
       if commands.is_a?(Array)
