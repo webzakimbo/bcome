@@ -12,7 +12,7 @@ module Bcome
         # If we're not in a console session, we filter out console only methods
         items = items.reject { |item| item[1][:console_only] } unless ::Bcome::System::Local.instance.in_console_session?
 
-        # reject disabled menu items that
+        # reject disabled menu items
         items = items.reject { |item| !enabled_menu_items.include?(item[0]) }
 
         next if items.empty?
@@ -27,6 +27,7 @@ module Bcome
       nil
     end
 
+    # TODO model menu items...
     def print_menu_items(items)
       items.each_with_index do |item, _index|
         key = item[0]
@@ -35,14 +36,18 @@ module Bcome
         next if !::Bcome::System::Local.instance.in_console_session? && config[:console_only]
 
         puts tab_spacing + key.to_s.resource_key + item_spacing(key) + (config[:description]).to_s.resource_value
-        if config[:usage] || config[:terminal_usage]
-          usage_string = if ::Bcome::System::Local.instance.in_console_session?
-                           config[:usage]
-                         else
-                           "bcome #{keyed_namespace.empty? ? '' : "#{keyed_namespace}:"}#{config[:terminal_usage]}"
-                         end
+
+        if config[:usage] && ::Bcome::System::Local.instance.in_console_session?
+          puts tab_spacing + ("\s" * menu_item_spacing_length) + 'usage: '.instructional + config[:usage]   
+        elsif config[:terminal_usage] && !::Bcome::System::Local.instance.in_console_session?
+          usage_string = "bcome #{keyed_namespace.empty? ? '' : "#{keyed_namespace}:"}#{config[:terminal_usage]}"
           puts tab_spacing + ("\s" * menu_item_spacing_length) + 'usage: '.instructional + usage_string
+        end 
+
+        if config[:application] && config[:application] == :vm_only
+          puts tab_spacing + ("\s" * menu_item_spacing_length) + "note:\s".warning + "VMs only - no container support"
         end
+
         puts "\n"
       end
     end
@@ -130,7 +135,7 @@ module Bcome
           group: :ssh
         },
         interactive: {
-          description: 'enter an interactive command session for all active namespaces',
+          description: 'execute commands against every server/container in all active namepaces',
           console_only: false,
           group: :ssh
         },
@@ -141,12 +146,14 @@ module Bcome
           group: :informational
         },
         ping: {
-          description: 'ping all namespaces to test connectivity',
+          description: 'ping all virtual machines to test connectivity',
+          application: :vm_only,
           console_only: false,
           group: :ssh
         },
         put: {
           description: 'upload a file or directory using scp',
+          application: :vm_only,
           usage: "put 'local/path','remote/path'",
           console_only: false,
           terminal_usage: "put 'local/path' 'remote/path'",
@@ -154,6 +161,7 @@ module Bcome
         },
         put_str: {
           description: 'Write a file /to/remote/path from a string',
+          application: :vm_only,
           usage: 'put_str "string" "remote/path"',
           console_only: false,
           terminal_usage: "put_str '<file contents>', 'remote/path'",
@@ -161,6 +169,7 @@ module Bcome
         },
         rsync: {
           description: 'upload a file or directory using rsync (faster)',
+          application: :vm_only,
           usage: "rsync 'local/path','remote/path'",
           console_only: false,
           terminal_usage: "rsync 'local/path' 'remote/path'",
@@ -168,19 +177,17 @@ module Bcome
         },
         cd: {
           description: 'navigate to any other namespace',
-          usage: 'For child namespaces: cd identifier OR cd foo:bar, For any namespace: cd #root:foo:bar',
+          usage: 'For child namespaces: cd identifier OR cd foo:bar. For any namespace: cd #root:foo:bar',
           console_only: true,
           group: :navigation
         },
         quit: {
           description: 'Quit out of bcome',
-          usage: 'quit',
           console_only: true,
           group: :navigation
         },
         back: {
           description: 'Go back up a namespace',
-          usage: 'back',
           console_only: true,
           group: :navigation
         },
@@ -204,6 +211,28 @@ module Bcome
           usage: 'execute_script "script_name"',
           terminal_usage: 'execute_script script_name',
           group: :ssh
+        },
+        logs: {
+          description: 'Live stream all container logs in selection',
+          group: :kubernetes
+        },
+        pathways: {
+          description: 'Map the paths to your containers via their ingresses and services',
+          group: :kubernetes
+        },
+        helm: {
+          description: "Access an interactive helm shell, scoped to this node's kubectl context",
+          group: :kubernetes
+        },
+        kubectl: {
+          description: "Access an interactive kubectl shell, scoped to this node's kubectl context",
+          group: :kubernetes
+        },  
+        focus: {
+          description: "Switch your console focus to a different kubernetes resource type",
+          usage: "e.g. focus secrets or focus configmaps etc",
+          group: :kubernetes,
+          console_only: true
         }
       }
     end

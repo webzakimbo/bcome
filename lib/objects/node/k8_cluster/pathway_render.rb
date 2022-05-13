@@ -13,6 +13,7 @@ module Bcome::Node::K8Cluster::PathwayRender
     end
     return
   end
+  alias :pathways :routes 
 
   def pathway_data(*params)
     retrieve(["services", "pods", "ingresses"])

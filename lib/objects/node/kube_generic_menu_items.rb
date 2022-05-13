@@ -9,12 +9,12 @@ module Bcome::Node::KubeGenericMenuItems
 
      base_items[:describe] = {
       description: 'Describe this k8 node',
-      group: :informational
+      group: :kubernetes
     }
 
     base_items[:config] = {
       description: 'Display the k8 configuration for this node',
-      group: :informational
+      group: :kubernetes
     }
     base_items
   end

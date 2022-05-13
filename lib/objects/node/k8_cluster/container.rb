@@ -63,27 +63,27 @@ module Bcome::Node::K8Cluster
     end 
 
     def enabled_menu_items
-      (super + %i[logs shell config pseudo_tty]) - non_k8_menu_items
+      (super + %i[logs sh config pseudo_tty]) - non_k8_menu_items
     end
 
     def menu_items
       base_items = super.dup
-      base_items[:shell] = {
+
+      base_items[:sh] = {
         description: 'Enter a shell',
         group: :ssh
       }
+
       base_items[:pseudo_tty] = {
         description: 'Execute a command using an interactive session',
         group: :ssh
       }
-      base_items[:config] = {
-        description: 'Display the k8 configuration for this node',
-        group: :informational
+
+      base_items[:interactive] = {
+        description: 'Execute commands against this container',
+        group: :ssh,
       }
-      base_items[:logs] = {
-        description: 'Live tail STDOUT',
-        group: :informational
-      }
+
       base_items
     end
     

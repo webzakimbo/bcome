@@ -22,10 +22,6 @@ module Bcome::Node::K8Cluster::Collection
       @nodes_loaded = false
     end
 
-    def interactive
-      kubectl
-    end
-
     def is_describable?
       false
     end
@@ -53,7 +49,7 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def enabled_menu_items
-      (super + %i[info info_dump config lsr reload]) - non_k8_menu_items
+      (super + %i[logs set_context info pathways helm kubectl info_dump config lsr reload]) - non_k8_menu_items
     end
 
     def ingresses
@@ -81,12 +77,17 @@ module Bcome::Node::K8Cluster::Collection
 
       base_items[:info] = {
         description: 'Cluster Info',
-        group: :informational
+        group: :kubernetes
       }
 
       base_items[:info_dump] = {
         description: 'Cluster Info dump',
-        group: :informational
+        group: :kubernetes
+      }
+
+      base_items[:set_context] = {
+        description: 'Export your current Kubectl context out of bcome',
+        group: :kubernetes
       }
 
       base_items

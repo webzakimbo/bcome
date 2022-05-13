@@ -24,15 +24,18 @@ module Bcome::Node::K8Cluster
 
     def menu_items
       base_items = super.dup
+
       base_items[:tunnel] = {
         description: 'Forward a Pod port to your local machine',
-        group: :ssh,
+        group: :kubernetes,
         usage: "tunnel [port]"
       }
-      base_items[:logs] = {
-        description: 'Live tail stdout (all selected containers)',
-        group: :informational
+
+      base_items[:interactive] = {
+        description: 'Execute commands against all containers in this pod',
+        group: :ssh,
       }
+
       base_items
     end
 

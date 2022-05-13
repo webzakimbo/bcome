@@ -22,7 +22,7 @@ module Bcome::Node::K8Cluster
  
       base_items[:read] = {
         description: "Human readable secret outputs - base64 decoded",
-        group: :contextual
+        group: :kubernetes
       }
       base_items
     end

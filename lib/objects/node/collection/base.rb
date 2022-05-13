@@ -35,8 +35,8 @@ module Bcome::Node::Collection
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
 
       resources.each do |resource|
-        if resource.inventory?
-          resource.load_nodes unless resource.nodes_loaded?
+        if resource.respond_to?(:load_nodes) && !resource.nodes_loaded?
+          resource.load_nodes
           set << resource.resources.active
         else
           set << resource.machines(skip_for_hidden)

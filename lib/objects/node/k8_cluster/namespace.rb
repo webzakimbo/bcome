@@ -102,7 +102,7 @@ module Bcome::Node::K8Cluster
     end
 
     def enabled_menu_items
-      (super + %i[lsr describe logs config reload kubectl helm]) - non_k8_menu_items
+      (super + %i[lsr describe focus pathways logs config reload kubectl helm]) - non_k8_menu_items
     end
 
     def menu_items
@@ -113,34 +113,24 @@ module Bcome::Node::K8Cluster
         group: :informational
       }
 
-      base_items[:describe] = {
-        description: 'Describe this k8 node',
-        group: :informational
-      }
-
-      base_items[:config] = {
-        description: 'Display the k8 configuration for this node',
-        group: :informational
-      }
-
       base_items[:reload] = {
         description: 'Reload all resources',
         group: :informational
       }
 
-      base_items[:logs] = {
-        description: 'Live tail stdout (all in selection)',
-        group: :informational
-      }
-
-      base_items[:kubectl] = {
-        description: 'Contextual kubectl shell',
+       base_items[:describe] = {
+        description: 'Describe this k8 node',
         group: :kubernetes
       }
 
-      base_items[:helm] = {
-        description: 'Contextual helm shell',
+      base_items[:config] = {
+        description: 'Display the k8 configuration for this node',
         group: :kubernetes
+      }
+
+      base_items[:interactive] = {
+        description: 'Execute commands against all containers in this namespace',
+        group: :ssh,
       }
 
       base_items

@@ -18,7 +18,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def start_message
-      puts "\nAny commands you enter here will be passed directly to Helm scoped to your bcome node's kubectl context.\n"
+      puts "\nAny commands you enter here will be passed directly to Helm scoped to this bcome node's kubectl context.\n"
     end
 
     def command_prompt

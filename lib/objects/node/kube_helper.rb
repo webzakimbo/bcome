@@ -1,4 +1,5 @@
 module Bcome::Node::KubeHelper
+
   def matches_filter?(filter)
     k8_path_filter = ::Bcome::Node::Resources::K8PathFilter.new(self, filter)
     return k8_path_filter.match?
@@ -45,4 +46,21 @@ module Bcome::Node::KubeHelper
   def non_k8_menu_items
     %i[ssh get put put_str rsync execute_script ping routes workon enable disable enable! disable!]
   end
+
+  ## Disable non container methods - revisit this as clear arch. issue with menu structure
+  def ping  
+  end
+
+  def put(*params)
+  end
+
+  def put_str(*params)
+  end
+
+  def rsync(*params)
+  end
+
+  def execute_script(*params)
+  end
+
 end

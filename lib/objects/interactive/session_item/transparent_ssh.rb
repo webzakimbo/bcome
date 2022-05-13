@@ -14,7 +14,6 @@ module Bcome::Interactive::SessionItem
       @working_dir = nil
     end  
 
-
     def machines
       skip_for_hidden = true
       node.server? ? [node] : node.machines(skip_for_hidden)
@@ -100,6 +99,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def open_ssh_connections
+      # A node may comprise virtual machines or containers. We need to open connection to the virtual machines
       ::Bcome::Ssh::Connector.connect(node, show_progress: true)
     end
 

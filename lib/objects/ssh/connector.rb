@@ -86,7 +86,7 @@ module Bcome
       private
 
       def set_servers
-        @servers_to_connect = machines.dup - machines.select{|machine| machine.type == "container" }
+        @servers_to_connect = machines.select{|machine| machine.is_a?(::Bcome::Node::Server::Base) } 
 
         # Ensure that all connections are loaded. A machine might need to proxy through another that
         # has not yet been loaded. Here we ensure that we've traversed the tree for all required nodes.
