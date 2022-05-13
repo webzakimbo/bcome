@@ -135,7 +135,8 @@ module Bcome
           group: :ssh
         },
         tree: {
-          description: 'print a tree view for all namespaces and their sub-namespaces',
+          description: 'print a tree view of your elements',
+          usage: "tree OR tree(depth: integer)",  
           console_only: false,
           group: :informational
         },

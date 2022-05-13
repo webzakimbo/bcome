@@ -115,10 +115,10 @@ module Bcome
 
     def build_tree(data_build_method, title_prefix, config)
       caller_stack = config[:callers] ? config[:callers].reverse : []
-      limit = config[:limit]
+      depth = config[:depth]
      
-      if limit
-        limit += caller_stack.size
+      if depth
+        depth += caller_stack.size
       end
  
       data = send(data_build_method, caller_stack)
@@ -136,7 +136,7 @@ module Bcome
    
       padding = ""
 
-      recurse_tree_lines(data, padding, limit)
+      recurse_tree_lines(data, padding, depth)
 
       @lines.each do |line|
         print "#{LEFT_PADDING}#{line}\n"
@@ -146,8 +146,8 @@ module Bcome
       p
     end
 
-    def recurse_tree_lines(data, padding, limit)
-      limit -= 1 if limit && limit > 0
+    def recurse_tree_lines(data, padding, depth)
+      depth -= 1 if depth && depth > 0
 
       data.each_with_index do |config, index|
         key = config[0]
@@ -172,8 +172,8 @@ module Bcome
 
         tab_padding = padding + branch + ("\s" * (anchor.length + 4))
 
-        if limit.nil? || (limit && limit > 0)
-          recurse_tree_lines(values, tab_padding, limit)
+        if depth.nil? || (depth && depth > 0)
+          recurse_tree_lines(values, tab_padding, depth)
           @lines << padding + branch
         end
       end
