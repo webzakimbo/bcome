@@ -32,14 +32,14 @@ module Bcome::Node::K8Cluster::Collection
 
     def info
       raw = run_kubectl_config("cluster-info").stdout
-      puts "Cluster Info\n".informational
-      puts "\n#{raw}\n"
+      print "\nCluster Info\n".informational
+      print "\n#{raw}\n"
     end
 
     def info_dump
       raw = run_kubectl_config("cluster-info dump").stdout
-      puts "Cluster Info Dump\n".informational
-      puts "\n#{raw}\n"
+      print "\nCluster Info Dump\n".informational
+      print "\n#{raw}\n"
     end
 
     def logs(cmd = "")
