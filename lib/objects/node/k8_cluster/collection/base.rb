@@ -74,11 +74,6 @@ module Bcome::Node::K8Cluster::Collection
         group: :informational
       }
 
-      base_items[:config] = {
-        description: 'Display the k8 configuration for this node',
-        group: :informational
-      }
-
       base_items[:reload] = {
         description: 'Reload all resources',
         group: :informational

@@ -77,6 +77,5 @@ module Bcome::Node::K8Cluster
     def k8_cluster
       parent.k8_cluster
     end
-
   end
 end
