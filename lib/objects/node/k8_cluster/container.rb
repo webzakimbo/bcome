@@ -11,6 +11,7 @@ module Bcome::Node::K8Cluster
     def initialize(*params)
       super
       @origin_object_id = object_id
+      @unreachable = false
     end
 
     def is_same_machine?(other)
@@ -111,6 +112,7 @@ module Bcome::Node::K8Cluster
 
     ## Get a shell onto the container--
 
+    ##
     ## todo: Default shell may be overriden, but should be a configuration option. 
     def shell(cmd = default_shell)
       shell_cmd = shells[cmd]
@@ -149,8 +151,12 @@ module Bcome::Node::K8Cluster
     end
 
     def shell_selection
-      return default_shell # Placeholder
+      return @shell_selection || default_shell
     end
+
+    def shell_selection=(selection)
+      @shell_selection = selection
+    end  
 
     def do_run(commands)
       if commands.is_a?(Array)
@@ -163,12 +169,25 @@ module Bcome::Node::K8Cluster
     end
 
     def run(*raw_commands)
+      runner = exec_run(*raw_commands)
+      ## Commands may be run in parallel over many machines (servers and/or containers) at the same time.
+      ## We output the command output at the end to prevent interspersing different machines' output.
+      runner.print_output
+    end
+
+    # TODO
+    # Create shells registry? Regex as before
+    # 1. shell registry, 2. annotation on container, 3. bcome default (and for simplicity we default to sh?) 
+    # Shell registry to have concept of "no shell"
+    # When we shell in, we use the above priority too, but we provide and override
+
+    def exec_run(*raw_commands)
       raw_commands = raw_commands.is_a?(String) ? [raw_commands] : raw_commands
       raise ::Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
       runner = ::Bcome::K8Cluster::ContainerCommand.exec(self, raw_commands)
       ## Commands may be run in parallel over many machines (servers and/or containers) at the same time.
       ## We output the command output at the end to prevent interspersing different machines' output.
-      runner.print_output
+      return runner
     end
  
     def pseudo_tty(command)
