@@ -1,6 +1,8 @@
 module Bcome::K8Cluster
   class ContainerCommand
 
+    attr_reader :output_string
+
     class << self
       def exec(container, commands)
         runner = new(container, commands)
@@ -26,6 +28,10 @@ module Bcome::K8Cluster
       print "#{@output_string}\n\n"
     rescue StandardError
       puts "Could not print #{@output_string.inspect}"
+    end
+
+    def shell_exec_failed?
+      (@output_string =~ /OCI runtime exec failed/) && (@output_string =~ /no such file or directory: unknown/)  
     end
 
     def execute!
