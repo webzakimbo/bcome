@@ -4,7 +4,12 @@ module Bcome::Node::K8Cluster
   class Service < Bcome::Node::K8Cluster::Child
 
     include ::Bcome::Node::K8Cluster::Selector
- 
+    include ::Bcome::Node::KubeTunnelHelper
+
+    def shorthand
+      "svc"
+    end
+
     def cluster_ip
       spec["clusterIP"]
     end  

@@ -3,7 +3,13 @@
 module Bcome::Node::K8Cluster
   class Pod < Bcome::Node::K8Cluster::Child
 
+    include ::Bcome::Node::KubeTunnelHelper
+
     RUNNING_STATE="running".freeze
+
+    def shorthand
+      "pod"
+    end 
 
     def is_job?
       # TODO - there must be a better way ?
@@ -147,20 +153,6 @@ module Bcome::Node::K8Cluster
 
     def get_children_command
       "get pods"
-    end
-
-    def form_tunnel_command_for_container(local_and_remote_port)
-      "port-forward #{hyphenated_identifier} #{local_and_remote_port} -n #{k8_namespace.hyphenated_identifier}"
-    end
-
-    def tunnel(local_and_remote_port)
-      puts "\nForwarding localhost:#{local_and_remote_port}".informational
-      puts "CTRL+C to close\n"
-      get_tunnel_command = form_tunnel_command_for_container(local_and_remote_port)
-      #puts get_tunnel_command
-      command = get_kubectl_cmd(get_tunnel_command)
-      runner = ::Bcome::Command::Local.run(command)
-      return runner
     end
 
     def deployment
