@@ -43,11 +43,15 @@ module Bcome::K8Cluster
         result = @container.run_kubectl_cmd(kube_command)
 
         local_command = result.local_command
+
         unless local_command.is_success?
           output_append(local_command.stderr + "\n")
         end
 
         output_append(local_command.stdout)
+
+        output_append "\nCould not acquire shell. See the docs for ways to overcome this.\n".warning if shell_exec_failed?
+
       end
     end 
 
