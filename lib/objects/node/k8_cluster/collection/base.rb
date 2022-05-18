@@ -49,17 +49,17 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def enabled_menu_items
-      (super + %i[logs set_context info pathways helm kubectl info_dump config lsr reload]) - non_k8_menu_items
+      (super + %i[logs export_context info pathways helm kubectl info_dump config lsr reload]) - non_k8_menu_items
     end
 
     def ingresses
       resources.active.collect{|resource| resource.crds["Ingress"] }.flatten.compact
     end
 
-    def set_context
-      puts "Setting external kubectl context to #{namespace}".warning
+    def export_context
+      puts "\nExporting kubectl context to Setting external kubectl for #{namespace}".warning
       k8_cluster.set_as_external_context
-      puts "\nMake sure that your $KUBECONFIG is set to #{::Bcome::K8Cluster::CommandRunner::BCOME_K8_CONFIG_FILE_PATH}\n".informational
+      puts "\nTo use: export KUBECONFIG=#{::Bcome::K8Cluster::CommandRunner::BCOME_K8_CONFIG_FILE_PATH}\n".informational
     end
 
     def menu_items
@@ -85,7 +85,7 @@ module Bcome::Node::K8Cluster::Collection
         group: :kubernetes
       }
 
-      base_items[:set_context] = {
+      base_items[:export_context] = {
         description: 'Export your current Kubectl context out of bcome',
         group: :kubernetes
       }
