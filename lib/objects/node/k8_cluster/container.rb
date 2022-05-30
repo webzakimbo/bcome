@@ -5,6 +5,7 @@ module Bcome::Node::K8Cluster
 
     include ::Bcome::Node::KubeHelper
     include ::Bcome::Node::KubeListHelper
+    include ::Bcome::Node::ContainerShellSelection
 
     DEFAULT_SHELL = "/bin/sh"
 
@@ -112,8 +113,6 @@ module Bcome::Node::K8Cluster
 
     ## Get a shell onto the container--
 
-    ##
-    ## todo: Default shell may be overriden, but should be a configuration option. 
     def shell(cmd = default_shell)
       shell_cmd = shells[cmd]
 
@@ -132,7 +131,6 @@ module Bcome::Node::K8Cluster
       return "sh"
     end
 
-    ## todo: May be overriden to set alternative shells, but should be a configuration option.
     def shells 
       {
         "bash" => "/bin/bash",
@@ -174,12 +172,6 @@ module Bcome::Node::K8Cluster
       ## We output the command output at the end to prevent interspersing different machines' output.
       runner.print_output
     end
-
-    # TODO
-    # Create shells registry? Regex as before
-    # 1. shell registry, 2. annotation on container, 3. bcome default (and for simplicity we default to sh?) 
-    # Shell registry to have concept of "no shell"
-    # When we shell in, we use the above priority too, but we provide and override
 
     def exec_run(*raw_commands)
       raw_commands = raw_commands.is_a?(String) ? [raw_commands] : raw_commands
