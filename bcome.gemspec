@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'google-cloud-container', '1.1.2'
   spec.add_dependency 'launchy', '2.4.3'
   spec.add_dependency 'net-scp', '~> 1.2', '>= 1.2.1'
-  spec.add_dependency 'net-ssh', '4.1.0'
+  spec.add_dependency 'net-ssh', '6.1.0'
   spec.add_dependency 'pmap', '1.1.1'
   spec.add_dependency 'pry', '0.12.2'
   spec.add_dependency 'rainbow', '~> 2.2'
