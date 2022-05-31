@@ -43,6 +43,10 @@ module Bcome::Node::K8Cluster
       self
     end
 
+    def export_context
+      parent.export_context(self)
+    end
+
     def do_set_resources(raw_resources)
       return [] if raw_resources.empty?
 

@@ -44,8 +44,14 @@ module ::Bcome::Driver::Kubernetes
       raise "Should be overriden"
     end
 
-    def set_as_external_context
-      run_kubectl_config("config use-context #{name}")
+    def set_as_external_context(namespace = nil)
+      register_cluster_context(namespace)
+     
+      puts "" 
+      reauthorize!
+
+      context_name = namespace ? "#{name}_#{namespace.identifier}" : name
+      run_kubectl_config("config use-context #{context_name}")
     end
 
     def server

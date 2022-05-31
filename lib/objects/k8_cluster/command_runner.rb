@@ -1,4 +1,4 @@
-module Bcome::K8Cluster
+Module Bcome::K8Cluster
   class CommandRunner
 
     KUBECTL_BINARY = "kubectl".freeze
@@ -50,6 +50,7 @@ module Bcome::K8Cluster
     def run_hand_off
       # For when we absolutely need to hand-off to the underlying operating system, such as when executing kubectl edit
       to_run = full_command
+      to_run += "\s--context=#{@cluster.name}"
 
       puts "\n(#{"local".bc_yellow}) > #{to_run}\n\n" unless ::Bcome::Orchestrator.instance.command_output_silenced?
       system(to_run)
@@ -86,14 +87,14 @@ module Bcome::K8Cluster
     end
   
     def result 
-      #print_command_and_obfuscate_token(full_command)
+      print_command_and_obfuscate_token(full_command)
       @result ||= ::Bcome::Command::Local.run(full_command)
     end
  
     def print_command_and_obfuscate_token(command)
       command.gsub!(/--token=([0-9A-Za-z\-_.]+)/,"--token=*****\s")
       command.gsub!(/certificate-authority-data\s([0-9A-Za-z])+/, "certificate-authority-data\s*****")
-      puts "#{command}".bc_grey 
+      #puts "#{command}".bc_grey 
     end
   end
 end

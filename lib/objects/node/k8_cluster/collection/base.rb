@@ -56,10 +56,14 @@ module Bcome::Node::K8Cluster::Collection
       resources.active.collect{|resource| resource.crds["Ingress"] }.flatten.compact
     end
 
-    def export_context
-      puts "\nExporting kubectl context to Setting external kubectl for #{namespace}".warning
-      k8_cluster.set_as_external_context
-      puts "\nTo use: export KUBECONFIG=#{::Bcome::K8Cluster::CommandRunner::BCOME_K8_CONFIG_FILE_PATH}\n".informational
+    def export_context(namespace = nil)
+      export_message = "\nExporting kubectl context\n".warning 
+      export_message += "\ncluster:\s".informational + identifier
+      export_message += "\nnamespace:\s".informational + namespace.identifier if namespace
+      puts export_message
+
+      k8_cluster.set_as_external_context(namespace)
+      puts "\nTo use:\s".informational + "export KUBECONFIG=#{::Bcome::K8Cluster::CommandRunner::BCOME_K8_CONFIG_FILE_PATH}\n"
     end
 
     def menu_items
