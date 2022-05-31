@@ -90,7 +90,7 @@ module Bcome::Node::K8Cluster::Collection
       }
 
       base_items[:export_context] = {
-        description: 'Export your current Kubectl context out of bcome',
+        description: "Export this cluster's kubectl context i.e. set this context for external applications",
         group: :kubernetes
       }
 

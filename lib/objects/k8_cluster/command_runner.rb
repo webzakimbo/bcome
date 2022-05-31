@@ -1,4 +1,4 @@
-Module Bcome::K8Cluster
+module Bcome::K8Cluster
   class CommandRunner
 
     KUBECTL_BINARY = "kubectl".freeze

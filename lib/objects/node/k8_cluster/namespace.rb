@@ -106,7 +106,7 @@ module Bcome::Node::K8Cluster
     end
 
     def enabled_menu_items
-      (super + %i[lsr describe focus pathways logs config reload kubectl helm]) - non_k8_menu_items
+      (super + %i[export_context lsr describe focus pathways logs config reload kubectl helm]) - non_k8_menu_items
     end
 
     def menu_items
@@ -135,6 +135,11 @@ module Bcome::Node::K8Cluster
       base_items[:interactive] = {
         description: 'Execute commands against all containers in this namespace',
         group: :ssh,
+      }
+
+      base_items[:export_context] = {
+        description: "Export this cluster namespace's kubectl context - i.e. set this context for external applications",
+        group: :kubernetes
       }
 
       base_items
