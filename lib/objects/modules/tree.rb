@@ -26,7 +26,7 @@ module Bcome
     end
 
     def routes
-      if machines.empty?
+      if machines.nil? ||  machines.empty?
         puts "\nNo routes are found below this namespace (empty server list)\n".warning
       else
         title_prefix = 'Ssh connection routes'
