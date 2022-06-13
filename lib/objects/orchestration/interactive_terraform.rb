@@ -83,7 +83,7 @@ module Bcome::Orchestration
       @var_string ||= form_var_string
     end
 
-    def backend_config_parameter_string
+    def Backend_config_parameter_string
       ## Backend configs are loaded before Terraform Core which means that we cannot use variables directly in our backend config.
       ## This is a pain as we'll have authorised with GCP via the console, and so all sesssion have an access token readily available.
       ## This patch passes the access token directly to terraform as a parameter.
@@ -100,19 +100,30 @@ module Bcome::Orchestration
     end
 
     # Formulate a terraform command
-    def command(raw_command)
-      cmd = "cd #{path_to_env_config} ; terraform #{raw_command}"
 
-      if raw_command =~ Regexp.new(/^apply$|plan|destroy|refresh/)
-        cmd = "#{cmd} -var-file=\"#{metadata_tf_filename}\""
+    def command(raw_command) ## TODO - CLEAN UP
+      if raw_command =~ Regexp.new(/^apply$|plan|destroy|refresh|import/)
+
+        params = "-var-file=\"#{metadata_tf_filename}\""
 
         if @node.network_driver.is_a?(::Bcome::Driver::Gcp)
-          cmd += "\s-var access_token=#{@node.network_driver.network_credentials[:access_token]}" 
+          params += "\s-var access_token=#{@node.network_driver.network_credentials[:access_token]}" 
         end
+
+       if raw_command =~ /^import/
+         raw_command =~ /([^\s]+)\s(.+)/
+         verb = $1
+         resource = $2
+         cmd = "cd #{path_to_env_config} ; terraform #{verb} #{params} #{resource}"
+        else
+          cmd = "cd #{path_to_env_config} ; terraform #{raw_command} #{params}"
+        end
+      else
+        cmd = "cd #{path_to_env_config} ; terraform #{raw_command}"
       end
 
-      #puts "\n" + cmd.informational + "\n"
-      cmd
+      puts "\n" + cmd.informational + "\n"
+      return cmd
     end
   end
 end
