@@ -14,8 +14,8 @@ module Bcome::Node::KubeHelper
   end
 
   ## Shared utility methods
-  def config
-    ap raw_config_data, {indent: -2}
+  def config  
+    puts raw_config_data.to_yaml
   end
 
   def describe
