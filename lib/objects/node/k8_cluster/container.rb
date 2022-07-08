@@ -81,17 +81,17 @@ module Bcome::Node::K8Cluster
 
       base_items[:sh] = {
         description: 'Enter a shell',
-        group: :ssh
+        group: :kubernetes
       }
 
       base_items[:pseudo_tty] = {
         description: 'Execute a command using an interactive session',
-        group: :ssh
+        group: :kubernetes
       }
 
       base_items[:interactive] = {
         description: 'Execute commands against this container',
-        group: :ssh,
+        group: :kubernetes,
       }
 
       base_items
@@ -143,6 +143,10 @@ module Bcome::Node::K8Cluster
       "#{exec_preamble} sh '#{raw_command}'"
     end
 
+    def form_pseudo_tty_command_for_container(raw_command)
+      "#{exec_preamble} #{raw_command}"
+    end
+
     def form_run_command_for_container(raw_command)
       "#{exec_preamble} #{shells[shell_selection]} -c '#{raw_command}'"
     end
@@ -182,7 +186,7 @@ module Bcome::Node::K8Cluster
     end
  
     def pseudo_tty(command)
-      get_pseudo_tty_command = form_command_for_container(command)
+      get_pseudo_tty_command = form_pseudo_tty_command_for_container(command)
       command = get_kubectl_cmd(get_pseudo_tty_command)
       system(command)
     end
