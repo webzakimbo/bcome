@@ -2,9 +2,35 @@ module Bcome::Node::K8Cluster
   class Base < Bcome::Node::Base
 
     include ::Bcome::InteractiveKubectl
+    include ::Bcome::Node::K8Cluster::Selector
+    include ::Bcome::Node::K8Cluster::Retrieve
 
     def is_describable?
       true
+    end
+
+    def reauthorize
+      k8_cluster.reauthorize!
+      return
+    end
+
+    def state
+      views[:raw_data]["status"] ? views[:raw_data]["status"]["phase"] : nil
+    end
+
+    def enabled_menu_items
+      (super + %i[reauthorize])
+    end
+
+    def menu_items
+      base_items = super.dup
+
+      base_items[:reauthorize] = {
+        description: "Reauthorize with the cluster API",
+        group: :kubernetes
+      }
+
+      base_items
     end
 
     def kubectl_context
