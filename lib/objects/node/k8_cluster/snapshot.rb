@@ -44,6 +44,7 @@ module Bcome::Node::Collection
     end
 
     def assign_resources_to_namespaces
+      puts "\n"
       wrap_indicator type: :progress, size: @namespaces.size, title: loader_title, completed_title: loader_completed_title do
          do_assign
       end
