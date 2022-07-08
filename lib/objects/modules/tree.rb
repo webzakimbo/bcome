@@ -5,16 +5,18 @@ module Bcome
 
     include Bcome::Draw
 
-    # GOAL: provide data in required format and it will render a tree.
-
+    ####################################################################
+    ## Node tree  - dynamic rendering of any parent->*child hierarchy  #
+    ####################################################################
     def tree(config = {})
+
+      unless resources.any?
+        puts "No tree available at this node. #{type.capitalize.informational} #{identifier.bc_white} does not have any children.\n\n"
+        return 
+      end
+
       config = {} unless config.is_a?(Hash)
       title_prefix = 'Namespace tree'
-      #if parent && parent.respond_to?(:tree)
-      #  config[:callers] = config[:callers] ? (config[:callers] << self) : [self]
-      #  parent.tree(config)
-      #else
-        # Preempt loading nodes
         iterate_over = config[:callers] ? config[:callers] : resources.active
         iterate_over.pmap do |resource|
           if resource.respond_to?(:load_nodes) && !resource.nodes_loaded?
@@ -25,6 +27,9 @@ module Bcome
       #end
     end
 
+    ######################
+    ## SSH Routing tree ##
+    ######################
     def routes
       if machines.nil? ||  machines.empty?
         puts "\nNo routes are found below this namespace (empty server list)\n".warning
@@ -80,7 +85,6 @@ module Bcome
 
       iterate_over.sort_by(&:identifier).each do |resource|
         next if resource.hide?
-
         resource.load_nodes if resource.respond_to?(:load_nodes) && !resource.nodes_loaded?
 
         unless resource.is_a?(Bcome::Node::Inventory::Merge)
@@ -95,7 +99,7 @@ module Bcome
 
     def namespace_tree_line(geneaology)
       colour = geneaology == :ancestor ? :bc_grey : :bc_green
-      "#{type.send(colour)} #{identifier}"
+      "#{type.send(colour)} #{identifier.resource_key}"
     end
 
     def routing_tree_line(is_direct = true)
@@ -115,16 +119,13 @@ module Bcome
 
     def build_tree(data_build_method, title_prefix, config)
       caller_stack = config[:callers] ? config[:callers].reverse : []
+
       depth = config[:depth]
-     
-      if depth
-        depth += caller_stack.size
-      end
- 
+      depth = depth.to_i + caller_stack.size  if depth 
       data = send(data_build_method, caller_stack)
 
       @lines = []
-      title = "#{title_prefix.informational}\s#{namespace}"
+      title = "#{title_prefix.informational}\s#{namespace.resource_key}"
       @lines << "\n"
       @lines << "#{BLIP}\s\s\s#{title}"
       @lines << INGRESS.to_s
@@ -155,7 +156,7 @@ module Bcome
 
         anchor, branch = deduce_tree_structure(index, data.size)
         labels = key.is_a?(Array) ? key : [key]
-
+ 
         labels.each_with_index do |label, index|
           key_string = if index == 0 #  First line
                          "#{anchor}\s#{label}"
