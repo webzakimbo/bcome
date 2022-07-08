@@ -83,7 +83,7 @@ module Bcome::Orchestration
       @var_string ||= form_var_string
     end
 
-    def Backend_config_parameter_string
+    def backend_config_parameter_string
       ## Backend configs are loaded before Terraform Core which means that we cannot use variables directly in our backend config.
       ## This is a pain as we'll have authorised with GCP via the console, and so all sesssion have an access token readily available.
       ## This patch passes the access token directly to terraform as a parameter.
