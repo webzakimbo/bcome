@@ -4,7 +4,7 @@ module Bcome::Node::Resources
   class Base
     include Enumerable
 
-    attr_reader :nodes
+    attr_accessor :nodes
 
     def initialize(*_params)
       @nodes = []
@@ -48,22 +48,25 @@ module Bcome::Node::Resources
       @nodes = []
     end
 
-    def do_disable(identifier)
-      if identifier.is_a?(Array)
-        identifier.each { |id| disable(id) }
-      else
-        disable(identifier)
-      end
-      nil
+    def do_disable(identifiers)
+      identifiers.each { |id| disable(id) }
+      return
     end
 
-    def do_enable(identifier)
-      if identifier.is_a?(Array)
-        identifier.each { |id| enable(id) }
-      else
-        enable(identifier)
-      end
-      nil
+    def do_enable(identifiers, reset = true)
+      resources = identifiers.collect{|id|
+        resource = for_identifier(id)
+        raise Bcome::Exception::NoNodeNamedByIdentifier, id unless resource
+        resource
+      }    
+      # clear all selections...
+      disable! if reset
+
+      # ...and replace with whatever the user wants to workon
+      resources.collect{|resource| 
+        @disabled_resources -= [resource]
+      }
+      return
     end
 
     def disable!
@@ -101,6 +104,7 @@ module Bcome::Node::Resources
     end
 
     def for_identifier(identifier)
+      identifier = $1 if identifier =~ /^'(.+)'$/
       resource = @nodes.select { |node| node.identifier == identifier }.last
       resource
     end
