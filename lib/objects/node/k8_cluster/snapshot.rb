@@ -18,7 +18,7 @@ module Bcome::Node::Collection
     end
 
     def loader_title
-      "loading snapshot"
+      "Loading snapshot"
     end
 
     def loader_completed_title
@@ -44,9 +44,9 @@ module Bcome::Node::Collection
     end
 
     def assign_resources_to_namespaces
-      #wrap_indicator type: :progress, size: @namespaces.size, title: loader_title, completed_title: loader_completed_title do
+      wrap_indicator type: :progress, size: @namespaces.size, title: loader_title, completed_title: loader_completed_title do
          do_assign
-      #end
+      end
     end
 
     def do_assign
@@ -65,7 +65,7 @@ module Bcome::Node::Collection
         end
 
         ::Bcome::Node::Factory.instance.bucket[namespace.keyed_namespace] = namespace
-        #signal_success
+        signal_success
       end
     end
 
