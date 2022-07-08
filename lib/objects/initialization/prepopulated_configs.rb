@@ -1,27 +1,24 @@
 module Bcome::Initialization::PrepopulatedConfigs
 
+  CONFIG_DIR="config"
+
   def prepopulated_path_contents(path)
     return config_contents[path.to_sym]
   end
 
+  def current_directory
+    File.dirname(__FILE__)
+  end
+
   def config_contents
     {
-      '.gauth/googles-not-so-secret-client-secrets.json': gcp_not_so_secret_config_contents 
+      '.gauth/googles-not-so-secret-client-secrets.json': get_config_file_contents("googles-not-so-secret-client-secrets.json")
     }
   end
 
-  def gcp_not_so_secret_config_contents
-    return <<EOF
-{
-  "installed":
-  {
-    "client_id": "32555940559.apps.googleusercontent.com",
-    "client_secret": "ZmssLNjJy2998hD4CTg2ejr2",
-    "type": "authorized_user"
-  }
-}
-EOF
+  def get_config_file_contents(filename)
+    full_path_to_config_file = "#{current_directory}/#{CONFIG_DIR}/#{filename}"
+    raise ::Bcome::Exception::Generic, "Could not find init config file '#{full_path_to_config_file}'" unless File.exist?(full_path_to_config_file)
+    return ::File.read(full_path_to_config_file)
   end
-
-
 end
