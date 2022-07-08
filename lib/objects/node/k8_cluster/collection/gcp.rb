@@ -18,8 +18,7 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def do_get_credentials
-     # wrap_indicator type: :basic, title: "Authorising\s" + "GCP\s".bc_blue.bold + cluster_id.underline, completed_title: 'done' do
-        print "\nAuthorising\s" + "GCP\s".bc_blue.bold + cluster_id.underline
+      wrap_indicator type: :basic, title: "Authorising\s" + "GCP\s".bc_blue.bold + cluster_id.underline, completed_title: 'done' do
         begin
           @k8_cluster = ::Bcome::Driver::Kubernetes::Gke.new(self)
         rescue ::Bcome::Exception::ReauthGcp
@@ -29,7 +28,7 @@ module Bcome::Node::K8Cluster::Collection
         rescue StandardError => e
           raise ::Bcome::Exception::Generic, "Could not retrieve credentials for #{cluster_id}. Failed with: #{e.class} #{e.message}"
         end
-     # end
+      end
     end
   end
 end
