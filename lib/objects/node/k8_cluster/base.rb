@@ -49,20 +49,6 @@ module Bcome::Node::K8Cluster
       return items
     end
 
-    def retrieve(crd_keys)
-      fetched_resources = []
-
-      raw_resources = get_kubectl_resource(crd_keys)
-
-      items = {}
-      raw_resources.each do |raw_resource|
-        resource_type = raw_resource["kind"]
-        resource_klass = resource_klasses[resource_type] ? resource_klasses[resource_type] : crd_resource_klass
-        fetched_resources << add_resource(resource_klass, resource_type, raw_resource) 
-      end
-      return fetched_resources
-    end
-
     def refresh_cache!(items)
       kinds = items.collect{|item| item["kind"]}.uniq
       kinds.each {|kind| 
