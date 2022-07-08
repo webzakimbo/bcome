@@ -14,7 +14,7 @@ module Bcome::Initialization::Structure
         method: :create_as_directory
       },
       { # Pre-populated configuration
-        paths: ['.gauth/googles-not-so-secret-client-secrets.json'],
+        paths: ['bcome/k8_hierarchy.yml','.gauth/googles-not-so-secret-client-secrets.json'],
         method: :set_prepopulated_configs
       }
     ]
