@@ -3,6 +3,8 @@
 
 require 'bcome'
 
+::Bcome::Timer.instance.start
+
 breadcrumbs = ARGV[0]
 arguments = ARGV - [ARGV[0]]
 handler = ::Bcome::Startup.new(breadcrumbs, arguments)

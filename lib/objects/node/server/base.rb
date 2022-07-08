@@ -190,12 +190,6 @@ module Bcome::Node::Server
       ssh_driver.get(remote_path, local_path)
     end
 
-    def ls
-      puts visual_hierarchy.hierarchy + "\n"
-      puts pretty_description
-    end
-    alias lsa ls
-
     def ping
       ping_result = ssh_driver.ping
       print_ping_result(ping_result)

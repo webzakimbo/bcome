@@ -21,14 +21,7 @@ module Bcome::K8Cluster
     end
 
     def full_command
-      cmd = "#{KUBECTL_BINARY}#{add_access_token_if_necessary}--kubeconfig=#{BCOME_K8_CONFIG_FILE_PATH}#{target_cluster_if_necessary}#{@command_suffix}#{ as_json? ? " -o json" : ""}"
-
-      if ::Bcome::PipedInput.instance.pipe?
-        cmd = "#{cmd}#{::Bcome::PipedInput.instance.command_suffix}" 
-        ::Bcome::PipedInput.instance.unset!
-      end
-
-      return cmd
+      return "#{KUBECTL_BINARY}#{add_access_token_if_necessary}--kubeconfig=#{BCOME_K8_CONFIG_FILE_PATH}#{target_cluster_if_necessary}#{@command_suffix}#{ as_json? ? " -o json" : ""}"
     end
 
     def add_access_token_if_necessary
@@ -51,6 +44,11 @@ module Bcome::K8Cluster
       # For when we absolutely need to hand-off to the underlying operating system, such as when executing kubectl edit
       to_run = full_command
       to_run += "\s--context=#{@cluster.name}"
+
+      if ::Bcome::PipedInput.instance.pipe?
+        to_run = "#{to_run}#{::Bcome::PipedInput.instance.command_suffix}" 
+        ::Bcome::PipedInput.instance.unset!
+      end
 
       puts "\n(#{"local".bc_yellow}) > #{to_run}\n\n" unless ::Bcome::Orchestrator.instance.command_output_silenced?
       system(to_run)
@@ -87,14 +85,14 @@ module Bcome::K8Cluster
     end
   
     def result 
-      print_command_and_obfuscate_token(full_command)
+      #print_command_and_obfuscate_token(full_command)
       @result ||= ::Bcome::Command::Local.run(full_command)
     end
  
     def print_command_and_obfuscate_token(command)
       command.gsub!(/--token=([0-9A-Za-z\-_.]+)/,"--token=*****\s")
       command.gsub!(/certificate-authority-data\s([0-9A-Za-z])+/, "certificate-authority-data\s*****")
-      #puts "#{command}".bc_grey 
+      puts "#{command}".bc_grey 
     end
   end
 end

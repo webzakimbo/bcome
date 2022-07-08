@@ -4,6 +4,11 @@ module Bcome::Node::K8Cluster::ResourceMappings
     @crds ||= get_crds
   end
 
+  def unset_crds
+    @crds = nil
+  end  
+
+  # Where user focuses on one specific resource, by type e.g. focus secrets
   def focus(crd_key)
     raise "You may only utilize switch with singular resources" if "#{crd_key}".split.size > 1 || crd_key =~ /,/
 
@@ -11,18 +16,34 @@ module Bcome::Node::K8Cluster::ResourceMappings
     items = get_kubectl_resource(crd_key)
 
     if items.any?
-      key = items.first["kind"]
-      switch_should_focus_on = resource_klasses[key] ? resource_klasses[key] : crd_resource_klass
-
-      # Create new workspace
-      other = self.dup 
-      other.focus_on = switch_should_focus_on 
-      other.set_switched_resources(items)
-
-      ::Bcome::Workspace.instance.set(current_context: other, context: other)
+      switch_focus(items)
     else
       puts "No resources of type '#{crd_key}' found".informational
     end
+  end
+
+  def refresh_cache!(items)
+    kinds = items.collect{|item| item["kind"]}.uniq
+    kinds.each {|kind|
+      # refresh crds cache
+      crds[kind] = []
+      resources.wipe!
+    }
+  end
+
+  ##########################################################################################################################
+  ## Change focus where user chooses to switch to a specific resource type using "focus resource_name e.g. focus secrets"  #
+  ##########################################################################################################################
+  def switch_focus(items)
+    key = items.first["kind"]
+    switch_should_focus_on = resource_klasses[key] ? resource_klasses[key] : crd_resource_klass
+
+    # Create new workspace
+    other = self.dup
+    other.focus_on = switch_should_focus_on
+    other.set_switched_resources(items)
+
+    ::Bcome::Workspace.instance.set(current_context: other, context: other)
   end
  
   def set_switched_resources(items)
@@ -30,7 +51,18 @@ module Bcome::Node::K8Cluster::ResourceMappings
     # we set the newly retrieved items as its resources.
     @resources = ::Bcome::Node::Resources::Base.new
     refresh_cache!(items)
-    do_set_resources(items)
+    do_set_switched_resources(items)
+  end
+
+  def do_set_switched_resources(raw_resources)
+    return [] if raw_resources.empty?
+
+    raw_resources.each do |resource|
+      resource_type = resource["kind"]
+      resource_klass = resource_klasses[resource_type]
+      resource_klass = crd_resource_klass unless resource_klass
+      add_resource(resource_klass, resource_type, resource)
+    end
   end
 
   def get_crds
@@ -50,6 +82,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
 
   def resource_klasses
     {
+      "Namespace" => ::Bcome::Node::K8Cluster::Namespace,
       "Pod" => ::Bcome::Node::K8Cluster::Pod,
       "Ingress" => ::Bcome::Node::K8Cluster::Ingress,
       "Service" =>  ::Bcome::Node::K8Cluster::Service,
@@ -95,6 +128,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
     end
 
     resource.set_child_nodes if resource.respond_to?(:set_child_nodes)
+
     ::Bcome::Node::Factory.instance.bucket[resource.keyed_namespace] = resource
     return resource
   end

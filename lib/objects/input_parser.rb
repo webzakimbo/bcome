@@ -17,7 +17,7 @@ class InputParser
         eval_lookup = "resources.for_identifier('#{resource.identifier}')"
         return "#{eval_lookup}.send('#{suffixes.join(".")}'.to_sym)"
       else
-        "cd #{resource.identifier}"
+        return "'#{resource.identifier}'"
       end
     end
 
@@ -34,7 +34,7 @@ class InputParser
 
   def node_methods
     # All methods expect (or may optionally have) one or more namespaces as arguments
-    %w(cd helm ls workon disable ssh tree switch focus)  
+    %w(cd helm ls workon enable disable ssh tree switch focus)  
   end
 
   def wrapped_methods

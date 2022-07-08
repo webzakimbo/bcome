@@ -58,10 +58,10 @@ module Bcome::Node
       tokens = string.split(".")
       (0..tokens.size-1).each do |i|
         candidate_id = tokens[0..i].join(".")
-        if resource = resources.for_identifier(candidate_id)
-          resource.load_nodes if resource.respond_to?(:load_nodes) && !resource.nodes_loaded?
+        if (object = resources.for_identifier(candidate_id)) || (object.respond_to?(candidate_id) && object = send(candidate_id))
+          object.load_nodes if object.respond_to?(:load_nodes) && !object.nodes_loaded?
           remaining_tokens = tokens[i+1..tokens.size]
-          return [resource, remaining_tokens]
+          return [object, remaining_tokens]
         end
       end
       return nil
@@ -241,6 +241,10 @@ module Bcome::Node
       @nodes_loaded = true
     end
 
+    def resources=(other_resources)
+      @resources = other_resources
+    end
+
     def resources
       @resources ||= ::Bcome::Node::Resources::Base.new
     end
@@ -344,6 +348,15 @@ module Bcome::Node
         puts 'No values found'.warning
       end
       puts ''
+    end
+
+    def set_additional_list_attributes(attrs)
+      @additional_list_attributes = attrs.deep_symbolize_keys!
+    end
+    
+    def define_method_name_with_value(name, value)
+      singleton = class << self; self end
+      singleton.send :define_method, name.to_sym, lambda { return value }
     end
 
     private

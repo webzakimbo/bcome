@@ -4,15 +4,11 @@ module Bcome::Node::K8Cluster::Selector
     @selected ||= get_selected
   end
 
-  private
+  def get_selected(potentials = candidates)
+    return [] if potentials.nil?
 
-  def get_selected
-    raise ::Bcome::Exception::Generic, "Misconfiguration: a class including Selector must have defined a selector_kind" unless respond_to?(:selector_kind)
-
-    return [] if candidates.nil?
-
-    candidates.select{|candidate|
-      candidate_data = candidate.raw_data 
+    potentials.select{|potential|
+      candidate_data = potential.raw_data 
 
       matches = selector.collect{|key, value|
         path = JsonPath.new("metadata.labels.'#{key}'")
@@ -25,6 +21,7 @@ module Bcome::Node::K8Cluster::Selector
   end
 
   def candidates
+    raise ::Bcome::Exception::Generic, "Misconfiguration: missing selector_kind" unless respond_to?(:selector_kind)
     parent.crds[selector_kind]
   end
 

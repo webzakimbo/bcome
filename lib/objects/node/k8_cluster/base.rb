@@ -2,9 +2,35 @@ module Bcome::Node::K8Cluster
   class Base < Bcome::Node::Base
 
     include ::Bcome::InteractiveKubectl
+    include ::Bcome::Node::K8Cluster::Selector
+    include ::Bcome::Node::K8Cluster::Retrieve
 
     def is_describable?
       true
+    end
+
+    def reauthorize
+      k8_cluster.reauthorize!
+      return
+    end
+
+    def state
+      views[:raw_data]["status"] ? views[:raw_data]["status"]["phase"] : nil
+    end
+
+    def enabled_menu_items
+      (super + %i[reauthorize])
+    end
+
+    def menu_items
+      base_items = super.dup
+
+      base_items[:reauthorize] = {
+        description: "Reauthorize with the cluster API",
+        group: :kubernetes
+      }
+
+      base_items
     end
 
     def kubectl_context
@@ -21,20 +47,6 @@ module Bcome::Node::K8Cluster
       items = data["items"]
 
       return items
-    end
-
-    def retrieve(crd_keys)
-      fetched_resources = []
-
-      raw_resources = get_kubectl_resource(crd_keys)
-
-      items = {}
-      raw_resources.each do |raw_resource|
-        resource_type = raw_resource["kind"]
-        resource_klass = resource_klasses[resource_type] ? resource_klasses[resource_type] : crd_resource_klass
-        fetched_resources << add_resource(resource_klass, resource_type, raw_resource) 
-      end
-      return fetched_resources
     end
 
     def refresh_cache!(items)

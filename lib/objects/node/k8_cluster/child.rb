@@ -17,10 +17,18 @@ module Bcome::Node::K8Cluster
     end
 
     def list_attributes
-      attribs = {
-      "k8/#{type}": :identifier
-      }
-      attribs
+      { "k8/#{type}": :identifier }
+    end
+
+    def machines(skip_for_hidden = true)
+      resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
+      return resources.collect(&:machines).flatten
+    end
+
+    def logs(cmd = "")
+      resources.active.pmap do |pod|
+        pod.logs(cmd)
+      end
     end
 
     def enabled_menu_items

@@ -27,7 +27,7 @@ module Bcome::Node::K8Cluster
     end
 
     def state
-      raw_data[:state]
+      raw_data[:state] 
     end
  
     def is_running?
@@ -207,12 +207,5 @@ module Bcome::Node::K8Cluster
     def k8_cluster
       parent.k8_cluster
     end 
-
-    def ls
-      puts "\n" + visual_hierarchy.hierarchy + "\n"
-      puts pretty_description
-    end
-    alias lsa ls
-
   end
 end
