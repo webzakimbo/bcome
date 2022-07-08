@@ -31,6 +31,16 @@ module Bcome::Node::K8Cluster::ResourceMappings
     }
   end
 
+  #####################################
+  ## Change focus to a new items set ##
+  #####################################
+  def switch_hierarchy(hierarchy_view)
+    puts "\nSwitching hierarchy: ".informational + "\s#{hierarchy_view.name}\n\n"
+    switch_to_node = hierarchy_view.hierarchy_node
+    @focus_on = switch_to_node.resources.first.class
+    ::Bcome::Workspace.instance.set(current_context: switch_to_node, context: switch_to_node)
+  end
+
   ##########################################################################################################################
   ## Change focus where user chooses to switch to a specific resource type using "focus resource_name e.g. focus secrets"  #
   ##########################################################################################################################

@@ -34,7 +34,7 @@ class InputParser
 
   def node_methods
     # All methods expect (or may optionally have) one or more namespaces as arguments
-    %w(cd helm ls workon enable disable ssh tree switch focus)  
+    %w(cd helm ls workon enable disable ssh tree switch focus vrender vfocus)  
   end
 
   def wrapped_methods

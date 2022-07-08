@@ -10,6 +10,7 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::K8Cluster::ResourceMappings
     include ::Bcome::InteractiveHelm
     include ::Bcome::Node::K8Cluster::PathwayRender
+    include ::Bcome::Node::K8Cluster::NamespaceHierarchy
        
     attr_reader :is_subdivided
 
@@ -106,7 +107,7 @@ module Bcome::Node::K8Cluster
     end
 
     def enabled_menu_items
-      (super + %i[export_context lsr describe focus pathways logs config reload kubectl helm]) - non_k8_menu_items
+      (super + %i[export_context lsr describe vfocus vrender focus pathways logs config reload kubectl helm]) - non_k8_menu_items
     end
 
     def menu_items
@@ -146,6 +147,20 @@ module Bcome::Node::K8Cluster
         description: "Switch workspace to focus on a specific kubernetes resource",
         group: :kubernetes,
         usage: "focus resource_name, e.g. focus secrets",
+        console_only: true
+      }
+
+      base_items[:vrender] = {
+        description: "Render a hierarchy view. Available hierarchies: #{pretty_available_hierarchies}",
+        group: :hierarchy,
+        usage: "vrender hierarchy e.g. vrender #{available_hierarchies.last}",
+        console_only: true
+      }
+
+      base_items[:vfocus] = {
+        description: "Switch workspace to another hierarchy. Available hierarchies: #{pretty_available_hierarchies}",
+        group: :hierarchy,
+        usage: "vfocus hierarchy, e.g. vfocus #{available_hierarchies.last}",
         console_only: true
       }
 

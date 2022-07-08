@@ -78,7 +78,8 @@ module Bcome
         miscellany: 'Miscellaneous',
         command_list: 'Command lists',
         kubernetes: 'Kubernetes',
-        contextual: 'Contextual'
+        contextual: 'Contextual',
+        hierarchy: 'Hierarchies'
       }
     end
 
