@@ -144,7 +144,7 @@ module Bcome::Node::K8Cluster
 
       base_items[:focus] = {
         description: "Switch workspace to focus on a specific kubernetes resource",
-        group: :hierarchy,
+        group: :kubernetes,
         usage: "focus resource_name, e.g. focus secrets",
         console_only: true
       }
