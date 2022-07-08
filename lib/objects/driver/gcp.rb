@@ -14,7 +14,7 @@ module Bcome::Driver
     end
 
     def matches_auth_config?(other_config)
-      # Used to deterime whether a particular network config matches one for an existing driver as far as is
+      # Used to determine whether a particular network config matches one for an existing driver as far as is
       # required for authorization. 
       config.select{|k, v|
         auth_attributes.include?(k)
