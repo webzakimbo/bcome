@@ -2,8 +2,8 @@
 
 # note: gcloud auth only for the time being (We need to guard against NON-OAUTH for now).
 
-# todo: this is a dynamic node (is_dynamic), and so like an inventory, cannot have any namespaces defined below it.
-# todo: clean up error message when auth fails (bearer auth)
+# TODO: this is a dynamic node (is_dynamic), and so like an inventory, cannot have any namespaces defined below it.
+# TODO: clean up error message when auth fails (bearer auth)
 # Enshrine is_dynamic in code, and guard against putting anything below this namespace as we already have for standard inventories
 
 module Bcome::Node::K8Cluster::Collection
@@ -15,6 +15,8 @@ module Bcome::Node::K8Cluster::Collection
     include ::Bcome::Node::K8Cluster::HelmWrap
     include ::Bcome::InteractiveHelm
     include ::Bcome::Node::K8Cluster::PathwayRender
+    include ::Bcome::Node::K8Cluster::Retrieve
+    include ::Bcome::Node::K8Cluster::ResourceMappings
 
     def initialize(*params)
       super
@@ -38,6 +40,11 @@ module Bcome::Node::K8Cluster::Collection
       print "\n#{raw}\n"
     end
 
+    def reauthorize
+      k8_cluster.reauthorize!
+      return 
+    end
+
     def logs(cmd = "")
       resources.active.pmap do |pod|
         pod.logs(cmd)
@@ -49,10 +56,10 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def enabled_menu_items
-      (super + %i[logs export_context info pathways helm kubectl info_dump config lsr reload]) - non_k8_menu_items
+      (super + %i[logs export_context info pathways helm kubectl info_dump config lsr reload reauthorize]) - non_k8_menu_items
     end
 
-    def ingresses
+    def ingresses 
       resources.active.collect{|resource| resource.crds["Ingress"] }.flatten.compact
     end
 
@@ -89,6 +96,11 @@ module Bcome::Node::K8Cluster::Collection
         group: :kubernetes
       }
 
+      base_items[:reauthorize] = {
+        description: 'Reauthorize with the cluster API',
+        group: :kubernetes
+      }
+       
       base_items[:export_context] = {
         description: "Export this cluster's kubectl context i.e. set this context for external applications",
         group: :kubernetes
