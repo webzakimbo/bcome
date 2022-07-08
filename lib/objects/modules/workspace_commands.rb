@@ -14,10 +14,12 @@ module Bcome
       if node != self && (resource = resources.for_identifier(node))
         resource.send(:ls, active_only)
       else
-        puts "\n" + visual_hierarchy.hierarchy + "\n"
-        #puts "\t" + "Available #{list_key}s:" + "\n\n"
+        
+        puts "\n\tYou are in\s".bc_white + "#{type}".informational + "\s#{identifier}\n".bc_white
 
         iterate_over = active_only ? resources.active : resources
+
+        puts "\t" + "children\n".bc_white.underline if iterate_over.any?
 
         if iterate_over.any?
           iterate_over.sort_by(&:identifier).each do |resource|
@@ -33,6 +35,10 @@ module Bcome
         new_line
         nil
       end
+    end
+
+    def pretty_child_type
+      return resources.first.type.pluralize(resources.size)
     end
 
     def lsa
@@ -92,13 +98,16 @@ module Bcome
     def pretty_description(is_active = true)
       desc = ''
 
-      @key_spacing_limit = 13
+      iteratable_attrs = @additional_list_attributes ? (list_attributes.merge(@additional_list_attributes)) : list_attributes
 
-      list_attributes.each do |key, value|
+      @key_spacing_limit = iteratable_attrs.keys.max_by(&:length).size + 2
+      iteratable_attrs.each do |key, value|
         next unless respond_to?(value) || instance_variable_defined?("@#{value}")
 
-        attribute_value = send(value)
+        attribute_value = send(value).to_s
         next unless attribute_value
+     
+        printed_value = (value.to_sym == :identifier) ? "#{"id".resource_key}:\s#{attribute_value}" : attribute_value
 
         desc += "\t"
         desc += is_active ? key.to_s.resource_key : key.to_s.resource_key_inactive
@@ -109,7 +118,8 @@ module Bcome
           desc += "\s" * (@key_spacing_limit - key.length)
         end
 
-        desc += is_active ? attribute_value.resource_value : attribute_value.resource_value_inactive
+
+        desc += is_active ? printed_value.resource_value : printed_value.resource_value_inactive
         desc += "\n"
         desc = desc unless is_active
       end
@@ -117,11 +127,13 @@ module Bcome
     end
 
     def disable(*ids)
-      ids.each { |id| resources.do_disable(id) }
+      ids.each { |id| resources.do_disable([id]) }
+      puts "Disabled #{ids.join(', ')} from selection.".informational 
     end
 
     def enable(*ids)
-      ids.each { |id| resources.do_enable(id) }
+      resources.do_enable(ids, reset = false)
+      puts "Enabled #{ids.join(', ')} in selection.".informational
     end
 
     def clear!
@@ -132,21 +144,20 @@ module Bcome
     end
 
     def workon(*ids)
-      resources.disable!
-      ids.each { |id| resources.do_enable(id) }
+      resources.do_enable(ids)
       puts "\nYou are now working on '#{ids.join(', ')}\n".informational
     end
 
     def disable!
       resources.disable!
       resources.each(&:disable!)
-      nil
+      return
     end
 
     def enable!
       resources.enable!
       resources.each(&:enable!)
-      nil
+      return
     end
 
     ## Helpers --
@@ -171,18 +182,9 @@ module Bcome
       end
     end
 
-    def visual_hierarchy
-      tabs = 0
-      hierarchy = ''
-      tree_descriptions.each do |d|
-        hierarchy += "#{"\s\s\s" * tabs}|- #{d}\n"
-        tabs += 1
-      end
-      hierarchy
-    end
-
     def tree_descriptions
-      d = parent ? parent.tree_descriptions + [description] : [description]
+      pretty_desc = "#{description} (#{type})"
+      d = parent ? parent.tree_descriptions + [pretty_desc] : [pretty_desc]
       d.flatten
     end
 
