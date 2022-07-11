@@ -164,6 +164,16 @@ module Bcome::Node::K8Cluster
         console_only: true
       }
 
+      base_items[:helm] = {
+        description: "Access an interactive helm shell, scoped to this kubernetes namespace",
+        group: :kubernetes
+      }
+
+      base_items[:kubectl] = {
+        description: "Access kubectl scoped to this kubernetes namespace",
+        group: :kubernetes
+      }
+
       base_items
     end
 

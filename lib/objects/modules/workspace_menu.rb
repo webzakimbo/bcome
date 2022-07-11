@@ -222,11 +222,11 @@ module Bcome
           group: :kubernetes
         },
         helm: {
-          description: "Access an interactive helm shell, scoped to this node's kubectl context",
+          description: "Access an interactive helm shell, scoped to this cluster's kubectl context",
           group: :kubernetes
         },
         kubectl: {
-          description: "Access an interactive kubectl shell, scoped to this node's kubectl context",
+          description: "Access kubectl scoped to this kubernetes cluster",
           group: :kubernetes
         },  
         focus: {
