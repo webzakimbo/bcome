@@ -32,13 +32,14 @@ module IRB
 
       IRB.conf[:USE_AUTOCOMPLETE] = false # To be re-introduced when we can inject just what we want
 
+
       irb = Irb.new(workspace)
 
       @CONF[:IRB_RC]&.call(irb.context)
       @CONF[:MAIN_CONTEXT] = irb.context
 
       # Do not echo command return values
-      irb.context.echo = true #false
+      irb.context.echo = false
 
       catch(:IRB_EXIT) do
         irb.eval_input
