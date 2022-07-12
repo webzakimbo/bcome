@@ -38,6 +38,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
     puts "\nSwitching hierarchy: ".informational + "\s#{hierarchy_view.name}\n\n"
     switch_to_node = hierarchy_view.hierarchy_node
     @focus_on = switch_to_node.resources.first.class
+    switch_to_node.reset_registry
     ::Bcome::Workspace.instance.set(current_context: switch_to_node, context: switch_to_node)
   end
 

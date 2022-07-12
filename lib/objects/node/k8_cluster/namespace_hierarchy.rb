@@ -27,6 +27,12 @@ module ::Bcome::Node::K8Cluster::NamespaceHierarchy
 
   def vscope(name, method)
     view = hierarchy.for_name(name)
-    view ? view.send(method) : (puts "Could not find hierarchy view named '#{name}'. Available hierarchies: #{pretty_available_hierarchies}".warning)
+    if view
+      ::Bcome::System::Local.instance.k8_view = view
+      view.send(method)
+    else
+      puts "Could not find hierarchy view named '#{name}'. Available hierarchies: #{pretty_available_hierarchies}".warning
+    end
+
   end
 end
