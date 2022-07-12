@@ -32,7 +32,6 @@ module IRB
 
       IRB.conf[:USE_AUTOCOMPLETE] = false # To be re-introduced when we can inject just what we want
 
-
       irb = Irb.new(workspace)
 
       @CONF[:IRB_RC]&.call(irb.context)
