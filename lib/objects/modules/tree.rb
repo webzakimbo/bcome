@@ -99,7 +99,7 @@ module Bcome
 
     def namespace_tree_line(geneaology)
       colour = geneaology == :ancestor ? :bc_grey : :bc_green
-      "#{type.send(colour)} #{identifier.resource_key}"
+      "#{type.send(colour)} #{tree_identifier}"
     end
 
     def routing_tree_line(is_direct = true)

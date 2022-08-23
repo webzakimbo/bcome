@@ -47,7 +47,7 @@ Gem::Specification.new do |spec|
 
   Welcome to Bcome, the DevOps Control Panel Framework
 
-  Versions 3.0.0 introduces Kubernetes drivers for GCP & Azure. 
+  Version 3.0.0 introduces Kubernetes drivers for GCP GKE & Amazon's EKS. 
 
   Visit our new documentation site here: https://docs.bcome.com/en/3.0.0
 

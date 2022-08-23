@@ -14,6 +14,10 @@ module Bcome::Node::K8Cluster
       @unreachable = false
     end
 
+    def tree_identifier
+      "#{identifier.resource_key} (#{state})"
+    end
+   
     def is_same_machine?(other)
       origin_object_id == other.origin_object_id
     end
