@@ -44,8 +44,8 @@ module Bcome::Node::K8Cluster
       self
     end
 
-    def export_context
-      parent.export_context(self)
+    def export
+      parent.export(self)
     end
 
     def do_set_resources(raw_resources)
@@ -107,7 +107,7 @@ module Bcome::Node::K8Cluster
     end
 
     def enabled_menu_items
-      (super + %i[export_context lsr describe vfocus vrender focus pathways logs config reload kubectl helm]) - non_k8_menu_items
+      (super + %i[export lsr describe vfocus vrender focus pathways logs config reload kubectl helm]) - non_k8_menu_items
     end
 
     def menu_items
@@ -138,7 +138,7 @@ module Bcome::Node::K8Cluster
         group: :ssh,
       }
 
-      base_items[:export_context] = {
+      base_items[:export] = {
         description: "Export this cluster namespace's kubectl context - i.e. set this context for external applications",
         group: :kubernetes
       }

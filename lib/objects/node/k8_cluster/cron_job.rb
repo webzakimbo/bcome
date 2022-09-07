@@ -9,6 +9,7 @@ module Bcome::Node::K8Cluster
       parent.delegated_kubectl_cmd(create_job_command(job_name))
       puts "Job name: #{job_name}"
     end
+    alias :trigger :trigger!
 
     def create_job_command(job_name)
       "create job --from=cronjob/#{identifier} #{job_name}"
