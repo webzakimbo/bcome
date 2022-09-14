@@ -10,6 +10,10 @@ class InputParser
   def parse
     @input.strip!
 
+    if alternative_command = alternative_mapped_command
+      return alternative_command
+    end
+
     resource, suffixes = @node.scan(@input)
 
     if resource
@@ -31,6 +35,11 @@ class InputParser
   end
 
   private
+
+  def alternative_mapped_command
+    return "back" if @input == "cd .."
+    return nil
+  end
 
   def node_methods
     # All methods expect (or may optionally have) one or more namespaces as arguments
