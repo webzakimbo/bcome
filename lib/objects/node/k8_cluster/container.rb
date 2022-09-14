@@ -31,9 +31,17 @@ module Bcome::Node::K8Cluster
     end
 
     def state
-      raw_data[:state] 
+      raw_data[:state] || get_state.upcase 
     end
- 
+
+    def get_state
+      return state_keys.first if state_keys.is_a?(Array)
+    end
+
+    def state_keys
+      return raw_data["state"].keys if raw_data["state"].is_a?(Hash)
+    end 
+  
     def is_running?
       state == "RUNNING"
     end   
