@@ -42,7 +42,12 @@ module Bcome::K8Cluster::Hierarchy
     # We front-load all candidate resources to reduce API calls to one
     def selection_pool
       raise ::Bcome::Exception::Generic, "Error in K8 hierarchy config '#{@config}' - no top-level resources defined." unless @resource_names.any?
-      @selection_pool ||= other.retrieve(@resource_names)
+
+      # Outside of hierarchy views we may load in child nodes automatically where it makes sense. We explicitly override that here, as we are only concerned
+      # with that which our hiearchy defines (e.g. do not auto-load containers as children of pods, because it is the hierarchy rules that define whether there are
+      # children, and what they are.
+      @set_children = false
+      @selection_pool ||= other.retrieve(@resource_names, @set_children)
     end
 
     def top_level_config

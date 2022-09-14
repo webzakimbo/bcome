@@ -55,7 +55,7 @@ module Bcome::K8Cluster::Hierarchy::Specification
     def set_resources
       do_set_resources
 
-      @parent.resources.each do |node|
+      @parent.resources.pmap do |node|
         next unless @element.child
         spec = @element.child.specification_for(node)
         spec.set_resources if spec

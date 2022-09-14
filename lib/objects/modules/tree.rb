@@ -9,7 +9,6 @@ module Bcome
     ## Node tree  - dynamic rendering of any parent->*child hierarchy  #
     ####################################################################
     def tree(config = {})
-
       unless resources.any?
         puts "No tree available at this node. #{type.capitalize.informational} #{identifier.bc_white} does not have any children.\n\n"
         return 

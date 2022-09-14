@@ -127,7 +127,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
     ::Bcome::Workspace.instance.set_kubernetes_focus(to_focus_on)
   end
 
-  def add_resource(resource_klass, resource_type, data)
+  def add_resource(resource_klass, resource_type, data, set_children = true)
     resource = resource_klass.new(views: {identifier: data["metadata"]["name"], raw_data: data }, parent: self)
 
     resources << resource if focus_on?(resource_klass) ## TODO set focus_on before we start adding resources
@@ -138,7 +138,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
       crds[resource_type] = [resource]
     end
 
-    resource.set_child_nodes if resource.respond_to?(:set_child_nodes)
+    resource.set_child_nodes if set_children && resource.respond_to?(:set_child_nodes)
 
     ::Bcome::Node::Factory.instance.bucket[resource.keyed_namespace] = resource
     return resource
