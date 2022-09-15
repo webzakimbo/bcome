@@ -4,9 +4,15 @@ module Bcome::K8Cluster::Hierarchy::Specification
     def do_set_resources
       retrieve.each_with_index do |raw_data,index|
 
+        # There are two different types of merges
+        # (1) "mergePaths" Merge in from an array reference on the parent, e.g. merge in containerStatus[1] to container[1] -
         if raw_data.is_a?(Hash) && merges[index]
           raw_data.merge!(merges[index])
         end
+
+        # (2) "cherryPick" Cherry-pick something from the parent and add it onto the abstract resource, e.g. the selector hash onto
+        # a port resource generated from a service
+        raw_data.merge!(cherry_picks) 
 
         resource_config = {
           identifier: raw_data["name"] ? raw_data["name"] : "#{index}-#{config[:abstract]}",
@@ -37,13 +43,31 @@ module Bcome::K8Cluster::Hierarchy::Specification
         ::JsonPath.new(path).on(json).flatten
       }.flatten.compact
     end
+  
+    def cherry_picks
+      return {} unless has_cherry_picks?
+      return @cherry_picks ||= get_cherry_picks
+    end 
+
+    def get_cherry_picks
+      to_copy = {}
+      config[:retrieval][:cherryPick].each do |cherry_pick|
+        raw = ::JsonPath.new(cherry_pick[:path]).on(json).flatten.first
+        to_copy.merge!({ cherry_pick[:key] => raw })
+      end
+      return to_copy
+    end
 
     def merges
       return [] unless has_merge_paths?
-
+        
       @merges ||= merge_paths.collect {|path|
         ::JsonPath.new(path).on(json).flatten
       }.flatten.compact
+    end
+
+    def has_cherry_picks?
+      config[:retrieval][:cherryPick]
     end
 
     def has_merge_paths?

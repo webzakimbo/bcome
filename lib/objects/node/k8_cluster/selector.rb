@@ -26,7 +26,7 @@ module Bcome::Node::K8Cluster::Selector
   end
 
   def selector
-    spec["selector"]
+    spec ? spec["selector"] : raw_data["selector"]
   end
 
   def path_values

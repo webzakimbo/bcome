@@ -2,8 +2,13 @@
 
 module Bcome::Node::K8Cluster
   class Crd < Bcome::Node::K8Cluster::Child
-    # Abstract: essentially a catch-all for a resource in a namespace that we haven't otherwise 
+
+    # Abstract: A catch-all for a resource in a namespace that we haven't otherwise 
     # modelled.
+
+    def tree_identifier
+      "#{identifier.resource_key}"
+    end
 
     def type=(declared)
       @type = "(abstract) #{declared}"

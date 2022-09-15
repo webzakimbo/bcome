@@ -25,7 +25,19 @@ module Bcome::K8Cluster::Hierarchy::Specification
     end  
 
     def selectors
-      ::JsonPath.new("spec.selector").on(source_json).first
+      spec_selector || selector
+    end
+
+    def spec_selector
+      path_on_key("spec.selector")
+    end
+
+    def selector
+      path_on_key("selector")
+    end
+    
+    def path_on_key(key)  
+      ::JsonPath.new(key).on(source_json).first
     end
 
     def is_valid_specification?
