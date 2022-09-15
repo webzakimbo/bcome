@@ -14,14 +14,22 @@ containers_from_pods: &containers_from_pods
       - status.containerStatuses
       - status.initContainerStatuses
 
-pods_from_services: &pods_from_services
+pods_by_selector: &pods_by_selector
   resource: pod
   retrieval:
     type: by_selector
 
-default_view: simple
+default_view: simple #services
 
 views:
+- name: virtualservices
+  description: All virtualservices
+  tree:
+    - resource: virtualservice  
+      decorators:
+      - name: identifier
+        json_path: spec.hosts[*]      
+    
 - name: simple
   description: Pods & containers
   tree:
@@ -32,10 +40,20 @@ views:
   description: Service, pods & their containers
   tree:
     - resource: service
+    - abstract: port
+      retrieval:
+        type: json_path
+        paths:
+        - spec.ports
+        cherryPick:
+        - key: selector
+          path: spec.selector
       decorators:
-      - name: ports
-        json_path: spec.ports[*].port
-    - *pods_from_services
+      - name: port
+        json_path: port
+      - name: target
+        json_path: targetPort
+    - *pods_by_selector
     - *containers_from_pods
 
 - name: paths
@@ -63,7 +81,7 @@ views:
       retrieval:
         type: by_reference
         reference: backend.service.name
-    - *pods_from_services
+    - *pods_by_selector
     - *containers_from_pods
 
 - name: certs
