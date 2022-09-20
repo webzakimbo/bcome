@@ -36,6 +36,7 @@ module Bcome::Node::K8Cluster
 
     def get_state
       return state_keys.first if state_keys.is_a?(Array)
+      return "unknown"
     end
 
     def state_keys
