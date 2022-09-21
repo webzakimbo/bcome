@@ -42,7 +42,12 @@ module Bcome::Orchestration::Catalogue
     end
 
     def all_containers
-      @node.retrieve(:pods).collect(&:resources).collect(&:nodes).flatten
+      pod.machines
+    end
+
+    def pod
+      raise "Registry method must be placed on a Pod." unless @node.is_a?(::Bcome::Node::K8Cluster::Pod)
+      return @node
     end
 
     def wait_for_command_input
