@@ -30,7 +30,7 @@ module Bcome::Driver
       @node = node
     end
 
-    def authorize
+    def authorize(*params)
       return # override as required
     end
 

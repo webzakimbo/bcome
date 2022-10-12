@@ -24,8 +24,16 @@ module ::Bcome::Driver::Kubernetes
       set_cluster_access_token
     end
 
-    def register_cluster_context
-      run_kubectl_config("config set-context #{name} --cluster=#{cluster_name} --user=#{username}")
+    def register_cluster_context(namespace = nil)
+      if namespace
+        context_name = "#{name}_#{namespace.identifier}"
+      else
+        context_name = "#{name}"
+      end
+
+      set_command = "config set-context #{context_name} --cluster=#{name} --user=#{username}"
+      set_command += "\s--namespace=#{namespace.identifier}" if namespace
+      run_kubectl_config(set_command)
     end
 
     def cluster_name
