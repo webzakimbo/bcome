@@ -29,9 +29,12 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def info
-      raw = run_kubectl_config("cluster-info").stdout
+      info_data = run_kubectl_config("cluster-info").stdout
+      version_data = run_kubectl_config("version").stdout
       print "\nCluster Info\n".informational
-      print "\n#{raw}\n"
+      print "\n#{info_data}\n"
+      print "\nKubernetes Version\n".informational
+      print "\n#{version_data}\n"
     end
 
     def info_dump
