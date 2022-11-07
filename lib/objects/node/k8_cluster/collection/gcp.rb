@@ -2,11 +2,11 @@ module Bcome::Node::K8Cluster::Collection
   class Gcp < Base
 
     def cluster_id
-      "#{cluster_name}/#{project}:#{region}"
+      "#{cluster_name}/#{project}:#{location}"
     end
 
-    def region
-      cluster[:region]
+    def location
+      cluster[:location]
     end
 
     def project
@@ -14,7 +14,7 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def required_attributes
-      [:cluster_name, :region, :project]
+      [:cluster_name, :location, :project]
     end
 
     def do_get_credentials

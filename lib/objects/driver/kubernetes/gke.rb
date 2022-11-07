@@ -27,7 +27,7 @@ module ::Bcome::Driver::Kubernetes
     end
 
     def name
-      "#{@node.cluster_name}-#{@node.region}_#{@node.project}"
+      "#{@node.cluster_name}-#{@node.location}_#{@node.project}"
     end
 
     def expected_collection_class
@@ -64,7 +64,7 @@ module ::Bcome::Driver::Kubernetes
     end
 
     def get_config_url
-      "https://container.googleapis.com/v1/projects/#{@node.project}/locations/#{@node.region}/clusters/#{@node.cluster_name}?alt=json"
+      "https://container.googleapis.com/v1/projects/#{@node.project}/locations/#{@node.location}/clusters/#{@node.cluster_name}?alt=json"
     end
   end
 end
