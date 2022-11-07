@@ -2,9 +2,11 @@
 
 module Bcome
   class Startup
+
     def initialize(breadcrumbs, arguments)
       @breadcrumbs = breadcrumbs
       @arguments = arguments
+      ::Bcome::Bootup.instance.starter = self
     end
 
     def do
@@ -49,6 +51,7 @@ module Bcome
     def close_connections
       ::Bcome::Bootup.instance.close_ssh_connections
       ::Bcome::Ssh::TunnelKeeper.instance.close_tunnels
+      ::Bcome::K8Cluster::ProcessKeeper.instance.kill_pids
     end
 
     def stop_loading_bars

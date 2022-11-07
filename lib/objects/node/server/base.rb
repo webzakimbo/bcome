@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
-    attr_reader :origin_object_id
 
     def initialize(*params)
       super
@@ -21,7 +20,7 @@ module Bcome::Node::Server
       super
     end
 
-    # Override a server's namespace parameters. Enabled features such as specific SSH config for a particular server, i.e. overidding that of it's parent
+    # Override a server's namespace parameters. Enabled features such as specific SSH config for a particular server, i.e. overidding that of its parent
     #  inventory namespace.
     def set_network_configuration_overrides
       overridden_attributes = ::Bcome::Node::Factory.instance.machines_data_for_namespace(namespace.to_sym)
@@ -190,12 +189,6 @@ module Bcome::Node::Server
     def get(remote_path, local_path)
       ssh_driver.get(remote_path, local_path)
     end
-
-    def ls
-      puts "\n" + visual_hierarchy.hierarchy + "\n"
-      puts pretty_description
-    end
-    alias lsa ls
 
     def ping
       ping_result = ssh_driver.ping

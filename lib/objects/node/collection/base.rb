@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-module Bcome::Node
-  class Collection < ::Bcome::Node::Base
+module Bcome::Node::Collection
+  class Base < ::Bcome::Node::Base
+
     def inventories
       inv = []
       @resources.active.each do |r|
@@ -17,7 +18,7 @@ module Bcome::Node
     def filter_duplicates(original_set)
       instance_lookup = []
       filtered_set = []
-      original_set.each do |server|
+      original_set.compact.each do |server|
         unless instance_lookup.include?(server.origin_object_id)
           filtered_set << server
           instance_lookup << server.origin_object_id
@@ -29,19 +30,20 @@ module Bcome::Node
     def machines(skip_for_hidden = true)
       set = []
 
+      return [] unless @resources
+
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
 
       resources.each do |resource|
-        if resource.inventory?
-          resource.load_nodes unless resource.nodes_loaded?
+        if resource.respond_to?(:load_nodes) && !resource.nodes_loaded?
+          resource.load_nodes
           set << resource.resources.active
         else
           set << resource.machines(skip_for_hidden)
         end
       end
 
-      set.flatten!
-      filtered_machines = filter_duplicates(set)
+      filtered_machines = filter_duplicates(set.flatten)
       filtered_machines
     end
 

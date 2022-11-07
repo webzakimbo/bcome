@@ -29,18 +29,18 @@ module Bcome::Ssh
     end
 
     def pretty_ssh_config
-      config = {
+      xconfig = {
         user: user,
         timeout: timeout_in_seconds
       }
 
       if has_proxy?
-        config[:proxy] = connection_wrangler.proxy_details
+        xconfig[:proxy] = connection_wrangler.proxy_details
       else
-        config[:host_or_ip] = node_host_or_ip
+        xconfig[:host_or_ip] = node_host_or_ip
       end
 
-      config
+      xconfig
     end
 
     def proxy_config_value

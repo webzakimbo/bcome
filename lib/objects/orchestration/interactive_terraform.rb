@@ -2,11 +2,15 @@
 
 module Bcome::Orchestration
   class InteractiveTerraform < Bcome::Orchestration::Base
-    ## Prototype interactive terraform shell embedded within bcome.
+
+    ## TODO - Refactor this.
+
+    ## Contextual Terraform shell
 
     # * Provides access to the metadata framework, so that data may be shared between Orchestrative processes and Terraform
     # * Transparent authorization, by passing in cloud authorisation details from the bcome session
     # * Passes in SSH credentials directly, which can be used to bootstrap machines.
+    # * Passes metadata from the bcome framework directly into Terraform, allowing data sharing between the rest of the framework
 
     QUIT = '\\q'
     COMMAND_PROMPT = "enter command or '#{QUIT}' to quit: " + 'terraform'.informational + "\s"
@@ -17,66 +21,62 @@ module Bcome::Orchestration
     end
 
     def execute
+      puts "\nContextual Terraform".bc_yellow.bold
+      write_terraform_metadata
       show_intro_text
       wait_for_command_input
     end
 
     def show_intro_text
-      puts "\n\n"
-      puts "Interactive Terraform\n".underline
-      puts "Namespace:\s" + @node.namespace.to_s.informational
-      puts "Configuration Path:\s" + "#{path_to_env_config}/*".informational
-      puts "\nConfigured metadata:\s" + terraform_metadata.inspect.informational
 
-      puts "\nAny commands you enter here will be passed directly to Terraform in your configuration path scope."
+      puts "\nNamespace:\s" + @node.namespace.to_s.informational
+      puts "Configuration Path:\s" + "#{path_to_env_config}/*".informational
+      puts "\nConfigured metadata:\s"# + terraform_metadata.inspect.informational
+      ap terraform_metadata, {indent: -2}
+
+      puts "\n#{"Ready".bc_green.bold} Any commands you enter here will be passed directly to Terraform in your configuration scope (#{path_to_env_config}).\n\n"
     end
 
-    # PROCESSING INTERACTIVE COMMANDS
-    #
     def process_command(raw_command)
       full_command = command(raw_command)
+      puts "\n"
       @node.execute_local(full_command)
       wait_for_command_input
     end
 
-    # HANDLING USER INPUT
-    #
     def wait_for_command_input
       raw_command = wait_for_input
       process_command(raw_command) unless raw_command == QUIT
     end
 
     def wait_for_input(message = COMMAND_PROMPT)
-      ::Readline.readline("\n#{message}", true).squeeze('').to_s
+      ::Readline.readline("#{message}", true).squeeze('').to_s
     end
 
-    # COMMAND PROCESSING
     def terraform_metadata
       @terraform_metadata ||= @node.metadata.fetch('terraform', @node.metadata.fetch(:terraform, {}))
     end
 
-    # Get the terraform variables for this stack, and merge in with our networking & ssh credentials
-    def form_var_string
+    def write_terraform_metadata
+      ## Get the terraform variables for this stack, and merge in with our networking & ssh credentials
       terraform_vars = terraform_metadata
-
-      terraform_vars.each do |key, value|
-        # Join arrays into a string (note we cannot handle nested arrays yet)
-        terraform_vars[key] = value.join(',') if value.is_a?(Array)
-      end
-
-      cleaned_data = terraform_vars.reject do |_k, v|
-        v.is_a?(Hash)
-      end # we can't yet handle nested terraform metadata on the command line so no hashes
-
-      all_vars = cleaned_data
 
       if @node.network_driver.has_network_credentials?
         network_credentials = @node.network_driver.network_credentials
-        all_vars = cleaned_data.merge(network_credentials)
+        terraform_vars.merge!(network_credentials)
+        # We do not persist the access token
+        terraform_vars.delete(:access_token) if @node.network_driver.is_a?(::Bcome::Driver::Gcp)
       end
 
-      all_vars[:ssh_user] = @node.ssh_driver.user
-      all_vars.collect { |key, value| "-var #{key}=\"#{value}\"" }.join("\s")
+      terraform_vars[:ssh_user] = @node.ssh_driver.user
+
+      full_path_to_metadata = "#{path_to_env_config}/#{metadata_tf_filename}"
+      puts "Extracting metadata: ".informational + full_path_to_metadata + "\n"
+      File.open(full_path_to_metadata, 'w') { |f| f.write(terraform_vars.to_json) }
+    end
+
+    def metadata_tf_filename
+      "bcome-tf-metadata.json"
     end
 
     def var_string
@@ -100,10 +100,30 @@ module Bcome::Orchestration
     end
 
     # Formulate a terraform command
-    def command(raw_command)
-      cmd = "cd #{path_to_env_config} ; terraform #{raw_command}"
-      cmd = "#{cmd} #{var_string}" if raw_command =~ Regexp.new(/^apply$|plan|destroy|refresh/)
-      cmd
+
+    def command(raw_command) ## TODO - CLEAN UP
+      if raw_command =~ Regexp.new(/^apply$|plan|destroy|refresh|import/)
+
+        params = "-var-file=\"#{metadata_tf_filename}\""
+
+        if @node.network_driver.is_a?(::Bcome::Driver::Gcp)
+          params += "\s-var access_token=#{@node.network_driver.network_credentials[:access_token]}" 
+        end
+
+       if raw_command =~ /^import/
+         raw_command =~ /([^\s]+)\s(.+)/
+         verb = $1
+         resource = $2
+         cmd = "cd #{path_to_env_config} ; terraform #{verb} #{params} #{resource}"
+        else
+          cmd = "cd #{path_to_env_config} ; terraform #{raw_command} #{params}"
+        end
+      else
+        cmd = "cd #{path_to_env_config} ; terraform #{raw_command}"
+      end
+
+      puts "\n" + cmd.informational + "\n"
+      return cmd
     end
   end
 end

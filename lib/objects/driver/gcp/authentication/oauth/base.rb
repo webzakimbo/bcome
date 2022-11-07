@@ -4,11 +4,10 @@ require 'google/api_client/auth/storage'
 require 'google/api_client/auth/storages/file_store'
 require 'google/api_client/client_secrets'
 
-module Bcome::Driver::Gcp::Authentication
-  class Oauth < Base
-    include Utilities
+module Bcome::Driver::Gcp::Authentication::Oauth
+  class Base < Bcome::Driver::Gcp::Authentication::Base
 
-    credential_directory = '.gauth'
+    include ::Bcome::Driver::Gcp::Authentication::Utilities
 
     attr_reader :scopes, :secrets_filename, :service, :client_config
 
@@ -21,24 +20,29 @@ module Bcome::Driver::Gcp::Authentication
       @secrets_filename = client_config.secrets_filename
       @path_to_secrets = "#{credential_directory}/#{@secrets_filename}"
 
-      raise ::Bcome::Exception::Generic, "Missing OAuth 2.0 client secrets file from GCP network configuration. Cannot find '#{@path_to_secrets}'" unless File.exist?(@path_to_secrets) && File.file?(@path_to_secrets)
+      raise ::Bcome::Exception::Generic, "Missing OAuth 2.0 client secrets file from GCP network configuration - cannot find '#{@path_to_secrets}. Have you run 'bcome init'?'" unless File.exist?(@path_to_secrets) && File.file?(@path_to_secrets)
 
       # All credentials are held in .gauth
       ensure_credential_directory
     end
 
     def authorized?
-      storage && !@storage.authorization.nil?
+      storage && !storage.authorization.nil?
     end
 
     def credential_file_suffix
       'oauth2.json'
     end
 
-    def authorize!
-      @service.authorization = storage.authorize
+    def authorize!(reauth = false)
+      if reauth
+        storage.refresh_authorization 
+        @service.authorization = storage.authorize
+      else
+        @service.authorization = storage.authorize
+      end
     end
-
+ 
     def client_secrets
       @client_secrets ||= load_client_secrets
     end
@@ -59,9 +63,10 @@ module Bcome::Driver::Gcp::Authentication
       "#{@client_config.checksum}:#{credential_file_suffix}"
     end
 
-    def do!
-      authorize!
+    def do!(reauth = false)
+      authorize!(reauth)
       if @storage.authorization.nil?
+
         # Total bloat from google here. Thanks google... requiring at last possible moment.
         require 'google/api_client/auth/installed_app'
 
@@ -69,7 +74,7 @@ module Bcome::Driver::Gcp::Authentication
           flow = Google::APIClient::InstalledAppFlow.new(
             client_id: client_secrets.client_id,
             client_secret: client_secrets.client_secret,
-            scope: @scopes
+            scope: @scopes 
           )
  
           ## Override the redirected-to screen so that clearer instruction can be given          
@@ -82,7 +87,7 @@ module Bcome::Driver::Gcp::Authentication
           rescue ArgumentError => e
             signal_failure
             raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
-           end
+          end
         end
       end
 

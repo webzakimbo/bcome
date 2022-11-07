@@ -8,7 +8,7 @@ class ResourcesTest < ActiveSupport::TestCase
     # Given
     identifier = "foo"
     description = "bar"
-    estate = Bcome::Node::Collection.new(views: { identifier: identifier, description: description, type: 'inventory' })
+    estate = Bcome::Node::Collection::Base.new(views: { identifier: identifier, description: description, type: 'inventory' })
 
     # then
     assert estate.resources.size == 0
@@ -42,7 +42,7 @@ class ResourcesTest < ActiveSupport::TestCase
     # Given
     identifier = "foo"
     description = "bar"
-    estate = Bcome::Node::Collection.new(views: { identifier: identifier, description: description, type: 'inventory' })
+    estate = Bcome::Node::Collection::Base.new(views: { identifier: identifier, description: description, type: 'inventory' })
 
     resource_1 = mock("Resource 1")
     resource_1_identifier = given_a_random_string_of_length(3)
@@ -71,7 +71,7 @@ class ResourcesTest < ActiveSupport::TestCase
     # Given
     identifier = "foo"
     description = "bar"
-    estate = Bcome::Node::Collection.new(views: { identifier: identifier, description: description, type: 'inventory' })
+    estate = Bcome::Node::Collection::Base.new(views: { identifier: identifier, description: description, type: 'inventory' })
 
     resources = []
     10.times do |i|
@@ -83,9 +83,9 @@ class ResourcesTest < ActiveSupport::TestCase
     assert estate.resources.active == resources
 
     # When we disable resources
-    estate.resources.do_disable(resources[1].identifier)
-    estate.resources.do_disable(resources[2].identifier)
-    estate.resources.do_disable(resources[3].identifier)
+    estate.resources.do_disable([resources[1].identifier])
+    estate.resources.do_disable([resources[2].identifier])
+    estate.resources.do_disable([resources[3].identifier])
 
     # Then they are disabled
     active_resources = resources - [resources[1], resources[2], resources[3]]
@@ -97,7 +97,7 @@ class ResourcesTest < ActiveSupport::TestCase
     end
 
     # When we enable resources
-    estate.resources.do_enable(resources[1].identifier)
+    estate.resources.do_enable([resources[1].identifier])
 
     # Then
     active_resources = resources - [resources[2], resources[3]]

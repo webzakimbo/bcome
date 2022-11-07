@@ -17,4 +17,8 @@ module Bcome::Initialization::Utils
       end
     end
   end
+
+  def set_prepopulated_configs(path)
+    File.write(path, prepopulated_path_contents(path))  
+  end
 end

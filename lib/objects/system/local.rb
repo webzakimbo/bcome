@@ -2,7 +2,12 @@
 
 module Bcome::System
   class Local
-    include Singleton
+
+    include ThreadSafeSingleton
+
+    def initialize
+      @k8_view = nil
+    end
 
     def execute_command(raw_command, print_out_command = false)
       puts "\n> #{raw_command}".bc_blue + "\n" if print_out_command
@@ -14,6 +19,19 @@ module Bcome::System
       end
 
       local_command
+    end
+
+    def k8_view=(view)
+      @k8_view = view
+    end
+
+    def in_k8_view?(view_name)
+      return false unless @k8_view
+      return @k8_view.name == view_name
+    end
+
+    def in_default_k8_view?
+      @k8_view.nil?
     end
 
     def in_console_session?

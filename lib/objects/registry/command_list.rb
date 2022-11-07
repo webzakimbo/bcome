@@ -2,7 +2,8 @@
 
 module Bcome::Registry
   class CommandList
-    include Singleton
+
+    include ThreadSafeSingleton
 
     attr_reader :list
 
@@ -12,19 +13,19 @@ module Bcome::Registry
     end
 
     def add_group_for_node(node, group)
-      @groups_for_nodes[node.keyed_namespace] = group
+      @groups_for_nodes[node.object_id] = group
     end
 
     def group_for_node(node)
-      @groups_for_nodes[node.keyed_namespace]
+      @groups_for_nodes[node.object_id]
     end
 
     def register(node, command_name)
-      @list[node.keyed_namespace] ? (@list[node.keyed_namespace] << command_name) : (@list[node.keyed_namespace] = [command_name])
+      @list[node.object_id] ? (@list[node.object_id] << command_name) : (@list[node.object_id] = [command_name])
     end
 
     def command_in_list?(node, command_name)
-      @list.key?(node.keyed_namespace) && @list[node.keyed_namespace].include?(command_name.to_sym)
+      @list.key?(node.object_id) && @list[node.object_id].include?(command_name.to_sym)
     end
 
     def teardown!

@@ -131,7 +131,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # And also that
     estate.resources.each_with_index do |resource, index|
-      assert resource.is_a?(::Bcome::Node::Collection)
+      assert resource.is_a?(::Bcome::Node::Collection::Base)
       assert resource.parent == estate
       views[index].each do |key, value|
         assert resource.send(key) == value
@@ -152,17 +152,17 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # But also that
     level1 = estate.resources.first
-    assert level1.is_a?(::Bcome::Node::Collection)
+    assert level1.is_a?(::Bcome::Node::Collection::Base)
     assert level1.parent == estate
     assert level1.resources.size == 1
 
     level2 = level1.resources.first
-    assert level2.is_a?(::Bcome::Node::Collection)
+    assert level2.is_a?(::Bcome::Node::Collection::Base)
     assert level2.parent == level1
     assert level2.resources.size == 1
 
     level3 = level2.resources.first
-    assert level3.is_a?(::Bcome::Node::Collection)
+    assert level3.is_a?(::Bcome::Node::Collection::Base)
     assert level3.parent == level2
     assert level3.resources.size == 1
 
@@ -178,7 +178,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     description = 'all my stuff'
 
     # When
-    estate = Bcome::Node::Collection.new(views: { identifier: identifier, description: description, type: 'inventory' })
+    estate = Bcome::Node::Collection::Base.new(views: { identifier: identifier, description: description, type: 'inventory' })
 
     # Then
     assert estate.identifier == identifier

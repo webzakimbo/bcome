@@ -5,7 +5,7 @@ module Bcome
     class Window
       attr_reader :lines
 
-      include Singleton
+      include ThreadSafeSingleton
 
       def initialize(*_params)
         @lines = []

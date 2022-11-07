@@ -10,9 +10,7 @@ module Bcome::Node
     include Bcome::Node::RegistryManagement
     include Bcome::Tree
 
-    def inspect
-      "<##{self.class}: #{namespace} @network_driver=#{network_driver}>"
-    end
+    attr_reader :origin_object_id
 
     def self.const_missing(constant)
       ## Hook for direct access to node level resources by constant name where
@@ -42,14 +40,70 @@ module Bcome::Node
 
       @original_identifier = @identifier
 
+      set_registry
+      return
+    end
+
+    def set_registry
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
-    attr_reader :parent
+    def reset_registry
+      set_registry
+      resources.pmap do |resource|
+        resource.reset_registry
+      end
+    end
 
+    def inspect
+      "<##{self.class}: #{namespace} @network_driver=#{network_driver}>"
+    end
+
+    def interactive 
+      ::Bcome::Interactive::Session.run(self, :interactive_ssh)
+    end
+
+    # Given a string, scan ahead to determine if it contains a resource name,
+    # auto-loading its nodes if so
+    def scan(string)
+      tokens = string.split(".")
+      (0..tokens.size-1).each do |i|
+        candidate_id = tokens[0..i].join(".")
+        if (object = resources.for_identifier(candidate_id)) || (object.respond_to?(candidate_id) && object = send(candidate_id))
+          object.load_nodes if object.respond_to?(:load_nodes) && !object.nodes_loaded?
+          remaining_tokens = tokens[i+1..tokens.size]
+          return [object, remaining_tokens]
+        end
+      end
+      return nil
+    end
+
+    attr_reader :parent
     attr_reader :views
 
+    def root
+      return parent.nil? ? self : parent.root
+    end
+
     def method_missing(method_sym, *arguments)
+      resource, suffixes = scan(method_sym.to_s)
+
+      if resource
+        if suffixes.any?
+          as_string = suffixes.join('.')
+          as_string =~ /(\S+)\s+(.+)/  
+          if args = $2
+            command = $1 
+            args = $1 if args =~ /["'](.+)['"]/
+            return resource.send(command, args)
+          else
+            return resource.send("#{suffixes.join('.')}".to_sym)
+          end
+        else
+          return resource
+        end
+      end
+
       raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
 
       if resource_identifiers.include?(method_sym.to_s)
@@ -57,7 +111,7 @@ module Bcome::Node
       elsif command = user_command_wrapper.command_for_console_command_name(method_sym)
         command.execute(self, arguments)
       else
-        raise NameError, "Missing method #{method_sym} for #{self.class}"
+        raise Bcome::Exception::Generic, "Unknown method #{method_sym} for #{self.class}"
       end
     end
 
@@ -77,8 +131,16 @@ module Bcome::Node
       false
     end
 
+    def container?
+     false
+    end  
+
+    def container_cluster?
+      false
+    end
+
     def enabled_menu_items
-      %i[ls lsa workon enable disable enable! disable! run tree ping put put_str rsync cd meta registry interactive execute_script]
+      %i[ls lsa workon enable disable enable! disable! run tree ping put put_str rsync cd meta registry quit back interactive execute_script]
     end
 
     def has_proxy?
@@ -161,11 +223,11 @@ module Bcome::Node
 
       @identifier ||= "NO-ID_#{Time.now.to_i}".dup
 
-      # raise ::Bcome::Exception::MissingIdentifierOnView.new(@views.inspect) unless @identifier
-      @identifier.gsub!(/\s/, '_') # Remove whitespace
-      @identifier.gsub!('-', '_') # change hyphens to undescores, hyphens don't play well in var names in irb
+      @identifier = @identifier.dup if @identifier.frozen?
 
-      # raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
+
+      @identifier.gsub!(/\s/, '_') # Remove whitespace
+      #@identifier.gsub!('-', '_') # change hyphens to undescores, hyphens don't play well in var names in irb
     end
 
     def requires_description?
@@ -182,12 +244,16 @@ module Bcome::Node
 
     def nodes_loaded?
       # resources.any? # This was buggy:  an inventory may validly contain no resources. This does not mean that we haven't attempted to load them
-      # we no explicitly set a flag for when we've loaded nodes. This will prevents uneccessary lookups over the wire
+      # we now explicitly set a flag for when we've loaded nodes. This will prevents uneccessary lookups over the wire
       @nodes_loaded
     end
 
     def nodes_loaded!
       @nodes_loaded = true
+    end
+
+    def resources=(other_resources)
+      @resources = other_resources
     end
 
     def resources
@@ -231,12 +297,10 @@ module Bcome::Node
       resource || (has_parent? ? parent.recurse_resource_for_identifier(identifier) : nil)
     end
 
-    def prompt_breadcrumb
-      "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : ''}#{if current_context?
-                                                                has_parent? ? identifier.terminal_prompt : identifier
-                                                              else
-                                                                identifier
-                                                              end}"
+    def prompt_breadcrumb(params = {})
+      prefix = has_parent? ? "#{parent.prompt_breadcrumb(params)}:" : ""
+      suffix = current_context? ? (has_parent? ? "#{identifier.terminal_prompt} >" : identifier) : identifier
+      return "#{prefix}#{suffix}"
     end
 
     def namespace
@@ -279,7 +343,6 @@ module Bcome::Node
     end
 
     def execute_local(command)
-      puts "(local) > #{command}" unless ::Bcome::Orchestrator.instance.command_output_silenced?
       system(command)
       puts ''
     end
@@ -296,6 +359,15 @@ module Bcome::Node
         puts 'No values found'.warning
       end
       puts ''
+    end
+
+    def set_additional_list_attributes(attrs)
+      @additional_list_attributes = attrs.deep_symbolize_keys!
+    end
+    
+    def define_method_name_with_value(name, value)
+      singleton = class << self; self end
+      singleton.send :define_method, name.to_sym, lambda { return value }
     end
 
     private

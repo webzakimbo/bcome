@@ -2,7 +2,8 @@
 
 module Bcome::Driver::Gcp::Authentication
   class OauthSessionStore
-    include Singleton
+
+    include ThreadSafeSingleton
 
     def initialize
       @oauth_sessions = []

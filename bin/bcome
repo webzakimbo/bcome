@@ -3,18 +3,16 @@
 
 require 'bcome'
 
+::Bcome::Timer.instance.start
+
 breadcrumbs = ARGV[0]
 arguments = ARGV - [ARGV[0]]
 handler = ::Bcome::Startup.new(breadcrumbs, arguments)
 
-trap('SIGINT') do
-  handler.stop_loading_bars
+Thread.report_on_exception = true
+
+begin
+  handler.do
+rescue SystemExit, Interrupt
+  handler.clean_up
 end
-
-trap('INT') do
-  handler.stop_loading_bars
-end
-
-Thread.report_on_exception = false
-
-handler.do

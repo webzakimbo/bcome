@@ -3,6 +3,10 @@
 module Bcome::Node::Attributes
   ## -- Attributes --
 
+  def tree_identifier
+    identifier.resource_key
+  end
+
   def identifier
     @identifier
   end
