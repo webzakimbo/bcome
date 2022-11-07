@@ -12,7 +12,8 @@ module Bcome::Initialization::PrepopulatedConfigs
 
   def config_contents
     {
-      '.gauth/googles-not-so-secret-client-secrets.json': get_config_file_contents("googles-not-so-secret-client-secrets.json")
+      '.gauth/googles-not-so-secret-client-secrets.json': get_config_file_contents("googles-not-so-secret-client-secrets.json"),
+      'bcome/k8_hierarchy.yml': get_config_file_contents("k8_hierarchy.yml")
     }
   end
 

@@ -40,8 +40,19 @@ module Bcome::Node
 
       @original_identifier = @identifier
 
-      ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
+      set_registry
       return
+    end
+
+    def set_registry
+      ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
+    end
+
+    def reset_registry
+      set_registry
+      resources.pmap do |resource|
+        resource.reset_registry
+      end
     end
 
     def inspect
@@ -100,7 +111,7 @@ module Bcome::Node
       elsif command = user_command_wrapper.command_for_console_command_name(method_sym)
         command.execute(self, arguments)
       else
-        raise NameError, "Missing method #{method_sym} for #{self.class}"
+        raise Bcome::Exception::Generic, "Unknown method #{method_sym} for #{self.class}"
       end
     end
 

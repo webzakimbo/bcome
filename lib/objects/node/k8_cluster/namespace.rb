@@ -10,6 +10,7 @@ module Bcome::Node::K8Cluster
     include ::Bcome::Node::K8Cluster::ResourceMappings
     include ::Bcome::InteractiveHelm
     include ::Bcome::Node::K8Cluster::PathwayRender
+    include ::Bcome::Node::K8Cluster::NamespaceHierarchy
        
     attr_reader :is_subdivided
 
@@ -43,8 +44,8 @@ module Bcome::Node::K8Cluster
       self
     end
 
-    def export_context
-      parent.export_context(self)
+    def export
+      parent.export(self)
     end
 
     def do_set_resources(raw_resources)
@@ -106,7 +107,7 @@ module Bcome::Node::K8Cluster
     end
 
     def enabled_menu_items
-      (super + %i[export_context lsr describe focus pathways logs config reload kubectl helm]) - non_k8_menu_items
+      (super + %i[export lsr describe vfocus vrender focus pathways logs config reload kubectl helm]) - non_k8_menu_items
     end
 
     def menu_items
@@ -137,16 +138,40 @@ module Bcome::Node::K8Cluster
         group: :ssh,
       }
 
-      base_items[:export_context] = {
+      base_items[:export] = {
         description: "Export this cluster namespace's kubectl context - i.e. set this context for external applications",
         group: :kubernetes
       }
 
       base_items[:focus] = {
         description: "Switch workspace to focus on a specific kubernetes resource",
-        group: :kubernetes,
+        group: :hierarchy,
         usage: "focus resource_name, e.g. focus secrets",
         console_only: true
+      }
+
+      base_items[:vrender] = {
+        description: "Render a hierarchy view. Available hierarchies: #{pretty_available_hierarchies}",
+        group: :hierarchy,
+        usage: "vrender hierarchy e.g. vrender #{available_hierarchies.last}",
+        console_only: true
+      }
+
+      base_items[:vfocus] = {
+        description: "Switch workspace to another hierarchy. Available hierarchies: #{pretty_available_hierarchies}",
+        group: :hierarchy,
+        usage: "vfocus hierarchy, e.g. vfocus #{available_hierarchies.last}",
+        console_only: true
+      }
+
+      base_items[:helm] = {
+        description: "Access an interactive helm shell, scoped to this kubernetes namespace",
+        group: :kubernetes
+      }
+
+      base_items[:kubectl] = {
+        description: "Access kubectl scoped to this kubernetes namespace",
+        group: :kubernetes
       }
 
       base_items

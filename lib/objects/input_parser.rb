@@ -10,6 +10,10 @@ class InputParser
   def parse
     @input.strip!
 
+    if alternative_command = alternative_mapped_command
+      return alternative_command
+    end
+
     resource, suffixes = @node.scan(@input)
 
     if resource
@@ -32,9 +36,14 @@ class InputParser
 
   private
 
+  def alternative_mapped_command
+    return "back" if @input == "cd .."
+    return nil
+  end
+
   def node_methods
     # All methods expect (or may optionally have) one or more namespaces as arguments
-    %w(cd helm ls workon enable disable ssh tree switch focus)  
+    %w(cd helm ls workon enable disable ssh tree switch focus vrender vfocus)  
   end
 
   def wrapped_methods

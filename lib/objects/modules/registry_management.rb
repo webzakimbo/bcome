@@ -4,7 +4,7 @@ module Bcome
   module Node
     module RegistryManagement
       def user_command_wrapper
-        @user_command_wrapper ||= ::Bcome::Registry::CommandList.instance.group_for_node(self)
+        ::Bcome::Registry::CommandList.instance.group_for_node(self)
       end
 
       def registry

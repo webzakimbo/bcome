@@ -9,7 +9,6 @@ module Bcome
     ## Node tree  - dynamic rendering of any parent->*child hierarchy  #
     ####################################################################
     def tree(config = {})
-
       unless resources.any?
         puts "No tree available at this node. #{type.capitalize.informational} #{identifier.bc_white} does not have any children.\n\n"
         return 
@@ -99,7 +98,7 @@ module Bcome
 
     def namespace_tree_line(geneaology)
       colour = geneaology == :ancestor ? :bc_grey : :bc_green
-      "#{type.send(colour)} #{identifier.resource_key}"
+      "#{type.send(colour)} #{tree_identifier}"
     end
 
     def routing_tree_line(is_direct = true)

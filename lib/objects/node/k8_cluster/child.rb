@@ -35,10 +35,6 @@ module Bcome::Node::K8Cluster
       super - non_k8_menu_items
     end
 
-    def kubectl
-      puts "Kubectl is not available at this level".warning
-    end
-
     def reset_resources!
       @resources = ::Bcome::Node::Resources::Base.new
       set_child_nodes if respond_to?(:set_child_nodes)

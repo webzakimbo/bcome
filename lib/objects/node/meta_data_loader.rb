@@ -17,12 +17,12 @@ module Bcome::Node
     end
 
     def data_for_namespace(namespace)
-      static_data = data[namespace.to_sym] || {}
+      static_data = data[namespace] || data[:"#{namespace}"] || {} 
       static_data.merge(terraform_data_for_namespace(namespace))
     end
 
     def terraform_data_for_namespace(namespace)
-      # Radical departure II - all we care is the outputs. This will then work across any terraform backend, and any version
+      # Radical departure II - all we care about is the outputs. This will then work across any terraform backend, and any version
       tf_state = ::Bcome::Terraform::Output.new(namespace)
       terraform_data = {}
       terraform_data['terraform_outputs'] = tf_state.output

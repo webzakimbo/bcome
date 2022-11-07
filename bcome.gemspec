@@ -36,18 +36,19 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'net-scp', '~> 1.2', '>= 1.2.1'
   spec.add_dependency 'net-ssh', '6.1.0'
   spec.add_dependency 'pmap', '1.1.1'
-  spec.add_dependency 'pry', '0.12.2'
+  spec.add_dependency 'pry', '0.14.1'
   spec.add_dependency 'rainbow', '~> 2.2'
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'strings-ansi', '0.2.0'
   spec.add_dependency 'tty-cursor', '0.2.0'
   spec.add_dependency 'jsonpath', '1.0.5'
   spec.add_dependency 'awesome_print', '1.9.2'
+  spec.add_dependency 'cronex', '0.11.1'
   spec.post_install_message = <<-END
 
   Welcome to Bcome, the DevOps Control Panel Framework
 
-  Versions 3.0.0 introduces Kubernetes drivers for GCP & Azure. 
+  Version 3.0.0 introduces Kubernetes drivers for GCP GKE & Amazon's EKS. 
 
   Visit our new documentation site here: https://docs.bcome.com/en/3.0.0
 

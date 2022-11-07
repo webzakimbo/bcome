@@ -2,6 +2,7 @@ module ::Bcome::Driver::Kubernetes
   class Eks < Cluster
 
     def register_cluster
+      get_token
       get_configuration
       register_cluster_context
       set_cluster_access_token
@@ -15,7 +16,7 @@ module ::Bcome::Driver::Kubernetes
     def get_token
       cmd = "eks get-token --cluster-name #{cluster_name}"     
       runner = aws_run(cmd)
-
+ 
       begin
         auth_data = JSON.parse(runner.stdout)
       rescue RuntimeError => e
@@ -29,7 +30,6 @@ module ::Bcome::Driver::Kubernetes
     end  
 
     def set_cluster_access_token
-      get_token
       run_kubectl_config("config set-credentials #{username} --token=#{access_token}")
     end
 

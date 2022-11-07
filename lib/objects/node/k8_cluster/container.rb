@@ -14,6 +14,10 @@ module Bcome::Node::K8Cluster
       @unreachable = false
     end
 
+    def tree_identifier
+      "#{identifier.resource_key} (#{state})"
+    end
+   
     def is_same_machine?(other)
       origin_object_id == other.origin_object_id
     end
@@ -27,9 +31,18 @@ module Bcome::Node::K8Cluster
     end
 
     def state
-      raw_data[:state] 
+      raw_data[:state] || get_state.upcase 
     end
- 
+
+    def get_state
+      return state_keys.first if state_keys.is_a?(Array)
+      return "unknown"
+    end
+
+    def state_keys
+      return raw_data["state"].keys if raw_data["state"].is_a?(Hash)
+    end 
+  
     def is_running?
       state == "RUNNING"
     end   

@@ -31,6 +31,17 @@ module Bcome::Node::K8Cluster::ResourceMappings
     }
   end
 
+  #####################################
+  ## Change focus to a new items set ##
+  #####################################
+  def switch_hierarchy(hierarchy_view)
+    puts "\nSwitching hierarchy: ".informational + "\s#{hierarchy_view.name}\n\n"
+    switch_to_node = hierarchy_view.hierarchy_node
+    @focus_on = switch_to_node.resources.first.class
+    switch_to_node.reset_registry
+    ::Bcome::Workspace.instance.set(current_context: switch_to_node, context: switch_to_node)
+  end
+
   ##########################################################################################################################
   ## Change focus where user chooses to switch to a specific resource type using "focus resource_name e.g. focus secrets"  #
   ##########################################################################################################################
@@ -116,7 +127,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
     ::Bcome::Workspace.instance.set_kubernetes_focus(to_focus_on)
   end
 
-  def add_resource(resource_klass, resource_type, data)
+  def add_resource(resource_klass, resource_type, data, set_children = true)
     resource = resource_klass.new(views: {identifier: data["metadata"]["name"], raw_data: data }, parent: self)
 
     resources << resource if focus_on?(resource_klass) ## TODO set focus_on before we start adding resources
@@ -127,7 +138,7 @@ module Bcome::Node::K8Cluster::ResourceMappings
       crds[resource_type] = [resource]
     end
 
-    resource.set_child_nodes if resource.respond_to?(:set_child_nodes)
+    resource.set_child_nodes if set_children && resource.respond_to?(:set_child_nodes)
 
     ::Bcome::Node::Factory.instance.bucket[resource.keyed_namespace] = resource
     return resource

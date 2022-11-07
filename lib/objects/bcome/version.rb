@@ -11,7 +11,7 @@ module Bcome
     end
 
     def self.release_name
-      'Palefire'
+      'Maverick'
     end
 
     def self.display

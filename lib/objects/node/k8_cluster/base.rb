@@ -37,6 +37,13 @@ module Bcome::Node::K8Cluster
       "#{parent.kubectl_context}.#{hyphenated_identifier}"
     end
 
+    # Allow resetting of parent. We do this in constructed hierarchies, where nodes loaded previously are assigned dynamically
+    # according to a config-defined hierarchy
+    def parent=(other_parent)
+      @params[:parent] = other_parent
+      @parent = other_parent
+    end
+
     def get_kubectl_resource(crd_keys)
       resource_names = crd_keys.is_a?(Array) ? crd_keys.join(",") : crd_keys
 

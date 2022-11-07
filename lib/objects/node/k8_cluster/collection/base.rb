@@ -29,9 +29,12 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def info
-      raw = run_kubectl_config("cluster-info").stdout
+      info_data = run_kubectl_config("cluster-info").stdout
+      version_data = run_kubectl_config("version").stdout
       print "\nCluster Info\n".informational
-      print "\n#{raw}\n"
+      print "\n#{info_data}\n"
+      print "\nKubernetes Version\n".informational
+      print "\n#{version_data}\n"
     end
 
     def info_dump
@@ -56,14 +59,14 @@ module Bcome::Node::K8Cluster::Collection
     end
 
     def enabled_menu_items
-      (super + %i[logs export_context info pathways helm kubectl info_dump config lsr reload reauthorize]) - non_k8_menu_items
+      (super + %i[logs export info pathways helm kubectl info_dump config lsr reload reauthorize]) - non_k8_menu_items
     end
 
     def ingresses 
       resources.active.collect{|resource| resource.crds["Ingress"] }.flatten.compact
     end
 
-    def export_context(namespace = nil)
+    def export(namespace = nil)
       export_message = "\nExporting kubectl context\n".warning 
       export_message += "\ncluster:\s".informational + identifier
       export_message += "\nnamespace:\s".informational + namespace.identifier if namespace
@@ -101,7 +104,7 @@ module Bcome::Node::K8Cluster::Collection
         group: :kubernetes
       }
        
-      base_items[:export_context] = {
+      base_items[:export] = {
         description: "Export this cluster's kubectl context i.e. set this context for external applications",
         group: :kubernetes
       }
