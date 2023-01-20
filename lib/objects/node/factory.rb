@@ -13,8 +13,8 @@ module Bcome::Node
     LOCAL_OVERRIDE_CONFIG_NAME = 'me.yml'
 
     INVENTORY_KEY = 'inventory'
-    GCP_KUBE_COLLECTION_KEY = 'gcp-k8s-cluster'
-    AWS_KUBE_COLLECTION_KEY = 'aws-k8s-cluster'
+    GCP_KUBE_COLLECTION_KEY = 'gke-k8s-cluster'
+    AWS_KUBE_COLLECTION_KEY = 'eks-k8s-cluster'
     COLLECTION_KEY = 'collection'
     SUBSELECT_KEY = 'inventory-subselect'
     MERGE_KEY = 'inventory-merge'

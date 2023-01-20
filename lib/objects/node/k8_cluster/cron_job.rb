@@ -16,6 +16,21 @@ module Bcome::Node::K8Cluster
       puts "Job name: #{job_name}"
     end
     alias :trigger :trigger!
+
+
+    def enabled_menu_items
+      (super + %i[trigger])
+    end
+
+    def menu_items
+      base_items = super.dup
+
+      base_items[:trigger] = {
+        description: "Trigger this cronjob to run immediately",
+        group: :kubernetes
+      }
+      base_items
+    end
  
     def schedule
       raw_config_data["spec"]["schedule"]
