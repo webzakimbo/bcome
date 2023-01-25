@@ -54,11 +54,10 @@ module ::Bcome::Ssh
     end
 
     def net_ssh_params
-      params = { paranoid: false }
+      params = { verify_host_key: :never }
       params[:proxy] = proxy if has_proxy?
       params[:timeout] = timeout_in_seconds
       params[:verbose] = :fatal # All but silent
-
       params
     end
 

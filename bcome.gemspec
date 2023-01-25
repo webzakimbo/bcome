@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'google-cloud-container', '1.1.2'
   spec.add_dependency 'launchy', '2.4.3'
   spec.add_dependency 'net-scp', '~> 1.2', '>= 1.2.1'
-  spec.add_dependency 'net-ssh', '6.1.0'
+  spec.add_dependency 'net-ssh', '7.0.1'
   spec.add_dependency 'pmap', '1.1.1'
   spec.add_dependency 'pry', '0.14.1'
   spec.add_dependency 'rainbow', '~> 2.2'
@@ -44,6 +44,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'jsonpath', '1.0.5'
   spec.add_dependency 'awesome_print', '1.9.2'
   spec.add_dependency 'cronex', '0.11.1'
+  spec.add_dependency 'ed25519', '1.3.0'
+  spec.add_dependency 'bcrypt_pbkdf', '1.1.0'
   spec.post_install_message = <<-END
 
   Welcome to Bcome, the DevOps Control Panel Framework
