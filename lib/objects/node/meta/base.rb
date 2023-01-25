@@ -15,7 +15,8 @@ module Bcome::Node::Meta
 
       key = matchers[:key].to_sym
       values = matchers[:values]
-      @data.key?(key) && values.include?(@data[key])
+      m = @data.key?(key) && (values.include?(@data[key]) || matchers[:values].select{|value| @data[key] =~ /#{value}/ }.any? )
+      return m
     end
 
     def keys
