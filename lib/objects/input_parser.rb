@@ -42,7 +42,7 @@ class InputParser
   end
 
   def node_methods
-    # All methods expect (or may optionally have) one or more namespaces as arguments
+    # All methods expect or may optionally have one or more namespaces as arguments
     %w(cd helm ls workon enable disable ssh tree switch focus vrender vfocus)  
   end
 
@@ -56,7 +56,7 @@ class InputParser
     if wrapped_methods.include?(method)
       return "#{method} \"#{arguments}\""
     else
-      arguments.gsub!(/([a-zA-Z\-0-9\.]+(?:[a-zA-Z\-0-9\.].+)*)/,"'\\1'")
+      arguments.gsub!(/([a-zA-Z\-0-9\._]+(?:[a-zA-Z\-0-9\._].+)*)/,"'\\1'")
       return "#{method} #{arguments}"
     end
   end
