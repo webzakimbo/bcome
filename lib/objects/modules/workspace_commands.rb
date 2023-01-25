@@ -102,11 +102,12 @@ module Bcome
 
       @key_spacing_limit = iteratable_attrs.keys.max_by(&:length).size + 2
       iteratable_attrs.each do |key, value|
+
         next unless respond_to?(value) || instance_variable_defined?("@#{value}")
 
         attribute_value = send(value).to_s
-        next unless attribute_value
-     
+        next if attribute_value.nil? || attribute_value.empty?
+
         printed_value = (value.to_sym == :identifier) ? "#{"id".resource_key}:\s#{attribute_value}" : attribute_value
 
         desc += "\t"
