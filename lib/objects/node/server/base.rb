@@ -34,7 +34,7 @@ module Bcome::Node::Server
     end
 
     def local_network?
-      defined?(local_network) && local_network
+      (defined?(local_network) && local_network) || ssh_driver.config[:local_network]
     end
 
     def dup_with_new_parent(new_parent)
