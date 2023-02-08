@@ -34,7 +34,7 @@ module Bcome
         puts "\nNo routes are found below this namespace (empty server list)\n".warning
       else
         title_prefix = 'Ssh connection routes'
-        build_tree(:routing_tree_data, title_prefix)
+        build_tree(:routing_tree_data, title_prefix, {})
       end
     end
 
