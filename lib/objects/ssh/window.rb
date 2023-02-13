@@ -24,12 +24,8 @@ module Bcome
       end
 
       def pop
-        line = @lines.pop
-        begin
-          print line
-        rescue Encoding::UndefinedConversionError
-          print Base64.decode64(line)
-        end
+        line = @lines.pop.force_encoding("UTF-8")
+        print line
       end
     end
   end
