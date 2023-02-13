@@ -24,7 +24,11 @@ module Bcome
       end
 
       def pop
-        print @lines.pop
+        begin
+          print @lines.pop
+        rescue Encoding::UndefinedConversionError
+          print Base64.decode64(@lines.pop)
+        end
       end
     end
   end
