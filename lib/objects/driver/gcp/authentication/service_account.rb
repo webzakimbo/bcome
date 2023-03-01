@@ -12,7 +12,7 @@ module Bcome::Driver::Gcp::Authentication
       ensure_credentials_file
     end
 
-    def do!
+    def do!(*params)
       @service.authorization = service_account
     end
 

@@ -60,7 +60,7 @@ module Bcome::Driver
     def network_credentials
       @network_credentials ||= set_network_credentials
     end
-
+    
     def set_network_credentials
       creds = {
         access_key: raw_fog_credentials['aws_access_key_id'],
