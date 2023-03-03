@@ -37,6 +37,10 @@ module Bcome
         def update_nodes
           resources.update_nodes(self)
         end
+ 
+        def network_driver
+          parent_inventory.network_driver
+        end
 
         def do_set_resources
           ::Bcome::Node::Resources::SubselectInventory.new(origin_inventory: self, parent_inventory: parent_inventory, filters: filters)
