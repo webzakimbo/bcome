@@ -31,10 +31,10 @@ module Bcome::Interactive::SessionItem
       if show_menu?(input)
         show_menu
         print "\n"
+      else
+        run_cli_command(input)
       end
 
-      run_cli_command(input)
-     
       action
     end
 
