@@ -24,7 +24,7 @@ module Bcome::Driver
     end
 
     def auth_attributes
-      [:type, :project, :authentication_scheme, :secrets_filename, :service_scopes, :service_account_credentials]
+      [:zone, :type, :project, :authentication_scheme, :secrets_filename, :service_scopes, :service_account_credentials]
     end
 
     def pretty_provider_name
