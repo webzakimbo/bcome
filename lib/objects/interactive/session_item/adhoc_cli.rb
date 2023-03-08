@@ -14,7 +14,8 @@ module Bcome::Interactive::SessionItem
     end  
 
     def do
-      puts "\n#{cli_title.underline}"
+      run_cli_command(startup_command) if startup_command
+
       puts "\n#{cli_description.bc_yellow}"
       puts "\nEnter your commands after the #{cli_command_prefix.informational} prompt."
 
@@ -66,9 +67,9 @@ module Bcome::Interactive::SessionItem
       @init_data[:run_as_user]
     end 
 
-    def cli_title
-      @init_data[:cli_title]
-    end  
+    def startup_command
+      @init_data[:startup_command]
+    end
 
     def cli_command_prefix
       @init_data[:cli_command_prefix]
@@ -79,7 +80,7 @@ module Bcome::Interactive::SessionItem
     end
  
     def validate
-      [:cli_description, :cli_title, :cli_command_prefix].each do |expected_attr|
+      [:cli_description, :cli_command_prefix].each do |expected_attr|
         raise ::Bcome::Exception::Generic, "Missing configuration parameter '#{expected_attr}'" unless send(expected_attr)
       end
     end 

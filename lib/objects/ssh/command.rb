@@ -19,11 +19,11 @@ module ::Bcome::Ssh
     def output
       cmd_output = @stdout
 
-      cmd_output += "\nExit code:" + "\s#{@exit_code}"
+      # Some processes may return output on stderr despite the command completing successfully, looking at you gitlab-runner.
+      # We're going to take the approach of 'if we have output, let's show it'
+      cmd_output += "\n#{@stderr}" if !@stderr.empty? 
 
-      cmd_output += "\nSTDERR: #{@stderr}" if exit_code == 1 && !@stderr.empty?
-
-      "\n#{cmd_output}"
+      return "\n#{cmd_output}"
     end
 
     def is_success?
