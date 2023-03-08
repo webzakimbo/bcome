@@ -9,7 +9,7 @@ module Bcome::Registry::Command
         if run_as_pseudo_tty?
           node.pseudo_tty command
         else
-          puts "\n(#{node.namespace})$".terminal_prompt + ">\s#{command}" unless node.container?
+          #puts "\n(#{node.namespace})$".terminal_prompt + ">\s#{command}" unless node.container?
           ::Bcome::Orchestrator.instance.tail_all_command_output!(node)
           node.run command
           ::Bcome::Orchestrator.instance.reset!
