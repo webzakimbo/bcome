@@ -38,7 +38,7 @@ module IRB
       @CONF[:MAIN_CONTEXT] = irb.context
 
       # Echo command return values
-      irb.context.echo = true
+      irb.context.echo = false
 
       catch(:IRB_EXIT) do
         irb.eval_input

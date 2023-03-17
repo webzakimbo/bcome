@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Bcome
   module WorkspaceCommands
+
     def ssh_connect(params = {})
       ::Bcome::Ssh::Connector.connect(self, params)
     end
@@ -15,7 +16,7 @@ module Bcome
         resource.send(:ls, active_only)
       else
         
-        puts "\n\tYou are in\s".bc_white + "#{type}".informational + "\s#{identifier}\n".bc_white
+        puts "\n\n\tYou are in\s".bc_white + "#{type}".informational + "\s#{identifier}\n".bc_white
 
         iterate_over = active_only ? resources.active : resources
 
@@ -46,8 +47,9 @@ module Bcome
       ls(self, show_active_only)
     end
 
-    def ping  
-      ssh_connect(is_ping: true, show_progress: true)
+    def ping(node = nil)
+      ping_params = { is_ping: true, show_progress: true }
+      ::Bcome::Ssh::Connector.connect(node ? node : self, ping_params)   
     end
 
     def parents
