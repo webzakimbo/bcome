@@ -92,12 +92,18 @@ module Bcome::Node
         if suffixes.any?
           as_string = suffixes.join('.')
           as_string =~ /(\S+)\s+(.+)/  
+
           if args = $2
             command = $1 
             args = $1 if args =~ /["'](.+)['"]/
+
             return resource.send(command, args)
           else
-            return resource.send("#{suffixes.join('.')}".to_sym)
+            if arguments.any?
+              return resource.send("#{suffixes.join('.')}".to_sym, arguments)
+            else
+              return resource.send("#{suffixes.join('.')}".to_sym)
+            end
           end
         else
           return resource

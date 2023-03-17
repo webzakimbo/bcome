@@ -38,7 +38,7 @@ module IRB
       @CONF[:MAIN_CONTEXT] = irb.context
 
       # Echo command return values
-      irb.context.echo = false
+      irb.context.echo = ENV["BC_DEBUG"] ? ENV["BC_DEBUG"] : false
 
       catch(:IRB_EXIT) do
         irb.eval_input
