@@ -79,7 +79,7 @@ module Bcome
           parent_namespace.hyphenated_identifier
         end
 
-        def machines(skip_for_hidden = true)
+        def do_load_machines(skip_for_hidden = true)
           parent_namespace.load_nodes unless parent_namespace.nodes_loaded?
           active_resources = skip_for_hidden ? resources.active : resources.active.reject(&:hide?)
 

@@ -27,7 +27,7 @@ module Bcome::Node::Collection
       filtered_set
     end
 
-    def machines(skip_for_hidden = true)
+    def do_load_machines(skip_for_hidden = true)
       set = []
 
       return [] unless @resources

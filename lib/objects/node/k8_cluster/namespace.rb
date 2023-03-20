@@ -25,7 +25,7 @@ module Bcome::Node::K8Cluster
       return "#{super}" + "\s(#{focus_breadcrumb.pluralize})" 
     end
 
-    def machines(skip_for_hidden = true)
+    def do_load_machines(skip_for_hidden = true)
       return [] unless @resources
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
       set = []

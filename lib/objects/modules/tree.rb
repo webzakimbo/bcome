@@ -90,6 +90,7 @@ module Bcome
           next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
         end
 
+
         @tree[resource.namespace_tree_line(geneaology)] = resource.resources.any? ? resource.network_namespace_tree_data(caller_stack) : nil
       end
 
@@ -97,7 +98,7 @@ module Bcome
     end
 
     def namespace_tree_line(geneaology)
-      colour = geneaology == :ancestor ? :bc_grey : :bc_green
+      colour = selection_in_play? ? (in_selection? ? :bc_green : :bc_grey) : (geneaology == :ancestor ? :bc_grey : :bc_green)
       "#{type.send(colour)} #{tree_identifier}"
     end
 

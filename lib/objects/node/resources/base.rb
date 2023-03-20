@@ -93,7 +93,7 @@ module Bcome::Node::Resources
     end
 
     def active
-      @nodes - @disabled_resources
+      return @nodes - @disabled_resources
     end
 
     def is_active_resource?(resource)

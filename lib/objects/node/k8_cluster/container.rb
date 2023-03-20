@@ -26,7 +26,7 @@ module Bcome::Node::K8Cluster
       return false
     end
 
-    def machines(*params)
+    def do_load_machines(*params)
       is_running? ? [self] : []
     end
 

@@ -67,8 +67,10 @@ module Bcome::Node
     # auto-loading its nodes if so
     def scan(string)
       tokens = string.split(".")
+
       (0..tokens.size-1).each do |i|
         candidate_id = tokens[0..i].join(".")
+ 
         if (object = resources.for_identifier(candidate_id)) || (object.respond_to?(candidate_id) && object = send(candidate_id))
           object.load_nodes if object.respond_to?(:load_nodes) && !object.nodes_loaded?
           remaining_tokens = tokens[i+1..tokens.size]
@@ -374,6 +376,26 @@ module Bcome::Node
     def define_method_name_with_value(name, value)
       singleton = class << self; self end
       singleton.send :define_method, name.to_sym, lambda { return value }
+    end
+
+    def machines(skip_for_hidden = true)
+      unless selection_in_play?
+        do_load_machines(skip_for_hidden = true)
+      else
+        ::Bcome::NodeSelection.instance.selection
+      end
+    end
+
+    def selection_in_play?
+      ::Bcome::NodeSelection.instance.active?
+    end
+
+    def in_selection?
+      ::Bcome::NodeSelection.instance.includes?(self)
+    end
+
+    def do_load_machines(*params)
+      raise "Should be overriden"
     end
 
     private

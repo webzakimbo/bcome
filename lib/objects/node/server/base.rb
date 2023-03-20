@@ -76,7 +76,7 @@ module Bcome::Node::Server
       'server'
     end
 
-    def machines
+    def do_load_machines(skip_for_hidden = true)
       [self]
     end
 

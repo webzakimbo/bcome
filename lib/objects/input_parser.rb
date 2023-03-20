@@ -43,19 +43,18 @@ class InputParser
 
   def node_methods
     # Methods that we may want to wrap so that we can do e.g. run command rather than run 'command'
-    %w(cd helm ls workon enable disable ssh tree switch focus vrender vfocus run pseudo_tty)  
+    %w(cd helm ls workon enable disable ssh tree switch focus vrender vfocus run pseudo_tty select)  
   end
 
   def wrapped_methods
     # Methods where the whole string needs to be wrapped, rather than the individual namespaces
     # e.g cd "foo" or cd "foo:bar"
-    %w(cd helm switch focus run)
+    %w(cd helm switch focus run select)
   end
 
   def do_parse(method, arguments)
     if wrapped_methods.include?(method)
-
-      if arguments !~ /"/
+      if arguments !~ /"/  
         return "#{method} \"#{arguments}\""
       else
         return "#{method} #{arguments}"

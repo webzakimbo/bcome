@@ -146,7 +146,7 @@ module Bcome::Node::K8Cluster
       return
     end
 
-    def machines(skip_for_hidden = true)
+    def do_load_machines(skip_for_hidden = true)
       resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
       return resources.collect(&:machines).flatten
     end

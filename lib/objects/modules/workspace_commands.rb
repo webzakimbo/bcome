@@ -58,31 +58,6 @@ module Bcome
       ps.flatten
     end
 
-    def cd(breadcrumb)
-      crumbs = breadcrumb.split(":")
-
-      if breadcrumb =~ /#(.+)/ # cd from root of namespace where '#' denotes 'root'
-        root.send(:cd, $1)
-      else # cd into a child namespace
-        crumbs = breadcrumb.split(":")   
-        step = self
-
-        crumbs.each do |crumb|
-          step.load_nodes if step.respond_to?(:load_nodes) && !step.nodes_loaded?
-
-          if step = step.resources.for_identifier(crumb)
-            unless step.parent.resources.is_active_resource?(step)
-              puts "\nCannot enter context - #{breadcrumb} is disabled\n".error
-              return
-            end
-          else
-            raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node at '#{crumb}'"
-          end
-       end
-        ::Bcome::Workspace.instance.set(current_context: self, context: step)
-      end
-    end
-
     def run(*raw_commands) 
       raise Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
 
@@ -144,6 +119,47 @@ module Bcome
       resources.clear!
       resources.each(&:clear!)
       nil
+    end
+
+    def select(breadcrumb)
+      method = :select
+      node = scan_ahead(method, breadcrumb)
+      ::Bcome::NodeSelection.instance.add(node)
+      puts "\nAdded\s".bc_grey + node.namespace.informational + "\sto selection\n".bc_grey
+    end
+
+    def cd(breadcrumb)
+      method = :cd
+      node = scan_ahead(method, breadcrumb)
+      ::Bcome::Workspace.instance.set(current_context: self, context: node)
+    end
+
+    def scan_ahead(method, breadcrumb)
+      method = :select
+
+      crumbs = breadcrumb.split /[:.?]/
+
+      if breadcrumb =~ /#(.+)/ # cd from root of namespace where '#' denotes 'root'
+        root.send(method, $1)
+      else 
+        crumbs = breadcrumb.split /[:.?]/
+        step = self
+
+        crumbs.each do |crumb|
+          step.load_nodes if step.respond_to?(:load_nodes) && !step.nodes_loaded?
+
+          if step = step.resources.for_identifier(crumb)
+            unless step.parent.resources.is_active_resource?(step)
+              puts "\nCannot enter context - #{breadcrumb} is disabled\n".error
+              return
+            end
+          else
+            raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node at '#{crumb}'"
+          end
+       end
+       
+       return step
+      end
     end
 
     def workon(*ids)
