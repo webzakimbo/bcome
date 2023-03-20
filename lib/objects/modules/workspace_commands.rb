@@ -124,19 +124,19 @@ module Bcome
     def select(breadcrumb)
       method = :select
       node = scan_ahead(method, breadcrumb)
-      ::Bcome::NodeSelection.instance.add(node)
-      puts "\nAdded\s".bc_grey + node.namespace.informational + "\sto selection\n".bc_grey
+      if node
+        ::Bcome::NodeSelection.instance.add(node)
+        puts "\nAdded\s".bc_grey + node.namespace.informational + "\sto selection\n".bc_grey
+      end
     end
 
     def cd(breadcrumb)
       method = :cd
       node = scan_ahead(method, breadcrumb)
-      ::Bcome::Workspace.instance.set(current_context: self, context: node)
+      ::Bcome::Workspace.instance.set(current_context: self, context: node) if node
     end
 
     def scan_ahead(method, breadcrumb)
-      method = :select
-
       crumbs = breadcrumb.split /[:.?]/
 
       if breadcrumb =~ /#(.+)/ # cd from root of namespace where '#' denotes 'root'
