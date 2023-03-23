@@ -16,6 +16,8 @@ module Bcome::Orchestration::Catalogue
             "set filter".informational
           when :shell
             "enter container id".informational
+          when :log
+            "enter container id".informational
           when :command
             "enter command".bc_red
           end

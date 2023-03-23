@@ -8,6 +8,7 @@ module Bcome::Orchestration::Catalogue
     include Docker::CommandRunner
     include Docker::Container
     include Docker::Action
+    include Docker::TailContainer
 
     def initialize(*params)
       super

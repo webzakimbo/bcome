@@ -17,6 +17,8 @@ module Bcome::Orchestration::Catalogue
             perform_filter(raw_command)
           when :shell
             get_shell_for_id(raw_command)
+          when :logs
+           tail_container_logs(raw_command)
           when :command
             run_command_on_selection(raw_command)
           end
@@ -50,6 +52,8 @@ module Bcome::Orchestration::Catalogue
               perform_filter(params)  
             elsif params && option == "\\c"
               run_command_on_selection(params)
+            elsif params && option == "\\t"
+              tail_container_logs(params)
             else 
               @selection = menu_opt[:selection]
             end

@@ -21,6 +21,7 @@ module Bcome::Orchestration::Catalogue
               { cmd: "\\l", desc: "list containers", method: :list },
               { cmd: "\\f", desc: "filter list", selection: :filter  },
               { cmd: "\\s", desc: "shell mode", selection: :shell  },
+              { cmd: "\\t", desc: "log mode", selection: :log },
               { cmd: "\\c", desc: "run command", selection: :command },
               { cmd: "\\q", desc: "quit" },
               { cmd: "\\r", desc: "reset filter", method: :reset_filter }
@@ -34,13 +35,16 @@ module Bcome::Orchestration::Catalogue
               { cmd: "\\b", desc: "back", method: :back_to_default },
               { cmd: "\\q", desc: "quit" }
             ],
+            log: [
+              { cmd: "\\b", desc: "back", method: :back_to_default },
+              { cmd: "\\q", desc: "quit" }
+            ],
             command: [
               { cmd: "\\b", desc: "back", method: :back_to_default },
               { cmd: "\\q", desc: "quit" }
             ],
           }
         end
-
       end
     end
 end
