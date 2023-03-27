@@ -47,6 +47,10 @@ module Bcome::Node::Server
       @parent = new_parent
     end
 
+    def network_driver
+      parent.network_driver
+    end
+
     def tags
       data_print_from_hash(cloud_tags.data, 'Tags')
     end
