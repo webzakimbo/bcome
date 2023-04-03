@@ -5,12 +5,17 @@ module Bcome
 
     include Bcome::Draw
 
+   # def watch(text, lines_back = 1)
+   #   erase_lines = "\033[1A\033[0K" * lines_back
+   #   system("echo \"\r#{erase_lines}#{text}\"")
+   # end
+
     ####################################################################
     ## Node tree  - dynamic rendering of any parent->*child hierarchy  #
     ####################################################################
     def tree(config = {})
       unless resources.any?
-        puts "No tree available at this node. #{type.capitalize.informational} #{identifier.bc_white} does not have any children.\n\n"
+        puts "\nNo tree available at this node. #{type.capitalize.informational} #{identifier.bc_white} does not have any children.\n\n"
         return 
       end
 
@@ -22,8 +27,8 @@ module Bcome
             resource.load_nodes
           end  
         end
-        return build_tree(:network_namespace_tree_data, title_prefix, config)
-      #end
+        build_tree(:network_namespace_tree_data, title_prefix, config)
+        config[:return_lines] ? (return @lines) : (print  @lines.join("\n"))
     end
 
     ######################
@@ -34,7 +39,8 @@ module Bcome
         puts "\nNo routes are found below this namespace (empty server list)\n".warning
       else
         title_prefix = 'Ssh connection routes'
-        build_tree(:routing_tree_data, title_prefix, {})
+        @lines = build_tree(:routing_tree_data, title_prefix, {})
+        print @lines.join("\n")
       end
     end
 
@@ -131,20 +137,16 @@ module Bcome
       @lines << INGRESS.to_s
 
       if data.nil?
-        parent.build_tree(data_build_method)
-        return
+        @lines << parent.build_tree(data_build_method)
+        return @lines.flatten
       end
    
       padding = ""
 
       recurse_tree_lines(data, padding, depth)
 
-      @lines.each do |line|
-        print "#{LEFT_PADDING}#{line}\n"
-      end
-
-      print "\n\n"
-      p
+      @lines << "\n\n"
+      return @lines
     end
 
     def recurse_tree_lines(data, padding, depth)
