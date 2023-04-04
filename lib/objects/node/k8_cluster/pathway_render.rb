@@ -5,7 +5,9 @@ module Bcome::Node::K8Cluster::PathwayRender
       resource.send(:routes)
     else
       caller_stack = {}
-      build_tree(:pathway_data, "routes", caller_stack)
+      @lines = build_tree(:pathway_data, "routes", caller_stack)
+
+      print @lines.join("\n")
     end
     return
   end
