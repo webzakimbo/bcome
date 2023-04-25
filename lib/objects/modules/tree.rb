@@ -146,6 +146,7 @@ module Bcome
       recurse_tree_lines(data, padding, depth)
 
       @lines << "\n\n"
+
       return @lines
     end
 
