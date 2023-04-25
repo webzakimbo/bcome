@@ -7,7 +7,7 @@ module Bcome::Orchestration::Catalogue
     end
 
     def stream
-      target_selector ? targets.each {|server| server.run(command) } : @node.run(command)
+      target_selector ? targets.pmap {|server| server.run(command) } : @node.run(command)
     end
 
     def command
