@@ -14,10 +14,10 @@ module ::Bcome::Ssh
       @context_node.execute_local(command)
     end
 
-    def local_port_forward(start_port, end_port)
+    def local_port_forward(start_port, end_port, return_tunnel = false)
       tunnel_command = local_port_forward_command(start_port, end_port)
 
-      if ::Bcome::Workspace.instance.console_set?
+      if ::Bcome::Workspace.instance.console_set? || return_tunnel
         puts "\sOpening ssh tunnel:\s".informational + tunnel_command.to_s.terminal_prompt
         tunnel = ::Bcome::Ssh::Tunnel::LocalPortForward.new(tunnel_command)
         ::Bcome::Ssh::TunnelKeeper.instance << tunnel

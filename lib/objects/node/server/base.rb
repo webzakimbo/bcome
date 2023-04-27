@@ -135,8 +135,8 @@ module Bcome::Node::Server
       base_items
     end
 
-    def local_port_forward(start_port, end_port)
-      ssh_driver.local_port_forward(start_port, end_port)
+    def local_port_forward(start_port, end_port, return_tunnel = false)
+      ssh_driver.local_port_forward(start_port, end_port, return_tunnel)
     end
     alias tunnel local_port_forward
 
