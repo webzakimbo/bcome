@@ -116,6 +116,7 @@ module Bcome
 
     def clear!
       # Clear any disabled selection at this level and at all levels below
+      ::Bcome::NodeSelection.instance.clear!
       resources.clear!
       resources.each(&:clear!)
       nil
