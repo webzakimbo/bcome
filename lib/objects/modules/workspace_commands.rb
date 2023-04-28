@@ -123,11 +123,14 @@ module Bcome
     end
 
     def select(breadcrumb)
+      crumbs = breadcrumb.split(",").collect{|c| c.gsub("\s", "") }
       method = :select
-      node = scan_ahead(method, breadcrumb)
-      if node
-        ::Bcome::NodeSelection.instance.add(node)
-        puts "\nAdded\s".bc_grey + node.namespace.informational + "\sto selection\n".bc_grey
+      crumbs.each do |crumb|
+        node = scan_ahead(method, crumb)
+        if node
+          ::Bcome::NodeSelection.instance.add(node)
+          puts "\nAdded\s".bc_grey + node.namespace.informational + "\sto selection\n".bc_grey
+        end
       end
     end
 
