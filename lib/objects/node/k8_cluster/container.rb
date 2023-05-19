@@ -111,7 +111,7 @@ module Bcome::Node::K8Cluster
     end
     
     def logs(annotate = false, cmd = "")
-      log_command = "logs #{parent.hyphenated_identifier} -c #{hyphenated_identifier} -n #{k8_namespace.hyphenated_identifier} --follow"
+      log_command = "logs #{parent.hyphenated_identifier} -c #{hyphenated_identifier} -n #{k8_namespace.hyphenated_identifier} --tail 10"
       full_log_command = get_kubectl_cmd(log_command)
 
       full_log_command = "#{full_log_command} | #{cmd}" unless cmd.empty?

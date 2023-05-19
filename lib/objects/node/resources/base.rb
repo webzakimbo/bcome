@@ -124,5 +124,10 @@ module Bcome::Node::Resources
     def first
       @nodes.first
     end
+
+    def last
+      @nodes.last
+    end
+
   end
 end

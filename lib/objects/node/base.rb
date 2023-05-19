@@ -398,6 +398,14 @@ module Bcome::Node
       raise "Should be overriden"
     end
 
+    def first
+      resources.first
+    end
+
+    def last
+      resources.last
+    end
+
     private
 
     def singleton_class
