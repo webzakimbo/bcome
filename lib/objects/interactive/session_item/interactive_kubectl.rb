@@ -6,6 +6,7 @@ module Bcome::Interactive::SessionItem
     END_SESSION_KEYS = ['\\q', 'exit']
     HELP_KEY = '\\?'
     REAUTH_KEY = '\\r'
+    EXPORT_KEY = '\\e'
 
     def start_message
       puts "\nAny commands you enter here will be passed directly to your bcome node's kubectl context.\n"
@@ -34,6 +35,10 @@ module Bcome::Interactive::SessionItem
       elsif reauth?(input)
         puts "\n"
         reauth
+        puts "\n"
+      elsif export?(input)
+        puts "\n"
+        export
         puts "\n"
       else
         puts "\n"
@@ -71,12 +76,16 @@ module Bcome::Interactive::SessionItem
     end
  
     def show_menu
-      info = "\\q or exit to quit\n\\r to reauthenticate to your cluster\n\\? this message".informational
+      info = "\\q or exit to quit\n\\e to export your cluster context\n\\r to reauthenticate to your cluster\n\\? this message".informational
       puts "\n#{info}\n\n"
     end
 
     def reauth
       k8_cluster.reauthorize!
+    end
+
+    def export
+      node.export
     end
 
     def k8_cluster
@@ -117,5 +126,10 @@ module Bcome::Interactive::SessionItem
     def reauth?(input)
       input == REAUTH_KEY
     end
+
+    def export?(input)
+      input == EXPORT_KEY
+    end  
+
   end
 end
