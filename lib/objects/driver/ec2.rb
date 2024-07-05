@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'fog/aws'
+require 'aws-sdk-core'
 
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
@@ -9,9 +10,22 @@ module Bcome::Driver
     def initialize(*params)
       super
       raise Bcome::Exception::Ec2DriverMissingProvisioningRegion, params.inspect unless provisioning_region
-      raise ::Bcome::Exception::Ec2DriverMissingAuthorizationKeys, PATH_TO_FOG_CREDENTIALS unless File.exist?(PATH_TO_FOG_CREDENTIALS)
+      set_fog_creds_env
+    end
 
-      ENV['FOG_RC'] = PATH_TO_FOG_CREDENTIALS
+    def set_fog_creds_env
+      if File.exist?(PATH_TO_FOG_CREDENTIALS)
+        ENV['FOG_RC'] = PATH_TO_FOG_CREDENTIALS
+      elsif File.exist?(default_creds_path)
+        # default credentials are in .ini format, and fog expects YAML
+        @credentials = Aws::SharedCredentials.new(profile_name: credentials_key)
+      else
+        raise ::Bcome::Exception::Ec2DriverMissingAuthorizationKeys, PATH_TO_FOG_CREDENTIALS
+      end
+    end  
+
+    def default_creds_path
+      return File.expand_path("~/.aws/credentials")
     end
 
     def pretty_provider_name
@@ -89,11 +103,19 @@ module Bcome::Driver
     def get_fog_client
       ::Fog.credential = credentials_key
 
-      client = ::Fog::Compute.new(
+      fog_config = {
         provider: 'AWS',
         region: provisioning_region
-      )
-      client
+      }
+
+      if @credentials
+        fog_config["aws_access_key_id"] = @credentials.credentials.access_key_id
+        fog_config["aws_secret_access_key"] = @credentials.credentials.secret_access_key
+        fog_config["aws_session_token"] = @credentials.credentials.session_token
+      end  
+
+      client = ::Fog::Compute.new(fog_config)
+      return client
     end
   end
 end
