@@ -13,7 +13,7 @@ module Bcome
           command_group.pretty_print
         else
           puts "\nYou have no registry commands configured for this namespace.".bc_white
-          puts "\nSee the documentation at ".bc_white + "https://docs.bcome.com".informational + " if you need help.\n"
+          puts "\nSee the documentation at ".bc_white + "https://docs.bcome.com".informational + " if you need help.\n\n"
         end
       end
     end

@@ -28,7 +28,8 @@ module Bcome
           end  
         end
         build_tree(:network_namespace_tree_data, title_prefix, config)
-        config[:return_lines] ? (return @lines) : (print  @lines.join("\n"))
+
+       config[:return_lines] ? (return @lines) : (print  @lines.join("\n"))
     end
 
     ######################
@@ -174,7 +175,7 @@ module Bcome
         @lines << "#{padding}#{branch}" if labels.size > 1
         next unless values&.is_a?(Hash)
 
-        tab_padding = padding + branch + ("\s" * (anchor.length + 4))
+        tab_padding = padding + branch + ("\s" * (anchor.length + 0))
 
         if depth.nil? || (depth && depth > 0)
           recurse_tree_lines(values, tab_padding, depth)
