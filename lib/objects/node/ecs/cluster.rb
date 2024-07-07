@@ -25,9 +25,9 @@ module Bcome::Node::Ecs
     end
 
     def load_dynamic_nodes
-      raw_tasks = load_tasks
-      raw_tasks ||= []
-      return raw_tasks
+      tasks = load_tasks
+      tasks ||= []
+      return tasks
     end
 
     def load_tasks
@@ -35,7 +35,27 @@ module Bcome::Node::Ecs
       task_arns = task_config[:body]["ListTasksResult"]["taskArns"]
       
       task_arns.each do |task_arn|
-        resources << ::Bcome::Node::Ecs::Task.new(task_arn)
+        detail_response = fog_client.describe_tasks('cluster' => @cluster_arn, 'tasks' => [task_arn])
+        full_details = detail_response.data[:body]["DescribeTasksResult"]["tasks"]
+        ## Aws send us a load of empty maps for some reason, so let's remove them
+        removed_empty = full_details.select{|d| d.keys.any? }
+
+        ## and then, we are left with an array containing two hashes. Weirdly, the keys across both hashes can appear in either in between requests. As they are unique, we can safely merge both maps and get a single data structure. Wtf aws.
+        one_map = removed_empty[1].merge(removed_empty[0])
+
+        one_map["taskDefinitionArn"] =~ /arn:aws:ecs:.+:[0-9]+:task-definition\/(.+):([0-9]+)/
+        task_definition_name = $1
+        task_definition_iteration = $2
+
+        resources << ::Bcome::Node::Ecs::Task.new(
+          views: {
+            identifier: task_definition_name,
+            iteration: task_definition_iteration,
+            type: "ecs/task",
+            raw_containers: one_map["containers"]
+          },  
+          parent: self
+         )
       end
     end
 

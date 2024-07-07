@@ -36,8 +36,12 @@ module Bcome::Driver
       @node.network_data[:provisioning_region]
     end
 
-    def fog_client
-      @fog_client ||= get_fog_client
+    def fog_compute_client
+      @fog_client ||= get_fog_compute_client
+    end
+
+    def fog_ecs_client
+      @fog_ecs_client ||= get_fog_ecs_client
     end
 
     def fetch_server_list(legacy_ec2_filters)
@@ -59,8 +63,29 @@ module Bcome::Driver
       @servers
     end
 
+    def fetch_ecs_containers(filters)
+
+      ## LEVEL TWO: First dynamic namespace level: tasks
+      task_arns = fog_ecs_client.list_tasks('cluster' => cluster_arn)
+      task_arns = task_arns[:body]["ListTasksResult"]["taskArns"]
+      task_arn = task_arns.first ## todo - just getting first here as an example
+      ## Task should describe itself to auto-populate the node:
+      task_details = fog_ecs_client.describe_tasks('cluster' => cluster_arn, 'tasks' => [task_arn])
+      ### ...
+
+      # LEVEL THREE: Second dynamic namespace level: containers
+      ## Per task, list the containers.
+      ## It's on this level that we're going to expose shell & log tails
+
+
+
+      # TODO raise if cluster_info empty
+
+      binding.pry
+    end
+
     def unfiltered_server_list
-      @unfiltered_server_list ||= fog_client.servers.all({})
+      @unfiltered_server_list ||= fog_compute_client.servers.all({})
     end
 
     def loading
@@ -100,7 +125,17 @@ module Bcome::Driver
 
     protected
 
-    def get_fog_client
+    def get_fog_ecs_client
+      return get_fog_client(::Fog::AWS::ECS)
+    end
+
+
+    def get_fog_compute_client
+      return get_fog_client(::Fog::Compute)
+    end
+
+
+    def get_fog_client(client_klass)
       ::Fog.credential = credentials_key
 
       fog_config = {
@@ -112,10 +147,12 @@ module Bcome::Driver
         fog_config["aws_access_key_id"] = @credentials.credentials.access_key_id
         fog_config["aws_secret_access_key"] = @credentials.credentials.secret_access_key
         fog_config["aws_session_token"] = @credentials.credentials.session_token
-      end  
+      end
 
-      client = ::Fog::Compute.new(fog_config)
+      client = client_klass.new(fog_config)
       return client
     end
+
+
   end
 end

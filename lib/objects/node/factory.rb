@@ -15,6 +15,7 @@ module Bcome::Node
     INVENTORY_KEY = 'inventory'
     GCP_KUBE_COLLECTION_KEY = 'gke-k8s-cluster'
     AWS_KUBE_COLLECTION_KEY = 'eks-k8s-cluster'
+    AWS_ECS_COLLECTION_KEY  = 'aws-ecs-cluster'
     COLLECTION_KEY = 'collection'
     SUBSELECT_KEY = 'inventory-subselect'
     MERGE_KEY = 'inventory-merge'
@@ -78,7 +79,7 @@ module Bcome::Node
       parent.resources << node if parent
 
       # Load inventory resources as early as possible
-      if node.is_a?(Bcome::Node::Inventory::Base)
+      if node.is_a?(Bcome::Node::Inventory::Base) || node.is_a?(Bcome::Node::Ecs::Cluster)
         node.load_nodes unless node.nodes_loaded?
       end
 
@@ -101,7 +102,8 @@ module Bcome::Node
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
         SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,
         MERGE_KEY => ::Bcome::Node::Inventory::Merge,
-        K8_SUBSELECT => ::Bcome::Node::K8Cluster::Subselect
+        K8_SUBSELECT => ::Bcome::Node::K8Cluster::Subselect,
+        AWS_ECS_COLLECTION_KEY => ::Bcome::Node::Ecs::Cluster
       }
     end
 
