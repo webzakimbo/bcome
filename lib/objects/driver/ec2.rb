@@ -2,6 +2,7 @@
 
 require 'fog/aws'
 require 'aws-sdk-core'
+require 'aws-sdk-ecs'
 
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
@@ -44,6 +45,10 @@ module Bcome::Driver
       @fog_ecs_client ||= get_fog_ecs_client
     end
 
+    def aws_ecs_client
+      @aws_ecs_client ||= get_aws_ecs_client
+    end
+
     def fetch_server_list(legacy_ec2_filters)
       # Filters should be defined within a namespace's :network element. Pre 2.0 the expectation was
       # to define filters at the root level of the namespace. Here we move :filters into :network, yet retain
@@ -61,27 +66,6 @@ module Bcome::Driver
       end
 
       @servers
-    end
-
-    def fetch_ecs_containers(filters)
-
-      ## LEVEL TWO: First dynamic namespace level: tasks
-      task_arns = fog_ecs_client.list_tasks('cluster' => cluster_arn)
-      task_arns = task_arns[:body]["ListTasksResult"]["taskArns"]
-      task_arn = task_arns.first ## todo - just getting first here as an example
-      ## Task should describe itself to auto-populate the node:
-      task_details = fog_ecs_client.describe_tasks('cluster' => cluster_arn, 'tasks' => [task_arn])
-      ### ...
-
-      # LEVEL THREE: Second dynamic namespace level: containers
-      ## Per task, list the containers.
-      ## It's on this level that we're going to expose shell & log tails
-
-
-
-      # TODO raise if cluster_info empty
-
-      binding.pry
     end
 
     def unfiltered_server_list
@@ -126,22 +110,34 @@ module Bcome::Driver
     protected
 
     def get_fog_ecs_client
-      return get_fog_client(::Fog::AWS::ECS)
+      requires_provider = false
+      return get_fog_client(::Fog::AWS::ECS, requires_provider)
     end
 
+    def get_aws_ecs_client
+      if @credentials
+        aws_creds = Aws::Credentials.new(
+          @credentials.credentials.access_key_id, 
+          @credentials.credentials.secret_access_key,
+          @credentials.credentials.session_token
+        )
+      end
+    
+      return Aws::ECS::Client.new(
+        region: provisioning_region,
+        credentials: aws_creds
+      )    
+    end
 
     def get_fog_compute_client
       return get_fog_client(::Fog::Compute)
     end
 
-
-    def get_fog_client(client_klass)
+    def get_fog_client(client_klass, requires_provider = true)
       ::Fog.credential = credentials_key
 
-      fog_config = {
-        provider: 'AWS',
-        region: provisioning_region
-      }
+      fog_config = { region: provisioning_region }
+      fog_config[:provider] = 'AWS' if requires_provider
 
       if @credentials
         fog_config["aws_access_key_id"] = @credentials.credentials.access_key_id
@@ -152,7 +148,5 @@ module Bcome::Driver
       client = client_klass.new(fog_config)
       return client
     end
-
-
   end
 end

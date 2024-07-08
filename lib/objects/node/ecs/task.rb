@@ -1,6 +1,8 @@
 module Bcome::Node::Ecs
   class Task < Bcome::Node::Base
 
+    attr_reader :arn
+
     def initialize(*params)
       super
       @nodes_loaded = false
@@ -11,8 +13,16 @@ module Bcome::Node::Ecs
       "task iteration ##{iteration}"
     end
 
+    def cluster_name
+      return parent.cluster_name
+    end
+
     def fog_client
-      parent.fog_ecs_client
+      parent.fog_client
+    end
+
+    def aws_client
+      parent.aws_client
     end
 
     def resources
@@ -35,7 +45,22 @@ module Bcome::Node::Ecs
     end
 
     def load_containers
-      binding.pry
+      views[:raw_containers].pmap do |cont_config|
+        next unless cont_config.has_key?("name")
+
+        container_arn = cont_config["containerArn"]
+ 
+        resources << ::Bcome::Node::Ecs::Container.new(
+          views: {
+            identifier: cont_config["name"],
+            type: "ecs/container",
+            arn: cont_config["containerArn"],
+            status: cont_config["lastStatus"]
+          },
+          arn: container_arn,
+          parent: self
+        )
+      end
 
     end
 

@@ -1,6 +1,10 @@
 module Bcome::Node::Ecs
   class Cluster < Bcome::Node::Base
 
+    include ::Bcome::LoadingBar::Handler
+
+    attr_reader :cluster_name
+
     def initialize(*params)
       super
       @nodes_loaded = false
@@ -9,6 +13,10 @@ module Bcome::Node::Ecs
 
     def fog_client
       network_driver.fog_ecs_client
+    end
+
+    def aws_client
+      network_driver.aws_ecs_client
     end
 
     def resources
@@ -34,29 +42,37 @@ module Bcome::Node::Ecs
       task_config = fog_client.list_tasks('cluster' => @cluster_arn)    
       task_arns = task_config[:body]["ListTasksResult"]["taskArns"]
       
-      task_arns.each do |task_arn|
-        detail_response = fog_client.describe_tasks('cluster' => @cluster_arn, 'tasks' => [task_arn])
-        full_details = detail_response.data[:body]["DescribeTasksResult"]["tasks"]
-        ## Aws send us a load of empty maps for some reason, so let's remove them
-        removed_empty = full_details.select{|d| d.keys.any? }
+      title = 'Loading' + "\sECS".bc_blue.bold + "\s" + namespace.to_s.underline
+      #wrap_indicator type: :basic, title: title, completed_title: '' do
 
-        ## and then, we are left with an array containing two hashes. Weirdly, the keys across both hashes can appear in either in between requests. As they are unique, we can safely merge both maps and get a single data structure. Wtf aws.
-        one_map = removed_empty[1].merge(removed_empty[0])
+        task_arns.pmap do |task_arn|
+          # Retrieve cluster & task details
+          detail_response = fog_client.describe_tasks('cluster' => @cluster_arn, 'tasks' => [task_arn])
+          full_details = detail_response.data[:body]["DescribeTasksResult"]["tasks"]
 
-        one_map["taskDefinitionArn"] =~ /arn:aws:ecs:.+:[0-9]+:task-definition\/(.+):([0-9]+)/
-        task_definition_name = $1
-        task_definition_iteration = $2
+          # Cleanup dirty AWS data structure
+          removed_empty = full_details.select{|d| d.keys.any? }
+          one_map = removed_empty[1].merge(removed_empty[0])
 
-        resources << ::Bcome::Node::Ecs::Task.new(
-          views: {
-            identifier: task_definition_name,
-            iteration: task_definition_iteration,
-            type: "ecs/task",
-            raw_containers: one_map["containers"]
-          },  
-          parent: self
-         )
-      end
+          # Derive node name        
+          one_map["taskDefinitionArn"] =~ /arn:aws:ecs:.+:[0-9]+:task-definition\/(.+):([0-9]+)/
+          task_definition_name = $1
+          task_definition_iteration = $2
+
+          # Set task resources
+          resources << ::Bcome::Node::Ecs::Task.new(
+            views: {
+              identifier: task_definition_name,
+              iteration: task_definition_iteration,
+              type: "ecs/task",
+              raw_containers: one_map["containers"],
+              arn: task_arn,
+            }, 
+            parent: self
+           )
+        end
+      #  signal_success
+      #end
     end
 
     def initialize_cluster_node
