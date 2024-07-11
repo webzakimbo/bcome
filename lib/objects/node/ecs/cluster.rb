@@ -31,6 +31,17 @@ module Bcome::Node::Ecs
       @resources ||= ::Bcome::Node::Resources::Ecs.new(self)
     end
 
+    def reload
+      resources.reset_duplicate_nodes!
+      do_reload
+      puts "\n\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
+    end
+
+    def do_reload
+      resources.unset!
+      load_dynamic_nodes
+    end
+
     def is_dynamic
       return true
     end  
