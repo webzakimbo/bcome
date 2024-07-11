@@ -25,8 +25,16 @@ module Bcome::Node::Ecs
       parent.aws_client
     end
 
+    def region
+      parent.region
+    end
+
+    def credentials_key
+      parent.credentials_key
+    end
+
     def resources
-      @resources ||= ::Bcome::Node::Resources::Base.new(self)
+      @resources ||= ::Bcome::Node::Resources::Ecs.new(self)
     end
 
     def is_dynamic
@@ -49,20 +57,39 @@ module Bcome::Node::Ecs
         next unless cont_config.has_key?("name")
 
         container_arn = cont_config["containerArn"]
- 
+
+        next unless cont_config["lastStatus"] in ["RUNNING", "PENDING"]
+
         resources << ::Bcome::Node::Ecs::Container.new(
           views: {
             identifier: cont_config["name"],
             type: "ecs/container",
             arn: cont_config["containerArn"],
-            status: cont_config["lastStatus"]
+            status: cont_config["lastStatus"],
+            definition: container_definition_for_identifier(cont_config["name"]),
           },
           arn: container_arn,
           parent: self
         )
       end
-
     end
+
+    def definition
+      @definition ||= get_definition  
+    end
+
+    def get_definition
+      response = aws_client.describe_task_definition(:task_definition => identifier)
+      return response.task_definition
+    end
+
+    def container_definitions
+      return definition.container_definitions
+    end
+
+    def container_definition_for_identifier(container_identifier)
+      return container_definitions.select{|c| c[:name] == container_identifier }.first
+    end 
 
   end
 end

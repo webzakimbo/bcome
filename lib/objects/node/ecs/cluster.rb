@@ -19,8 +19,16 @@ module Bcome::Node::Ecs
       network_driver.aws_ecs_client
     end
 
+    def region
+      return network_data[:provisioning_region]
+    end
+
+    def credentials_key
+      return network_driver.credentials_key
+    end
+
     def resources
-      @resources ||= ::Bcome::Node::Resources::Base.new(self)
+      @resources ||= ::Bcome::Node::Resources::Ecs.new(self)
     end
 
     def is_dynamic
