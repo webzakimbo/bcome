@@ -35,6 +35,12 @@ module Bcome::Node::Ecs
       return true
     end  
 
+    def logs
+      resources.active.pmap do |task|
+        task.logs
+      end
+    end
+
     def load_nodes
       load_dynamic_nodes unless resources.any?
       nodes_loaded!

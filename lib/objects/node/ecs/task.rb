@@ -33,6 +33,12 @@ module Bcome::Node::Ecs
       parent.credentials_key
     end
 
+    def logs
+      resources.active.pmap do |container|
+        container.logs if container.logs_enabled?
+      end
+    end
+
     def resources
       @resources ||= ::Bcome::Node::Resources::Ecs.new(self)
     end
@@ -58,7 +64,9 @@ module Bcome::Node::Ecs
 
         container_arn = cont_config["containerArn"]
 
-        next unless cont_config["lastStatus"] in ["RUNNING", "PENDING"]
+        next unless ["RUNNING","PENDING"].include?(cont_config["lastStatus"])
+
+        # next unless cont_config["lastStatus"]"RUNNING", "PENDING"]
 
         resources << ::Bcome::Node::Ecs::Container.new(
           views: {

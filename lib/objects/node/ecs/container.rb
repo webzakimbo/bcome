@@ -36,11 +36,19 @@ module Bcome::Node::Ecs
       log_config[:options]["awslogs-stream-prefix"]
     end
 
+    def logs_enabled?
+      !definition.nil? && log_config
+    end
+
     def logs
-      command = "aws --profile #{parent.credentials_key} logs tail"
-      command += "\s#{log_group} --region #{parent.region}"
-      command += "\s--log-stream-name-prefix #{log_stream_prefix} --follow"
-      system(command)
+      unless logs_enabled?
+        puts "Logs are not enabled for this container".warning 
+      else
+        command = "aws --profile #{parent.credentials_key} logs tail"
+        command += "\s#{log_group} --region #{parent.region}"
+        command += "\s--log-stream-name-prefix #{log_stream_prefix} --follow"
+        system(command)
+      end
     end
 
     def cluster_name
