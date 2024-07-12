@@ -68,7 +68,7 @@ module Bcome::Node::Ecs
       task_arns = task_config[:body]["ListTasksResult"]["taskArns"]
       
       title = 'Loading' + "\sECS".bc_blue.bold + "\s" + namespace.to_s.underline
-      #wrap_indicator type: :basic, title: title, completed_title: '' do
+      wrap_indicator type: :basic, title: title, completed_title: '' do
 
         task_arns.pmap do |task_arn|
           # Retrieve cluster & task details
@@ -96,8 +96,8 @@ module Bcome::Node::Ecs
             parent: self
            )
         end
-      #  signal_success
-      #end
+        signal_success
+      end
     end
 
     def initialize_cluster_node
