@@ -71,10 +71,10 @@ module UnitTestHelper
   end
 
   def given_a_dummy_estate
-    ::Bcome::Node::Collection.new(given_estate_setup_params)
+    ::Bcome::Node::Collection::Base.new(given_estate_setup_params)
   end
 
   def given_a_dummy_collection(add_to_view_params = {})
-    ::Bcome::Node::Collection.new(views: { type: 'collection', identifier: given_a_random_string_of_length(5), description: given_a_random_string_of_length(5) }.merge(add_to_view_params))
+    ::Bcome::Node::Collection::Base.new(views: { type: 'collection', identifier: given_a_random_string_of_length(5), description: given_a_random_string_of_length(5) }.merge(add_to_view_params))
   end
 end

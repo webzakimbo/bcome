@@ -12,6 +12,7 @@ module Bcome::Node::Server::Dynamic
 
         params = {
           identifier: identifier,
+          ec2_id: fog_instance.id,
           internal_ip_address: fog_instance.private_ip_address,
           public_ip_address: fog_instance.public_ip_address,
           role: fog_instance.tags['function'],
@@ -23,8 +24,14 @@ module Bcome::Node::Server::Dynamic
       end
     end
 
+    def list_attributes
+      super.merge({
+        "ec2_id": :ec2_id,     
+      })
+    end
+
     def host
-      'EC2'
+      'ec2'
     end
 
     def do_generate_cloud_tags

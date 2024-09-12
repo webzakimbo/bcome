@@ -22,7 +22,10 @@ module Bcome::Interactive
       def session_type_to_klass
         {
           interactive_ssh: ::Bcome::Interactive::SessionItem::TransparentSsh,
-          capture_input: ::Bcome::Interactive::SessionItem::CaptureInput
+          capture_input: ::Bcome::Interactive::SessionItem::CaptureInput,
+          interactive_kubectl: ::Bcome::Interactive::SessionItem::InteractiveKubectl,
+          interactive_helm: ::Bcome::Interactive::SessionItem::InteractiveHelm,
+          ad_hoc_cli: ::Bcome::Interactive::SessionItem::AdHocCli
         }
       end
     end

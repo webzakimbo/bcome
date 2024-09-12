@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Bcome::Driver::Gcp::Authentication
   class SignetServiceAccountClient < Signet::OAuth2::Client
     def initialize(scopes, service_account_json_path)
@@ -13,8 +12,12 @@ module Bcome::Driver::Gcp::Authentication
       token
     end
 
-    def authorize
-      @token ||= fetch_access_token
+    def authorize(reauth = true)
+      if reauth
+        @token = fetch_access_token
+      else
+        @token ||= fetch_access_token
+      end
     end
 
     def authorizer

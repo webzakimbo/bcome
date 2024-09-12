@@ -76,7 +76,8 @@ module Bcome::Ssh
       {
         by_inventory_node: :get_host_by_inventory_node,
         by_host_or_ip: :get_host_or_ip_from_config,
-        by_bcome_namespace: :get_host_by_namespace
+        by_bcome_namespace: :get_host_by_namespace, # in bcome 3.0.0 we switched to referring to namespaces as nodes. This needs to be kept in for backwards compatibility
+        by_bcome_node: :get_host_by_namespace
       }
     end
 

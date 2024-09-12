@@ -1,0 +1,102 @@
+---
+containers_from_pods: &containers_from_pods
+  abstract: container
+  decorators:
+    - name: image
+      json_path: image
+  retrieval:
+    klass: Bcome::Node::K8Cluster::Container
+    type: json_path
+    paths:
+      - spec.containers
+      - spec.initContainers
+    mergePaths:
+      - status.containerStatuses
+      - status.initContainerStatuses
+
+pods_by_selector: &pods_by_selector
+  resource: pod
+  retrieval:
+    type: by_selector
+
+default_view: simple #services
+
+views:
+- name: virtualservices
+  description: All virtualservices
+  tree:
+    - resource: virtualservice  
+      decorators:
+      - name: identifier
+        json_path: spec.hosts[*]      
+    
+- name: simple
+  description: Pods & containers
+  tree:
+    - resource: pod
+    - *containers_from_pods
+
+- name: services
+  description: Service, pods & their containers
+  tree:
+    - resource: service
+    - abstract: port
+      retrieval:
+        type: json_path
+        paths:
+        - spec.ports
+        cherryPick:
+        - key: selector
+          path: spec.selector
+      decorators:
+      - name: port
+        json_path: port
+      - name: target
+        json_path: targetPort
+    - *pods_by_selector
+    - *containers_from_pods
+
+- name: paths
+  description: Ingress to container routing paths
+  tree:
+    - resource: ingress
+    - abstract: rule
+      decorators:   
+        - name: hostname
+          json_path: host
+      retrieval:
+        type: json_path
+        paths:
+          - spec.rules
+    - abstract: path
+      decorators:
+        - name: identifier
+          json_path: path
+      retrieval:
+        type: json_path
+        paths:
+          - http.paths
+          - https.paths
+    - resource: service
+      retrieval:
+        type: by_reference
+        reference: backend.service.name
+    - *pods_by_selector
+    - *containers_from_pods
+
+- name: certs
+  description: Cert Manager flow
+  tree:
+    - resource: order
+    - resource: certificaterequest
+      retrieval:
+        type: by_reference
+        reference: metadata.ownerReferences[0].name
+    - resource: certificate
+      retrieval:
+        type: by_reference
+        reference: metadata.annotations.'cert-manager.io/certificate-name'
+    - resource: clusterissuer 
+      retrieval:
+        type: by_reference 
+        reference: spec.issuerRef.name

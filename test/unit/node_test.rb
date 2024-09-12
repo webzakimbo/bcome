@@ -18,11 +18,11 @@ class NodeTest < ActiveSupport::TestCase
     }
 
     # when
-    node = Bcome::Node::Collection.new(params)
+    node = Bcome::Node::Collection::Base.new(params)
 
     # Then
     assert node.is_a?(Bcome::Node::Base)
-    assert node.is_a?(Bcome::Node::Collection)
+    assert node.is_a?(Bcome::Node::Collection::Base)
     assert node.identifier == identifier
     assert node.description == description
     assert node.type == type

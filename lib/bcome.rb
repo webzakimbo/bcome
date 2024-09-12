@@ -9,6 +9,10 @@ require 'require_all'
 require 'tty-cursor'
 require 'strings-ansi'
 require 'pry'
+require 'jsonpath'
+require 'awesome_print'
+require 'readline'
+require 'reline'
 
 require_all "#{File.dirname(__FILE__)}/../patches"
 require_all "#{File.dirname(__FILE__)}/../lib/objects"

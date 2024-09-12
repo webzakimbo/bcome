@@ -60,6 +60,7 @@ module Bcome
 
     def unpack
       prompt_for_key
+      puts "\n"
       toggle_packed_files(all_encrypted_filenames, :decrypt)
       nil
     end
@@ -125,6 +126,7 @@ module Bcome
     def toggle_packed_files(filenames, packer_method)
       raise 'Missing encryption key. Please set an encryption key' unless @key
 
+      puts "\n"
       filenames.each do |filename|
         # Get raw
         raw_contents = File.read(filename)
@@ -153,7 +155,6 @@ module Bcome
 
         # Write encrypted/decryption action
         enc_decrypt_result = raw_contents.send(packer_method, @key)
-        print "\n\n"
         puts "#{action}\s".informational + filename + "\sto\s".informational + "#{path_to_metadata}/" + opposing_filename
         write_file(opposing_filename, enc_decrypt_result)
       end

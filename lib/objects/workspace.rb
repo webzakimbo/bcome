@@ -16,7 +16,7 @@ class ::Bcome::Workspace
     init_irb unless console_set?
 
     @context = params[:context]
-    @context.load_nodes if @context.inventory? && !@context.nodes_loaded?
+    @context.load_nodes if @context.respond_to?(:load_nodes) && !@context.nodes_loaded?
 
     main_context = IRB.conf[:MAIN_CONTEXT]
 
@@ -29,11 +29,24 @@ class ::Bcome::Workspace
     nil
   end
 
+  def screen_width
+    height, width = Reline.get_screen_size
+    return width
+  end
+
+  def print_divider(width)
+    print (::Bcome::Draw::BOX_HORIZONTAL_LINE * width).bc_grey + "\n" 
+  end
+
   def show_welcome
-    puts "\n\n"
-    puts "Welcome to bcome v#{::Bcome::Version.release}".bc_yellow
+    puts "\nWelcome to bcome v#{::Bcome::Version.release}".bc_yellow
     puts "\nType\s" + 'menu'.underline + "\sfor a command list, or\s" + 'registry'.underline + "\sfor your custom tasks."
-    puts "\n\n"
+    puts "\n"
+
+    width = screen_width 
+    print_divider(width) if width
+
+    puts "\n"
   end
 
   def console_set!
@@ -56,8 +69,21 @@ class ::Bcome::Workspace
     !context.nil?
   end
 
+  def kubernetes_focus_on
+    @focus_on ||= default_kubernetes_focus_on
+  end
+
+  def default_kubernetes_focus_on
+    ::Bcome::Node::K8Cluster::Pod
+  end
+
+  def set_kubernetes_focus(klass)
+    @focus_on = klass
+  end
+
   def irb_prompt
-    @context ? @context.prompt_breadcrumb : default_prompt
+    prompt = @context ? @context.prompt_breadcrumb : default_prompt
+    return prompt
   end
 
   def default_prompt

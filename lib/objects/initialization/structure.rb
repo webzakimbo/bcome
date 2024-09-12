@@ -12,6 +12,10 @@ module Bcome::Initialization::Structure
       { # Cloud provider authorisation directories
         paths: ['.gauth', '.aws'],
         method: :create_as_directory
+      },
+      { # Pre-populated configuration
+        paths: ['bcome/k8_hierarchy.yml','.gauth/googles-not-so-secret-client-secrets.json'],
+        method: :set_prepopulated_configs
       }
     ]
   end

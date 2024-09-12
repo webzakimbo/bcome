@@ -26,12 +26,20 @@ module Bcome
           base_items
         end
 
+        def description
+          identifier
+        end
+
         def resources
           @resources ||= do_set_resources
         end
 
         def update_nodes
           resources.update_nodes(self)
+        end
+ 
+        def network_driver
+          parent_inventory.network_driver
         end
 
         def do_set_resources

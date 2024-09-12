@@ -11,17 +11,18 @@ module Bcome::Registry
     end
 
     def set_command_group_for_node(node)
-      if group_for_node = ::Bcome::Registry::CommandList.instance.group_for_node(node)
-        return group_for_node
-      end
 
+      if (group_for_node = ::Bcome::Registry::CommandList.instance.group_for_node(node))
+        return group_for_node
+      end  
+   
       command_group = init_new_command_group(node)
 
       data.each do |key, commands|
         begin
-          if /^#{key}$/.match(node.keyed_namespace)
+          next if commands.nil?
 
-            next if commands.nil?
+          if /^#{key}$/.match(node.keyed_namespace)
 
             commands.each do |c|
               unless c[:console_command]
@@ -33,7 +34,8 @@ module Bcome::Registry
               # Verify that the proposed user registered method does not conflict with either an existing method name, instance var, or other registry command name for this node
               raise Bcome::Exception::MethodNameConflictInRegistry, "'#{c[:console_command]}'" if node.is_node_level_method?(c[:console_command]) || command_group.console_method_name_exists?(c[:console_command])
 
-              command_group << ::Bcome::Registry::Command::Base.new_from_raw_command(c) unless restrict_config?(node, c)
+
+              command_group << ::Bcome::Registry::Command::Base.new_from_raw_command(c) unless restrict_config?(node, c) || restricted_k8_method?(node, c)
               ::Bcome::Registry::CommandList.instance.register(node, c[:console_command].to_sym)
             end
           end
@@ -41,6 +43,7 @@ module Bcome::Registry
           raise Bcome::Exception::InvalidRegexpMatcherInRegistry, e.message
         end
       end
+
       ::Bcome::Registry::CommandList.instance.add_group_for_node(node, command_group)
     end
 
@@ -50,19 +53,32 @@ module Bcome::Registry
 
     def restrict_config?(node, command_config)
       return false unless command_config.key?(:restrict_to_node)
-
       node_klass_mapping = restriction_to_node_klass_mappings[command_config[:restrict_to_node].to_sym]
-
       raise Bcome::Exception::InvalidRestrictionKeyInRegistry, "'#{command_config[:restrict_to_node]}' is invalid. Valid keys: #{restriction_to_node_klass_mappings.keys.join(', ')}" unless node_klass_mapping
-
       !node.is_a?(node_klass_mapping)
     end
 
+    def restricted_k8_method?(node, command_config)
+      # Only restrict k8 methods for k8 nodes
+      return false unless node.is_a?(Bcome::Node::K8Cluster::Base)
+
+      local = ::Bcome::System::Local.instance
+      set_k8_view = command_config[:k8_hierarchy]
+
+      if local.in_default_k8_view?
+        return true if set_k8_view
+      else
+        return (local.in_k8_view?(set_k8_view) ? false : true)
+      end
+    end
+ 
     def restriction_to_node_klass_mappings
       {
         server: ::Bcome::Node::Server::Base,
         inventory: ::Bcome::Node::Inventory,
-        collection: ::Bcome::Node::Collection
+        collection: ::Bcome::Node::Collection,
+        k8_pod: ::Bcome::Node::K8Cluster::Pod,
+        k8_container: ::Bcome::Node::K8Cluster::Container,
       }
     end
 

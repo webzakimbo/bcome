@@ -2,19 +2,30 @@
 
 module Bcome
   class Bootup
-    def self.set_and_do(params, spawn_into_console = true)
-      instance.set(params, spawn_into_console)
-      instance.do
+
+    include ThreadSafeSingleton
+
+    class << self
+      def set_and_do(params, spawn_into_console = true)
+        instance.set(params, spawn_into_console)
+        instance.do
+      end
+
+      def traverse(breadcrumbs = nil, _spawn_into_console = false)
+        spawn_into_console = false
+        ::Bcome::Bootup.set_and_do({ breadcrumbs: breadcrumbs }, spawn_into_console)
+      end
+
+      def spider(breadcrumbs = nil)
+        instance.spider({ breadcrumbs: breadcrumbs})
+      end
     end
 
-    def self.traverse(breadcrumbs = nil, _spawn_into_console = false)
-      spawn_into_console = false
-      ::Bcome::Bootup.set_and_do({ breadcrumbs: breadcrumbs }, spawn_into_console)
+    attr_reader :breadcrumbs, :arguments, :starter
+
+    def starter=(starter)
+      @starter = starter
     end
-
-    include Singleton
-
-    attr_reader :breadcrumbs, :arguments
 
     def set(params, spawn_into_console = false)
       @breadcrumbs = params[:breadcrumbs]
@@ -28,10 +39,26 @@ module Bcome
     end
 
     def init_context(context)
+      context.load_nodes if context.respond_to?(:load_nodes) && !context.nodes_loaded?
+ 
       if @spawn_into_console
         ::Bcome::Workspace.instance.set(context: context, show_welcome: true)
       else
         context
+      end
+    end
+
+    def spider(params)
+      @breadcrumbs = params[:breadcrumbs]
+      starting_context = estate
+
+      crumbs.each_with_index do |crumb, _index|
+        # Some contexts' resources are loaded dynamically and do not come from the estate config. As we're traversing, we'll need to load
+        # them if necessary
+        starting_context.load_nodes if starting_context.respond_to?(:load_nodes) && !starting_context.nodes_loaded?
+        next_context ||= starting_context.resource_for_identifier(crumb)
+        return unless next_context
+        starting_context = next_context
       end
     end
 
@@ -40,7 +67,7 @@ module Bcome
       crumbs.each_with_index do |crumb, _index|
         # Some contexts' resources are loaded dynamically and do not come from the estate config. As we're traversing, we'll need to load
         # them if necessary
-        starting_context.load_nodes if starting_context.inventory? && !starting_context.nodes_loaded?
+        starting_context.load_nodes if starting_context.respond_to?(:load_nodes) && !starting_context.nodes_loaded?
 
         # Attempt to load our next context resource
         next_context = starting_context.resources.active.first if crumb == 'first'
@@ -55,6 +82,7 @@ module Bcome
         end
         starting_context = next_context
       end
+
       # Set our workspace to our last context - we're not invoking a method call and so we're entering a console session
       init_context(starting_context)
     end

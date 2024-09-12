@@ -1,32 +1,36 @@
 # frozen_string_literal: true
-
 module Bcome
   module WorkspaceCommands
+
     def ssh_connect(params = {})
       ::Bcome::Ssh::Connector.connect(self, params)
+    end
+
+    def lsr
+      reload if respond_to?(:reload)
+      ls
     end
 
     def ls(node = self, active_only = false)
       if node != self && (resource = resources.for_identifier(node))
         resource.send(:ls, active_only)
       else
-        puts "\n\n" + visual_hierarchy.hierarchy + "\n"
-        puts "\t" + "Available #{list_key}s:" + "\n\n"
+        
+        puts "\n\n\tYou are in\s".bc_white + "#{type}".informational + "\s#{identifier}\n".bc_white
 
         iterate_over = active_only ? resources.active : resources
 
-        if iterate_over.any?
+        puts "\t" + "children\n".bc_white.underline if iterate_over.any?
 
+        if iterate_over.any?
           iterate_over.sort_by(&:identifier).each do |resource|
             next if resource.hide?
-
             is_active = resources.is_active_resource?(resource)
-            puts resource.pretty_description(is_active)
-
+            puts resource.pretty_description(is_active) 
             puts "\n"
           end
         else
-          puts "\tNo resources found".informational
+          puts "\tNo child resources".informational
         end
 
         new_line
@@ -34,13 +38,18 @@ module Bcome
       end
     end
 
+    def pretty_child_type
+      return resources.first.type.pluralize(resources.size)
+    end
+
     def lsa
       show_active_only = true
       ls(self, show_active_only)
     end
 
-    def interactive
-      ::Bcome::Interactive::Session.run(self, :interactive_ssh)
+    def ping(node = nil)
+      ping_params = { is_ping: true, show_progress: true }
+      ::Bcome::Ssh::Connector.connect(node ? node : self, ping_params)   
     end
 
     def parents
@@ -49,20 +58,7 @@ module Bcome
       ps.flatten
     end
 
-    def cd(identifier)
-      if (resource = resources.for_identifier(identifier))
-        if resource.parent.resources.is_active_resource?(resource)
-          ::Bcome::Workspace.instance.set(current_context: self, context: resource)
-        else
-          puts "\nCannot enter context - #{identifier} is disabled. To enable enter 'enable #{identifier}'\n".error
-        end
-      else
-        raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
-        puts "#{identifier} not found"
-      end
-    end
-
-    def run(*raw_commands)
+    def run(*raw_commands) 
       raise Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
 
       results = {}
@@ -76,22 +72,32 @@ module Bcome
       results
     end
 
-    def ping
-      ssh_connect(is_ping: true, show_progress: true)
-    end
-
     def pretty_description(is_active = true)
       desc = ''
-      list_attributes.each do |key, value|
+
+      iteratable_attrs = @additional_list_attributes ? (list_attributes.merge(@additional_list_attributes)) : list_attributes
+
+      @key_spacing_limit = iteratable_attrs.keys.max_by(&:length).size + 2
+      iteratable_attrs.each do |key, value|
+
         next unless respond_to?(value) || instance_variable_defined?("@#{value}")
 
-        attribute_value = send(value)
-        next unless attribute_value
+        attribute_value = send(value).to_s
+        next if attribute_value.nil? || attribute_value.empty?
+
+        printed_value = (value.to_sym == :identifier) ? "#{"id".resource_key}:\s#{attribute_value}" : attribute_value
 
         desc += "\t"
         desc += is_active ? key.to_s.resource_key : key.to_s.resource_key_inactive
-        desc += "\s" * (12 - key.length)
-        desc += is_active ? attribute_value.resource_value : attribute_value.resource_value_inactive
+
+        if key.length >= @key_spacing_limit 
+          desc += "\s"
+        else    
+          desc += "\s" * (@key_spacing_limit - key.length)
+        end
+
+
+        desc += is_active ? printed_value.resource_value : printed_value.resource_value_inactive
         desc += "\n"
         desc = desc unless is_active
       end
@@ -99,36 +105,82 @@ module Bcome
     end
 
     def disable(*ids)
-      ids.each { |id| resources.do_disable(id) }
+      ids.each { |id| resources.do_disable([id]) }
+      puts "Disabled #{ids.join(', ')} from selection.".informational 
     end
 
     def enable(*ids)
-      ids.each { |id| resources.do_enable(id) }
+      resources.do_enable(ids, reset = false)
+      puts "Enabled #{ids.join(', ')} in selection.".informational
     end
 
     def clear!
       # Clear any disabled selection at this level and at all levels below
+      ::Bcome::NodeSelection.instance.clear!
       resources.clear!
       resources.each(&:clear!)
       nil
     end
 
+    def select(breadcrumb)
+      crumbs = breadcrumb.split(",").collect{|c| c.gsub("\s", "") }
+      method = :select
+      crumbs.each do |crumb|
+        node = scan_ahead(method, crumb)
+        if node
+          ::Bcome::NodeSelection.instance.add(node)
+          puts "\nAdded\s".bc_grey + node.namespace.informational + "\sto selection\n".bc_grey
+        end
+      end
+    end
+
+    def cd(breadcrumb)
+      method = :cd
+      node = scan_ahead(method, breadcrumb)
+      ::Bcome::Workspace.instance.set(current_context: self, context: node) if node
+    end
+
+    def scan_ahead(method, breadcrumb)
+      crumbs = breadcrumb.split /[:.?]/
+
+      if breadcrumb =~ /#(.+)/ # cd from root of namespace where '#' denotes 'root'
+        root.send(method, $1)
+      else 
+        crumbs = breadcrumb.split /[:.?]/
+        step = self
+
+        crumbs.each do |crumb|
+          step.load_nodes if step.respond_to?(:load_nodes) && !step.nodes_loaded?
+
+          if step = step.resources.for_identifier(crumb)
+            unless step.parent.resources.is_active_resource?(step)
+              puts "\nCannot enter context - #{breadcrumb} is disabled\n".error
+              return
+            end
+          else
+            raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node at '#{crumb}'"
+          end
+       end
+       
+       return step
+      end
+    end
+
     def workon(*ids)
-      resources.disable!
-      ids.each { |id| resources.do_enable(id) }
+      resources.do_enable(ids)
       puts "\nYou are now working on '#{ids.join(', ')}\n".informational
     end
 
     def disable!
       resources.disable!
       resources.each(&:disable!)
-      nil
+      return
     end
 
     def enable!
       resources.enable!
       resources.each(&:enable!)
-      nil
+      return
     end
 
     ## Helpers --
@@ -146,21 +198,16 @@ module Bcome
     end
 
     def method_is_available_on_node?(method_sym)
-      resource_identifiers.include?(method_sym.to_s) || method_in_registry?(method_sym) || respond_to?(method_sym) || instance_variable_defined?("@#{method_sym}")
-    end
-
-    def visual_hierarchy
-      tabs = 0
-      hierarchy = ''
-      tree_descriptions.each do |d|
-        hierarchy += "#{"\s\s\s" * tabs}|- #{d}\n"
-        tabs += 1
+      begin
+        resource_identifiers.include?(method_sym.to_s) || method_in_registry?(method_sym) || respond_to?(method_sym) || instance_variable_defined?("@#{method_sym}")
+      rescue NameError
+        return false
       end
-      hierarchy
     end
 
     def tree_descriptions
-      d = parent ? parent.tree_descriptions + [description] : [description]
+      pretty_desc = "#{description} (#{type})"
+      d = parent ? parent.tree_descriptions + [pretty_desc] : [pretty_desc]
       d.flatten
     end
 

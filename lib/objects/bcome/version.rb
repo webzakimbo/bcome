@@ -7,11 +7,11 @@ module Bcome
     end
 
     def self.release
-      '2.0.1'
+      '3.0.0'
     end
 
     def self.release_name
-      'Multicloud & Hybrid'
+      'Maverick'
     end
 
     def self.display

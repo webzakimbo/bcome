@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'fog/aws'
+require 'aws-sdk-core'
+require 'aws-sdk-ecs'
 
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
@@ -9,9 +11,22 @@ module Bcome::Driver
     def initialize(*params)
       super
       raise Bcome::Exception::Ec2DriverMissingProvisioningRegion, params.inspect unless provisioning_region
-      raise ::Bcome::Exception::Ec2DriverMissingAuthorizationKeys, PATH_TO_FOG_CREDENTIALS unless File.exist?(PATH_TO_FOG_CREDENTIALS)
+      set_fog_creds_env
+    end
 
-      ENV['FOG_RC'] = PATH_TO_FOG_CREDENTIALS
+    def set_fog_creds_env
+      if File.exist?(PATH_TO_FOG_CREDENTIALS)
+        ENV['FOG_RC'] = PATH_TO_FOG_CREDENTIALS
+      elsif File.exist?(default_creds_path)
+        # default credentials are in .ini format, and fog expects YAML
+        @credentials = Aws::SharedCredentials.new(profile_name: credentials_key)
+      else
+        raise ::Bcome::Exception::Ec2DriverMissingAuthorizationKeys, PATH_TO_FOG_CREDENTIALS
+      end
+    end  
+
+    def default_creds_path
+      return File.expand_path("~/.aws/credentials")
     end
 
     def pretty_provider_name
@@ -22,12 +37,20 @@ module Bcome::Driver
       @node.network_data[:provisioning_region]
     end
 
-    def fog_client
-      @fog_client ||= get_fog_client
+    def fog_compute_client
+      @fog_client ||= get_fog_compute_client
+    end
+
+    def fog_ecs_client
+      @fog_ecs_client ||= get_fog_ecs_client
+    end
+
+    def aws_ecs_client
+      @aws_ecs_client ||= get_aws_ecs_client
     end
 
     def fetch_server_list(legacy_ec2_filters)
-      # Filters should be defined within a namespace's :network element. Pre 2.0 the expection for AWS was
+      # Filters should be defined within a namespace's :network element. Pre 2.0 the expectation was
       # to define filters at the root level of the namespace. Here we move :filters into :network, yet retain
       # ec2_filters at the root level for backwards compaibility with pre 2.0 versions.
       filters = config.key?(:filters) ? config[:filters] : legacy_ec2_filters
@@ -46,7 +69,7 @@ module Bcome::Driver
     end
 
     def unfiltered_server_list
-      @unfiltered_server_list ||= fog_client.servers.all({})
+      @unfiltered_server_list ||= fog_compute_client.servers.all({})
     end
 
     def loading
@@ -58,10 +81,18 @@ module Bcome::Driver
     end
 
     def network_credentials
-      {
+      @network_credentials ||= set_network_credentials
+    end
+    
+    def set_network_credentials
+      creds = {
         access_key: raw_fog_credentials['aws_access_key_id'],
         secret_key: raw_fog_credentials['aws_secret_access_key']
       }
+
+      creds[:session_token] = raw_fog_credentials['aws_session_token'] if raw_fog_credentials['aws_session_token']
+
+      return creds
     end
 
     def raw_fog_credentials
@@ -78,14 +109,44 @@ module Bcome::Driver
 
     protected
 
-    def get_fog_client
+    def get_fog_ecs_client
+      requires_provider = false
+      return get_fog_client(::Fog::AWS::ECS, requires_provider)
+    end
+
+    def get_aws_ecs_client
+      if @credentials
+        aws_creds = Aws::Credentials.new(
+          @credentials.credentials.access_key_id, 
+          @credentials.credentials.secret_access_key,
+          @credentials.credentials.session_token
+        )
+      end
+    
+      return Aws::ECS::Client.new(
+        region: provisioning_region,
+        credentials: aws_creds
+      )    
+    end
+
+    def get_fog_compute_client
+      return get_fog_client(::Fog::Compute)
+    end
+
+    def get_fog_client(client_klass, requires_provider = true)
       ::Fog.credential = credentials_key
 
-      client = ::Fog::Compute.new(
-        provider: 'AWS',
-        region: provisioning_region
-      )
-      client
+      fog_config = { region: provisioning_region }
+      fog_config[:provider] = 'AWS' if requires_provider
+
+      if @credentials
+        fog_config["aws_access_key_id"] = @credentials.credentials.access_key_id
+        fog_config["aws_secret_access_key"] = @credentials.credentials.secret_access_key
+        fog_config["aws_session_token"] = @credentials.credentials.session_token
+      end
+
+      client = client_klass.new(fog_config)
+      return client
     end
   end
 end

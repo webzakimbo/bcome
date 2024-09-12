@@ -2,14 +2,17 @@
 
 module Bcome::Driver
   class Bucket
-    include Singleton
+  
+    include ThreadSafeSingleton
 
     def initialize
       @drivers = []
     end
 
     def driver_for_network_data(network_data, node)
-      found_driver = @drivers.select { |driver| driver.config == network_data }.first
+      found_driver = @drivers.select { |driver| 
+        driver.matches_auth_config?(network_data)
+      }.first
       found_driver || create_network_driver(network_data, node)
     end
 

@@ -41,6 +41,13 @@ module Bcome
 
         def load_inventory(from_crumb)
           inventory = ::Bcome::Node::Factory.instance.bucket[from_crumb]
+  
+          #unless inventory
+          #  # We're lazy loading some resources, so we may need to spider-traverse the namespace
+          #  #::Bcome::Bootup.spider(from_crumb)
+          #  #inventory = ::Bcome::Node::Factory.instance.bucket[from_crumb]
+          #end
+
           raise Bcome::Exception::CannotFindInventory, "for key '#{from_crumb}'" unless inventory
 
           inventory

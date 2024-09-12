@@ -5,7 +5,7 @@ module Bcome
     class Window
       attr_reader :lines
 
-      include Singleton
+      include ThreadSafeSingleton
 
       def initialize(*_params)
         @lines = []
@@ -24,7 +24,8 @@ module Bcome
       end
 
       def pop
-        print @lines.pop
+        line = @lines.pop.force_encoding("UTF-8")
+        print line
       end
     end
   end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
-    attr_reader :origin_object_id
 
     def initialize(*params)
       super
@@ -21,7 +20,7 @@ module Bcome::Node::Server
       super
     end
 
-    # Override a server's namespace parameters. Enabled features such as specific SSH config for a particular server, i.e. overidding that of it's parent
+    # Override a server's namespace parameters. Enabled features such as specific SSH config for a particular server, i.e. overidding that of its parent
     #  inventory namespace.
     def set_network_configuration_overrides
       overridden_attributes = ::Bcome::Node::Factory.instance.machines_data_for_namespace(namespace.to_sym)
@@ -35,7 +34,7 @@ module Bcome::Node::Server
     end
 
     def local_network?
-      defined?(local_network) && local_network
+      (defined?(local_network) && local_network) || ssh_driver.config[:local_network]
     end
 
     def dup_with_new_parent(new_parent)
@@ -46,6 +45,10 @@ module Bcome::Node::Server
 
     def update_parent(new_parent)
       @parent = new_parent
+    end
+
+    def network_driver
+      parent.network_driver
     end
 
     def tags
@@ -77,7 +80,7 @@ module Bcome::Node::Server
       'server'
     end
 
-    def machines
+    def do_load_machines(skip_for_hidden = true)
       [self]
     end
 
@@ -132,8 +135,8 @@ module Bcome::Node::Server
       base_items
     end
 
-    def local_port_forward(start_port, end_port)
-      ssh_driver.local_port_forward(start_port, end_port)
+    def local_port_forward(start_port, end_port, return_tunnel = false)
+      ssh_driver.local_port_forward(start_port, end_port, return_tunnel)
     end
     alias tunnel local_port_forward
 
@@ -190,12 +193,6 @@ module Bcome::Node::Server
     def get(remote_path, local_path)
       ssh_driver.get(remote_path, local_path)
     end
-
-    def ls
-      puts "\n" + visual_hierarchy.hierarchy + "\n"
-      puts pretty_description
-    end
-    alias lsa ls
 
     def ping
       ping_result = ssh_driver.ping

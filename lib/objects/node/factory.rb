@@ -2,7 +2,8 @@
 
 module Bcome::Node
   class Factory
-    include Singleton
+
+    include ThreadSafeSingleton
 
     attr_reader :estate
 
@@ -12,12 +13,21 @@ module Bcome::Node
     LOCAL_OVERRIDE_CONFIG_NAME = 'me.yml'
 
     INVENTORY_KEY = 'inventory'
+    GCP_KUBE_COLLECTION_KEY = 'gke-k8s-cluster'
+    AWS_KUBE_COLLECTION_KEY = 'eks-k8s-cluster'
+    AWS_ECS_COLLECTION_KEY  = 'aws-ecs-cluster'
     COLLECTION_KEY = 'collection'
     SUBSELECT_KEY = 'inventory-subselect'
     MERGE_KEY = 'inventory-merge'
-    KUBE_CLUSTER = 'kube-cluster'
+
+    K8_SUBSELECT = 'kubernetes-subselect'
 
     BCOME_RC_FILENAME = '.bcomerc'
+
+    def initialize(*params)
+      @config_file_name = nil
+      super
+    end
 
     def bucket
       @bucket ||= {}
@@ -42,7 +52,9 @@ module Bcome::Node
     end
 
     def create_tree(context_node, views)
-      views.each { |config| create_node(config, context_node) }
+      views.each { |config| 
+        create_node(config, context_node) 
+      }
     end
 
     def reformat_config(config)
@@ -67,7 +79,7 @@ module Bcome::Node
       parent.resources << node if parent
 
       # Load inventory resources as early as possible
-      if node.is_a?(Bcome::Node::Inventory::Base)
+      if node.is_a?(Bcome::Node::Inventory::Base) || node.is_a?(Bcome::Node::Ecs::Cluster)
         node.load_nodes unless node.nodes_loaded?
       end
 
@@ -84,11 +96,14 @@ module Bcome::Node
 
     def klass_for_view_type
       {
-        COLLECTION_KEY => ::Bcome::Node::Collection,
+        GCP_KUBE_COLLECTION_KEY => ::Bcome::Node::K8Cluster::Collection::Gcp,
+        AWS_KUBE_COLLECTION_KEY => ::Bcome::Node::K8Cluster::Collection::Eks,
+        COLLECTION_KEY => ::Bcome::Node::Collection::Base,
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
         SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,
         MERGE_KEY => ::Bcome::Node::Inventory::Merge,
-        KUBE_CLUSTER => ::Bcome::Node::Kube::Estate
+        K8_SUBSELECT => ::Bcome::Node::K8Cluster::Subselect,
+        AWS_ECS_COLLECTION_KEY => ::Bcome::Node::Ecs::Cluster
       }
     end
 

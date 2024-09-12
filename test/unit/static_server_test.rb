@@ -53,7 +53,6 @@ class StaticServerTest < ActiveSupport::TestCase
 
     config = {
       views: {
-        description: "Test server",
         identifier: identifier,
         public_ip_address: public_ip_address,
         description: description

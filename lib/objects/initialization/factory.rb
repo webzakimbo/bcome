@@ -4,6 +4,7 @@ module Bcome::Initialization
   class Factory
     include ::Bcome::Initialization::Utils
     include ::Bcome::Initialization::Structure
+    include ::Bcome::Initialization::PrepopulatedConfigs
 
     class << self
       def do
