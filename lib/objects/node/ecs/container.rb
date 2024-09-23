@@ -56,20 +56,15 @@ module Bcome::Node::Ecs
     end
 
     def run(cmd)
-     # response = aws_client.execute_command({
-     #   cluster: cluster_name,
-     #   task: parent.arn,
-     #   container: identifier,
-     #   command: cmd,
-     #   interactive: true
-     # })
-
-     # binding.pry
-      raise ::Bcome::Exception::Generic.new "Not yet implemented"
+      execute(cmd)
     end
 
     def shell(cmd = "/bin/sh")
-      command = "aws --profile #{parent.credentials_key} ecs execute-command --region #{parent.region}" 
+      execute(cmd)
+    end
+
+    def execute(cmd)
+      command = "aws --profile #{parent.credentials_key} ecs execute-command --region #{parent.region}"
       command += "\s--cluster #{cluster_name} --task #{parent.arn} --container #{identifier}"
       command += "\s--command \"#{cmd}\" --interactive"
       system(command)
