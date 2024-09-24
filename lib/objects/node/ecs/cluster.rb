@@ -19,6 +19,10 @@ module Bcome::Node::Ecs
       network_driver.aws_ecs_client
     end
 
+    def identifier_override_set?
+      respond_to?(:override_identifier) && !override_identifier.nil?
+    end  
+
     def region
       return network_data[:provisioning_region]
     end

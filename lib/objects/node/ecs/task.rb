@@ -21,6 +21,14 @@ module Bcome::Node::Ecs
       parent.fog_client
     end
 
+    def override_server_identifier?
+      return true
+    end
+
+    def update_identifier(new_identifier)
+      @identifier = new_identifier
+    end
+
     def aws_client
       parent.aws_client
     end

@@ -16,6 +16,10 @@ module Bcome::Node::Ecs
       parent.aws_client
     end
 
+    def override_server_identifier?
+      return false
+    end
+
     def list_attributes
       attribs = super.merge({ "status": :status })
       attribs.delete(:Description)

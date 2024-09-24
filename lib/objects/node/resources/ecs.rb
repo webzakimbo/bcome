@@ -8,14 +8,20 @@ module Bcome::Node::Resources
       super
     end
 
+    def set_overrides(cluster, node)
+      override_server_identifier(cluster, node)
+    end
+
     def override_server_identifier(cluster, node)
-      if cluster.override_server_identifier?
+      if node.override_server_identifier? && cluster.identifier_override_set?
         node.identifier =~ /#{cluster.override_identifier}/
         node.update_identifier(Regexp.last_match(1)) if Regexp.last_match(1)
       end
     end
 
     def <<(node)
+      set_overrides(@cluster, node)
+
       if existing_node = for_identifier(node.identifier)
         duplicate_nodes[node.identifier] = duplicate_nodes[node.identifier] ? (duplicate_nodes[node.identifier] + 1) : 2
         count = duplicate_nodes[node.identifier]
