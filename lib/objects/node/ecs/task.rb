@@ -17,6 +17,10 @@ module Bcome::Node::Ecs
       return parent.cluster_name
     end
 
+    def container_by_name(name)
+      resources.nodes.select{|container| container.identifier == name }[0]
+    end
+
     def fog_client
       parent.fog_client
     end
@@ -76,11 +80,15 @@ module Bcome::Node::Ecs
 
         # next unless cont_config["lastStatus"]"RUNNING", "PENDING"]
 
+        container_arn =~ /arn:aws:ecs:[a-z0-9-]+:[0-9]+:container\/[a-z-]+\/([a-z0-9]+)/
+        container_id = $1
+
         resources << ::Bcome::Node::Ecs::Container.new(
           views: {
             identifier: cont_config["name"],
             type: "ecs/container",
             arn: cont_config["containerArn"],
+            container_id: container_id,
             status: cont_config["lastStatus"],
             definition: container_definition_for_identifier(cont_config["name"]),
           },

@@ -20,11 +20,20 @@ module Bcome::Node::Ecs
       return false
     end
 
+    def config
+      pp definition 
+    end
+
     def list_attributes
       attribs = super.merge({ "status": :status })
       attribs.delete(:Description)
       return attribs
     end
+
+    def env_value_by_name(name)
+      env_key = definition.environment.select{|e| e.name == name }
+      return (env_key && env_key[0])  ? env_key[0].value : nil
+    end 
 
     ## Logs 
 
@@ -48,11 +57,37 @@ module Bcome::Node::Ecs
       unless logs_enabled?
         puts "Logs are not enabled for this container".warning 
       else
-        command = "aws --profile #{parent.credentials_key} logs tail"
-        command += "\s#{log_group} --region #{parent.region}"
-        command += "\s--log-stream-name-prefix #{log_stream_prefix} --follow"
-        system(command)
+        if log_config[:options]
+          command = aws_log_stream_prefix_command
+          system(command)
+        elsif log_config.log_driver && log_config.log_driver == "awsfirelens"
+            # Infer log group & app name from the associated fluent bit container
+            fb_container = parent.container_by_name("fluentbit")
+            log_group = fb_container.env_value_by_name("LOG_GROUP_NAME")
+            app_name = fb_container.env_value_by_name("APP_NAME")
+            log_stream = "#{app_name}/#{container_id}"
+
+            command = aws_log_stream_command(log_group, log_stream)
+            puts command
+            system(command)
+        else 
+          puts "Cannot infer log stream for driver '#{log_config.log_driver}'".warning
+        end
       end
+    end
+
+    def aws_log_stream_command(log_group_name, log_stream_name)
+      command = "aws --profile #{parent.credentials_key} logs tail"
+      command += "\s#{log_group_name} --region #{parent.region}"
+      command += "\s--log-stream-name-prefix #{log_stream_name} --follow"
+      return command
+    end
+
+    def aws_log_stream_prefix_command
+      command = "aws --profile #{parent.credentials_key} logs tail"
+      command += "\s#{log_group} --region #{parent.region}"
+      command += "\s--log-stream-name-prefix #{log_stream_prefix} --follow"
+      return command
     end
 
     def cluster_name
