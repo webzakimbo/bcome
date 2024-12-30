@@ -68,7 +68,6 @@ module Bcome::Node::Ecs
             log_stream = "#{app_name}/#{container_id}"
 
             command = aws_log_stream_command(log_group, log_stream)
-            puts command
             system(command)
         else 
           puts "Cannot infer log stream for driver '#{log_config.log_driver}'".warning
