@@ -25,7 +25,7 @@ module Bcome::Node::Ecs
     end
 
     def list_attributes
-      attribs = super.merge({ "status": :status })
+      attribs = super.merge({ "Status": :status })
       attribs.delete(:Description)
       return attribs
     end
@@ -65,7 +65,7 @@ module Bcome::Node::Ecs
             fb_container = parent.container_by_name("fluentbit")
             log_group = fb_container.env_value_by_name("LOG_GROUP_NAME")
             app_name = fb_container.env_value_by_name("APP_NAME")
-            log_stream = "#{app_name}/#{container_id}"
+            log_stream = "#{app_name}/#{task_id}"
 
             command = aws_log_stream_command(log_group, log_stream)
             system(command)
